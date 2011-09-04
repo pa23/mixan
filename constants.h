@@ -23,7 +23,7 @@
 
 #include <QString>
 
-const QString version = "v1.0";
+const QString version = "v1.0 DEV";
 const size_t baseColor = 0xFFFFFFFF;
 const size_t thresholdColor = 0xFF888888;
 const size_t imgWidth = 600; // px

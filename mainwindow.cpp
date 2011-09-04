@@ -31,7 +31,7 @@
 #include <QDateTime>
 #include <QPrinter>
 #include <QTextCursor>
-#include <QMimeData>
+#include <QDateTime>
 
 #include <cmath>
 
@@ -128,18 +128,18 @@ void MainWindow::on_action_loadImages_activated() {
         width = img.width();
         if ( width > imgWidth ) { width = imgWidth; }
 
-        ui->textBrowser_report->insertHtml(
-                    "<br>Original image: " +
-                    imageFiles[i] +
-                    "<br><img src=\"" +
-                    imageFiles[i] +
-                    "\" width=\"" +
-                    QString::number(width) +
-                    "\" /><br>"
-                    );
+//        ui->textBrowser_report->insertHtml(
+//                    "<br>Original image: " +
+//                    imageFiles[i] +
+//                    "<br><img src=\"" +
+//                    imageFiles[i] +
+//                    "\" width=\"" +
+//                    QString::number(width) +
+//                    "\" /><br>"
+//                    );
 
-        colorToGrey(&img);
-        setMaxContrast(&img);
+//        colorToGrey(&img);    img.save("temp/"+QDateTime::currentDateTime().toString("dd-MM-yyyy_hh-mm-ss")+"__"+QString::number(i)+".jpg");
+//        setMaxContrast(&img); img.save("temp/"+QDateTime::currentDateTime().toString("dd-MM-yyyy_hh-mm-ss")+"__"+QString::number(i)+"_.jpg");
 
         images.push_back(img);
 
@@ -147,6 +147,8 @@ void MainWindow::on_action_loadImages_activated() {
         ui->textBrowser_report->textCursor().insertImage(img.scaledToWidth(width));
         ui->textBrowser_report->insertHtml( "<br>" );
     }
+
+    ui->textBrowser_report->moveCursor(QTextCursor::End);
 }
 
 void MainWindow::on_action_createReport_activated() {
@@ -262,7 +264,7 @@ void MainWindow::on_action_analyze_activated() {
 
 void MainWindow::on_action_about_mixan_activated() {
 
-    QString str = "<b>mixan v0.1</b>\n"
+    QString str = "<b>mixan " + version + "</b>\n"
             "<br><br>Analyze of granular material mix."
             "<br><br>Copyright (C) 2011 Artem Petrov <a href= \"mailto:pa2311@gmail.com\" >pa2311@gmail.com</a>"
             "<br><br>Web site: <a href= \"https://github.com/pa23/mixan\">https://github.com/pa23/mixan</a>"
