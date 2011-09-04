@@ -31,6 +31,7 @@
 #include <QDateTime>
 #include <QPrinter>
 #include <QTextCursor>
+#include <QMimeData>
 
 #include <cmath>
 
@@ -47,6 +48,38 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow() {
 
     delete ui;
+}
+
+void MainWindow::colorToGrey(QImage *img) const {
+
+    size_t gray = 0;
+
+    for ( ptrdiff_t i=0; i<img->width(); i++ ) {
+
+        for ( ptrdiff_t j=0; j<img->height(); j++ ) {
+
+            gray = qGray(img->pixel(i, j));
+            img->setPixel(i, j, qRgb(gray, gray, gray));
+        }
+    }
+}
+
+void MainWindow::setMaxContrast(QImage *img) const {
+
+    size_t color = 0;
+
+    for ( ptrdiff_t i=0; i<img->width(); i++ ) {
+
+        for ( ptrdiff_t j=0; j<img->height(); j++ ) {
+
+            color = (size_t)img->pixel(i, j);
+
+            if ( color > thresholdColor ) { color = 0xFFFFFFFF; }
+            else                          { color = 0xFF000000; }
+
+            img->setPixel(i, j, (QRgb)color);
+        }
+    }
 }
 
 void MainWindow::on_action_loadImages_activated() {
@@ -92,16 +125,11 @@ void MainWindow::on_action_loadImages_activated() {
             continue;
         }
 
-        images.push_back(img);
         width = img.width();
-
-        if ( width > 600 ) {
-
-            width = 600;
-        }
+        if ( width > imgWidth ) { width = imgWidth; }
 
         ui->textBrowser_report->insertHtml(
-                    "<br>File for analysis: " +
+                    "<br>Original image: " +
                     imageFiles[i] +
                     "<br><img src=\"" +
                     imageFiles[i] +
@@ -109,9 +137,16 @@ void MainWindow::on_action_loadImages_activated() {
                     QString::number(width) +
                     "\" /><br>"
                     );
-    }
 
-    ui->textBrowser_report->moveCursor(QTextCursor::End);
+        colorToGrey(&img);
+        setMaxContrast(&img);
+
+        images.push_back(img);
+
+        ui->textBrowser_report->insertHtml( "<br>Image for analysis:<br>" );
+        ui->textBrowser_report->textCursor().insertImage(img.scaledToWidth(width));
+        ui->textBrowser_report->insertHtml( "<br>" );
+    }
 }
 
 void MainWindow::on_action_createReport_activated() {
@@ -176,7 +211,7 @@ void MainWindow::on_action_analyze_activated() {
         }
 
         conc = (double)part1 / ( (double)part1 + (double)part2 );
-        summ_concdiff += pow( (conc - idealConcentration), 2 );
+        summ_concdiff += pow( (conc - idealConc), 2 );
 
         concentrations.push_back(conc);
 
@@ -205,7 +240,7 @@ void MainWindow::on_action_analyze_activated() {
 
     if ( images.count() > 1 ) {
 
-        double Vc = 100.0 / idealConcentration * pow( 1.0 / ( concentrations.count() - 1.0 ) * summ_concdiff, 0.5 );
+        double Vc = 100.0 / idealConc * pow( 1.0 / ( concentrations.count() - 1.0 ) * summ_concdiff, 0.5 );
 
         ui->textBrowser_report->insertHtml(
                     "Analysis results: Vc = <b>" +

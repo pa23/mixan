@@ -23,8 +23,10 @@
 
 #include <QString>
 
-const QString version = "v0.1";
+const QString version = "v1.0";
 const size_t baseColor = 0xFFFFFFFF;
-const double idealConcentration = 0.5;
+const size_t thresholdColor = 0xFF888888;
+const size_t imgWidth = 600; // px
+const double idealConc = 0.5;
 
 #endif // CONSTANTS_H

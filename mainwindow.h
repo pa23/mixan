@@ -44,6 +44,9 @@ private:
     Ui::MainWindow *ui;
     QVector<QImage> images;
 
+    void colorToGrey(QImage *) const;
+    void setMaxContrast(QImage *) const;
+
 private slots:
 
     void on_action_loadImages_activated();
