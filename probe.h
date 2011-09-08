@@ -2,7 +2,7 @@
     mixan
     Analyze of granular material mix.
 
-    File: mainwindow.h
+    File: probe.h
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
@@ -18,43 +18,37 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef PROBE_H
+#define PROBE_H
 
-#include <QMainWindow>
-#include <QVector>
+#include <QString>
+#include <QImage>
 
-#include "probe.h"
-
-namespace Ui {
-
-    class MainWindow;
-}
-
-class MainWindow : public QMainWindow {
-
-    Q_OBJECT
+class Probe {
 
 public:
 
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit Probe(QString);
+    virtual ~Probe();
+
+    bool analyze();
+    QImage *originalImage();
+    QImage *blackwhiteImage();
+    size_t thresholdColor() const;
+    double concentration() const;
 
 private:
 
-    Ui::MainWindow *ui;
+    QImage origImage;
+    QImage bwImage;
+    size_t *histogram;
+    size_t threshColor;
+    double conc;
 
-    QVector<Probe *> probes;
-
-private slots:
-
-    void on_action_loadImages_activated();
-    void on_action_createReport_activated();
-    void on_action_cleanReportWindow_activated();
-    void on_action_quit_activated();
-    void on_action_analyze_activated();
-    void on_action_about_mixan_activated();
+    bool colorToBW();
+    bool defThreshColor();
+    bool defConc();
 
 };
 
-#endif // MAINWINDOW_H
+#endif // PROBE_H

@@ -2,7 +2,7 @@
     mixan
     Analyze of granular material mix.
 
-    File: mainwindow.h
+    File: numcompfuns.h
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
@@ -18,43 +18,11 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef NUMCOMPFUNS_H
+#define NUMCOMPFUNS_H
 
-#include <QMainWindow>
-#include <QVector>
+#include <vector>
 
-#include "probe.h"
+bool polyapprox(std::vector<double> *, std::vector<double> *, std::vector<double> *); // x, y, coeff ( numCoeff = polyPower + 1 )
 
-namespace Ui {
-
-    class MainWindow;
-}
-
-class MainWindow : public QMainWindow {
-
-    Q_OBJECT
-
-public:
-
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-
-private:
-
-    Ui::MainWindow *ui;
-
-    QVector<Probe *> probes;
-
-private slots:
-
-    void on_action_loadImages_activated();
-    void on_action_createReport_activated();
-    void on_action_cleanReportWindow_activated();
-    void on_action_quit_activated();
-    void on_action_analyze_activated();
-    void on_action_about_mixan_activated();
-
-};
-
-#endif // MAINWINDOW_H
+#endif // NUMCOMPFUNS_H

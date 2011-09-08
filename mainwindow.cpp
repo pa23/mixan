@@ -21,6 +21,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "constants.h"
+#include "probe.h"
 
 #include <QString>
 #include <QStringList>
@@ -28,12 +29,9 @@
 #include <QDir>
 #include <QPixmap>
 #include <QMessageBox>
-#include <QDateTime>
 #include <QPrinter>
 #include <QTextCursor>
 #include <QDateTime>
-
-#include <cmath>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -41,45 +39,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
-    setWindowTitle("mixan " + version);
-    ui->textBrowser_report->setHtml("<br><b>mixan " + version + "</b><br>Analyze of granular material mix.<br>");
+    setWindowTitle("mixan " + VERSION);
+    ui->textBrowser_report->setHtml("<br><b>mixan " + VERSION + "</b><br>Analyze of granular material mix.<br>");
 }
 
 MainWindow::~MainWindow() {
 
     delete ui;
-}
-
-void MainWindow::colorToGrey(QImage *img) const {
-
-    size_t gray = 0;
-
-    for ( ptrdiff_t i=0; i<img->width(); i++ ) {
-
-        for ( ptrdiff_t j=0; j<img->height(); j++ ) {
-
-            gray = qGray(img->pixel(i, j));
-            img->setPixel(i, j, qRgb(gray, gray, gray));
-        }
-    }
-}
-
-void MainWindow::setMaxContrast(QImage *img) const {
-
-    size_t color = 0;
-
-    for ( ptrdiff_t i=0; i<img->width(); i++ ) {
-
-        for ( ptrdiff_t j=0; j<img->height(); j++ ) {
-
-            color = (size_t)img->pixel(i, j);
-
-            if ( color > thresholdColor ) { color = 0xFFFFFFFF; }
-            else                          { color = 0xFF000000; }
-
-            img->setPixel(i, j, (QRgb)color);
-        }
-    }
 }
 
 void MainWindow::on_action_loadImages_activated() {
@@ -94,7 +60,7 @@ void MainWindow::on_action_loadImages_activated() {
 
     if ( imageFiles.count() == 0 ) {
 
-        QMessageBox::warning(this, "mixan", "Please, select images files.");
+        QMessageBox::information(this, "mixan", "You do not select any file (");
         return;
     }
 
@@ -108,45 +74,33 @@ void MainWindow::on_action_loadImages_activated() {
                 "</b><br>"
                 );
 
-    images.clear();
+    //
 
-    QImage img;
-    size_t width = 0;
+    probes.clear();
+
+    ptrdiff_t filenum = 1;
+
+    ui->textBrowser_report->insertHtml(
+                "<br><u>Selected files:</u><br>"
+                );
 
     //
 
     for ( ptrdiff_t i=0; i<imageFiles.count(); i++ ) {
 
-        img.load(imageFiles[i]);
+        ui->textBrowser_report->insertHtml(
+                    QString::number(filenum) +
+                    ". " +
+                    imageFiles[i] +
+                    "<br>"
+                    );
 
-        if ( img.isNull() ) {
+        probes.push_back(new Probe(imageFiles[i]));
 
-            QMessageBox::critical(this, "mixan", "Image is empty or this is not image!");
-            continue;
-        }
-
-        width = img.width();
-        if ( width > imgWidth ) { width = imgWidth; }
-
-//        ui->textBrowser_report->insertHtml(
-//                    "<br>Original image: " +
-//                    imageFiles[i] +
-//                    "<br><img src=\"" +
-//                    imageFiles[i] +
-//                    "\" width=\"" +
-//                    QString::number(width) +
-//                    "\" /><br>"
-//                    );
-
-//        colorToGrey(&img);    img.save("temp/"+QDateTime::currentDateTime().toString("dd-MM-yyyy_hh-mm-ss")+"__"+QString::number(i)+".jpg");
-//        setMaxContrast(&img); img.save("temp/"+QDateTime::currentDateTime().toString("dd-MM-yyyy_hh-mm-ss")+"__"+QString::number(i)+"_.jpg");
-
-        images.push_back(img);
-
-        ui->textBrowser_report->insertHtml( "<br>Image for analysis:<br>" );
-        ui->textBrowser_report->textCursor().insertImage(img.scaledToWidth(width));
-        ui->textBrowser_report->insertHtml( "<br>" );
+        filenum++;
     }
+
+    //
 
     ui->textBrowser_report->moveCursor(QTextCursor::End);
 }
@@ -174,7 +128,7 @@ void MainWindow::on_action_createReport_activated() {
 
 void MainWindow::on_action_cleanReportWindow_activated() {
 
-    ui->textBrowser_report->setHtml("<br><b>mixan " + version + "</b><br>Analyze of granular material mix.<br>");
+    ui->textBrowser_report->setHtml("<br><b>mixan " + VERSION + "</b><br>Analyze of granular material mix.<br>");
 }
 
 void MainWindow::on_action_quit_activated() {
@@ -184,78 +138,42 @@ void MainWindow::on_action_quit_activated() {
 
 void MainWindow::on_action_analyze_activated() {
 
-    if ( images.isEmpty() ) {
+    if ( probes.isEmpty() ) {
 
         QMessageBox::critical(this, "mixan", "No images for analysis!");
         return;
     }
 
-    size_t curColor = 0;
-    size_t part1 = 0; // light
-    size_t part2 = 0; // dark
+    ui->textBrowser_report->moveCursor(QTextCursor::End);
 
-    QVector<double> concentrations;
+    //
 
-    double conc = 0;
-    double summ_concdiff = 0;
+    ui->textBrowser_report->insertHtml(
+                "<br><u>Analysis results:</u><br>"
+                );
 
-    for ( ptrdiff_t i=0; i<images.count(); i++ ) {
+    for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
 
-        for (ptrdiff_t j=0; j<images[i].width(); j++) {
+        if ( !probes[i]->analyze() ) {
 
-            for (ptrdiff_t k=0; k<images[i].height(); k++) {
-
-                curColor = (size_t)images[i].pixel(j, k);
-
-                if ( curColor < baseColor ) { part2++; }
-                else                        { part1++; }
-            }
+            QMessageBox::warning(this, "mixan", "Analysis of image " + QString::number(i) + " fails!");
+            continue;
         }
 
-        conc = (double)part1 / ( (double)part1 + (double)part2 );
-        summ_concdiff += pow( (conc - idealConc), 2 );
-
-        concentrations.push_back(conc);
-
-        part1 = 0;
-        part2 = 0;
+        ui->textBrowser_report->insertHtml(
+                    "Image <b>" +
+                    QString::number(i+1) +
+                    "</b><br>Threshold color = 0x" +
+                    QString::number(probes[i]->thresholdColor(), 16).toUpper() +
+                    "<br>Light component concentration = <b>" +
+                    QString::number(probes[i]->concentration()) +
+                    "</b><br>"
+                    );
     }
 
     //
 
     ui->textBrowser_report->moveCursor(QTextCursor::End);
-
-    ui->textBrowser_report->insertHtml(
-                "<br>Analysis results: \"Light in dark\" concentrations: "
-                );
-
-    for ( ptrdiff_t i=0; i<concentrations.count(); i++ ) {
-
-        ui->textBrowser_report->insertHtml(
-                    "<b>" + QString::number(concentrations[i]) + "; </b>"
-                    );
-    }
-
-    ui->textBrowser_report->insertHtml(
-                "<br>"
-                );
-
-    if ( images.count() > 1 ) {
-
-        double Vc = 100.0 / idealConc * pow( 1.0 / ( concentrations.count() - 1.0 ) * summ_concdiff, 0.5 );
-
-        ui->textBrowser_report->insertHtml(
-                    "Analysis results: Vc = <b>" +
-                    QString::number(Vc) + "</b><br>"
-                    );
-    }
-
-    ui->textBrowser_report->moveCursor(QTextCursor::End);
-
-    //
-
-    concentrations.clear();
-    images.clear();
 
     //
 
@@ -264,7 +182,7 @@ void MainWindow::on_action_analyze_activated() {
 
 void MainWindow::on_action_about_mixan_activated() {
 
-    QString str = "<b>mixan " + version + "</b>\n"
+    QString str = "<b>mixan " + VERSION + "</b>\n"
             "<br><br>Analyze of granular material mix."
             "<br><br>Copyright (C) 2011 Artem Petrov <a href= \"mailto:pa2311@gmail.com\" >pa2311@gmail.com</a>"
             "<br><br>Web site: <a href= \"https://github.com/pa23/mixan\">https://github.com/pa23/mixan</a>"

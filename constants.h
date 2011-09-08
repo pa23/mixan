@@ -23,10 +23,9 @@
 
 #include <QString>
 
-const QString version = "v1.0 DEV";
-const size_t baseColor = 0xFFFFFFFF;
-const size_t thresholdColor = 0xFF888888;
-const size_t imgWidth = 600; // px
-const double idealConc = 0.5;
+const QString VERSION = "v1.0 DEV";
+const ptrdiff_t POLYPOWER = 6;
+const size_t IMGWIDTH = 600; // px
+const double IDEALCONC = 0.5;
 
 #endif // CONSTANTS_H

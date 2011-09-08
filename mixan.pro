@@ -1,10 +1,14 @@
 QT += core gui
 TARGET = mixan
 TEMPLATE = app
-SOURCES += main.cpp\
-    mainwindow.cpp
+SOURCES += main.cpp \
+    mainwindow.cpp \
+    numcompfuns.cpp \
+    probe.cpp
 HEADERS += mainwindow.h \
-    constants.h
+    constants.h \
+    numcompfuns.h \
+    probe.h
 FORMS += mainwindow.ui
 unix: {
     DESTDIR = build/unix/bin
@@ -28,4 +32,6 @@ win32: {
         OBJECTS_DIR = build\\win\\release
     }
 }
+
+
 
