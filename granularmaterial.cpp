@@ -2,7 +2,7 @@
     mixan
     Analyze of granular material mix.
 
-    File: probe.cpp
+    File: granularmaterial.cpp
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
@@ -18,7 +18,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "probe.h"
+#include "granularmaterial.h"
 #include "numcompfuns.h"
 #include "constants.h"
 
@@ -28,58 +28,63 @@
 #include <QVector>
 #include <QImage>
 
-#include <QDebug>
-
 using std::vector;
 
-Probe::Probe(QString imgFileName) :
-    threshColor(0),
-    conc(0) {
+GranularMaterial::GranularMaterial() {
 
-    origImage.load(imgFileName);
-    bwImage = origImage;
+    threshColor = 0;
 
     histogram = new size_t[256];
     for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
 }
 
-Probe::~Probe() {
+GranularMaterial::~GranularMaterial() {
 
     delete histogram;
 }
 
-bool Probe::analyze() {
+bool GranularMaterial::isEmpty() const {
+
+    if ( origImage.isNull() ) { return true;  }
+    else                      { return false; }
+}
+
+bool GranularMaterial::analyze(QString imgFileName) {
+
+    if ( !origImage.load(imgFileName) ) { return false; }
+    bwImage = origImage;
+
+    //
 
     if ( !colorToBW()      ) { return false; }
     if ( !defThreshColor() ) { return false; }
-    if ( !defConc()        ) { return false; }
 
     for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
 
     return true;
 }
 
-QImage *Probe::originalImage() {
+QImage GranularMaterial::originalImage() {
 
-    return &origImage;
+    return origImage;
 }
 
-QImage *Probe::blackwhiteImage() {
+QImage GranularMaterial::blackwhiteImage() {
 
-    return &bwImage;
+    return bwImage;
 }
 
-size_t Probe::thresholdColor() const {
+size_t GranularMaterial::thresholdColor() const {
 
     return threshColor;
 }
 
-double Probe::concentration() const {
+vector<double> GranularMaterial::polynomCoefficients() const {
 
-    return conc;
+    return polyCoeff;
 }
 
-bool Probe::colorToBW() {
+bool GranularMaterial::colorToBW() {
 
     if ( origImage.isNull() ) { return false; }
 
@@ -99,11 +104,12 @@ bool Probe::colorToBW() {
     return true;
 }
 
-bool Probe::defThreshColor() {
+bool GranularMaterial::defThreshColor() {
 
     vector<double> x(256, 0);
     vector<double> y(256, 0);
-    vector<double> coeff(POLYPOWER+1, 0);
+
+    polyCoeff.resize(POLYPOWER+1, 0);
 
     for ( ptrdiff_t i=0; i<256; i++ ) {
 
@@ -113,7 +119,7 @@ bool Probe::defThreshColor() {
 
     //
 
-    if ( !polyapprox(&x, &y, &coeff) ) { return false; }
+    if ( !polyapprox(&x, &y, &polyCoeff) ) { return false; }
 
     //
 
@@ -124,7 +130,7 @@ bool Probe::defThreshColor() {
 
         for ( ptrdiff_t n=0; n<(POLYPOWER+1); n++ ) {
 
-            p += coeff[n] * pow( x[i], n );
+            p += polyCoeff[n] * pow( x[i], n );
         }
 
         poly[i] = p;
@@ -133,38 +139,19 @@ bool Probe::defThreshColor() {
 
     //
 
-    ptrdiff_t iextr = 0;
+    ptrdiff_t maxpoly = 0;
+    size_t iextr = 0;
 
-    for ( ptrdiff_t i=1; i<256; i++ ) {
+    for ( ptrdiff_t i=0; i<256; i++ ) {
 
-        if ( poly[i] > poly[i-1] ) { iextr = i; }
-    }
+        if ( poly[i] > maxpoly ) {
 
-    threshColor = (size_t)qRgb(iextr, iextr, iextr);
-
-    return true;
-}
-
-bool Probe::defConc() {
-
-    if ( bwImage.isNull() ) { return false; }
-
-    size_t curColor = 0;
-    size_t part1 = 0; // light
-    size_t part2 = 0; // dark
-
-    for (ptrdiff_t i=0; i<bwImage.width(); i++) {
-
-        for (ptrdiff_t j=0; j<bwImage.height(); j++) {
-
-            curColor = (size_t)bwImage.pixel(i, j);
-
-            if ( curColor < threshColor ) { part2++; }
-            else                          { part1++; }
+            maxpoly = poly[i];
+            iextr = i;
         }
     }
 
-    conc = (double)part1 / ( (double)part1 + (double)part2 );
+    threshColor = (size_t)qRgb(iextr, iextr, iextr);
 
     return true;
 }

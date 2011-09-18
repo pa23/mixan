@@ -26,14 +26,14 @@
      <x>0</x>
      <y>0</y>
      <width>850</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="action_loadImages"/>
+    <addaction name="action_selectImages"/>
     <addaction name="separator"/>
     <addaction name="action_createReport"/>
     <addaction name="action_cleanReportWindow"/>
@@ -56,9 +56,9 @@
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
-  <action name="action_loadImages">
+  <action name="action_selectImages">
    <property name="text">
-    <string>Load Images...</string>
+    <string>Select Images...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>

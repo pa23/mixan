@@ -18,14 +18,15 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-// rewritten realization from http://alexeypetrov.narod.ru/C/sqr_less_about.html
-
 #include <vector>
 #include <cmath>
 
 using std::vector;
 
 bool polyapprox(vector<double> *x, vector<double> *y, vector<double> *coeff) {
+
+    // it was rewritten. original algorithm realization:
+    // http://alexeypetrov.narod.ru/C/sqr_less_about.html
 
     ptrdiff_t N = x->size();
     ptrdiff_t K = coeff->size() - 1;

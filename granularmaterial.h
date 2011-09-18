@@ -2,7 +2,7 @@
     mixan
     Analyze of granular material mix.
 
-    File: probe.h
+    File: granularmaterial.h
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
@@ -18,37 +18,39 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PROBE_H
-#define PROBE_H
+#ifndef GRANULARMATERIAL_H
+#define GRANULARMATERIAL_H
 
 #include <QString>
 #include <QImage>
 
-class Probe {
+#include <vector>
+
+class GranularMaterial {
 
 public:
 
-    explicit Probe(QString);
-    virtual ~Probe();
+    explicit GranularMaterial();
+    virtual ~GranularMaterial();
 
-    bool analyze();
-    QImage *originalImage();
-    QImage *blackwhiteImage();
+    bool isEmpty() const;
+    bool analyze(QString);
+    QImage originalImage();
+    QImage blackwhiteImage();
     size_t thresholdColor() const;
-    double concentration() const;
+    std::vector<double> polynomCoefficients() const;
 
-private:
+protected:
 
     QImage origImage;
     QImage bwImage;
     size_t *histogram;
     size_t threshColor;
-    double conc;
+    std::vector<double> polyCoeff;
 
     bool colorToBW();
     bool defThreshColor();
-    bool defConc();
 
 };
 
-#endif // PROBE_H
+#endif // GRANULARMATERIAL_H

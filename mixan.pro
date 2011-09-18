@@ -4,11 +4,13 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     numcompfuns.cpp \
-    probe.cpp
+    granularmaterial.cpp \
+    granularmix.cpp
 HEADERS += mainwindow.h \
     constants.h \
     numcompfuns.h \
-    probe.h
+    granularmaterial.h \
+    granularmix.h
 FORMS += mainwindow.ui
 unix: {
     DESTDIR = build/unix/bin
@@ -32,6 +34,3 @@ win32: {
         OBJECTS_DIR = build\\win\\release
     }
 }
-
-
-

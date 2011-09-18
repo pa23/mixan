@@ -21,7 +21,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "constants.h"
-#include "probe.h"
+#include "granularmaterial.h"
+#include "granularmix.h"
 
 #include <QString>
 #include <QStringList>
@@ -40,25 +41,68 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     setWindowTitle("mixan " + VERSION);
-    ui->textBrowser_report->setHtml("<br><b>mixan " + VERSION + "</b><br>Analyze of granular material mix.<br>");
+
+    ui->textBrowser_report->setHtml(
+                "<br><b>mixan " +
+                VERSION +
+                "</b><br>Analyze of granular material mix.<br>"
+                );
+
+    //
+
+    lightMaterial = new GranularMaterial();
+    darkMaterial = new GranularMaterial();
 }
 
 MainWindow::~MainWindow() {
 
     delete ui;
+
+    delete lightMaterial;
+    delete darkMaterial;
+
+    probes.clear();
+
+//    for (ptrdiff_t i=0; i<probes.count(); i++) {
+
+//        delete probes[i];
+//    }
 }
 
-void MainWindow::on_action_loadImages_activated() {
+void MainWindow::on_action_selectImages_activated() {
 
-    QStringList imageFiles(QFileDialog::getOpenFileNames(
-                               this,
-                               tr("Open Image File..."),
-                               QDir::currentPath(),
-                               QString::fromAscii("JPEG files (*.jpg);;JPEG files (*.jpeg);;PNG files (*.png);;Bitmap files (*.bmp);;All files (*.*)"),
-                               0,
-                               0));
+    QString filters = "Images (*.jpg *.png *.bmp);;All files (*.*)";
 
-    if ( imageFiles.count() == 0 ) {
+    lightMaterialImageFileName =
+            QFileDialog::getOpenFileName(
+                this,
+                tr("Select light component image file..."),
+                QDir::currentPath(),
+                filters,
+                0,
+                0);
+
+    darkMaterialImageFileName =
+            QFileDialog::getOpenFileName(
+                this,
+                tr("Select dark component image file..."),
+                QDir::currentPath(),
+                filters,
+                0,
+                0);
+
+    mixImageFileNames =
+            QFileDialog::getOpenFileNames(
+                this,
+                tr("Select image files of mix..."),
+                QDir::currentPath(),
+                filters,
+                0,
+                0);
+
+    if ( lightMaterialImageFileName.isEmpty() ||
+         darkMaterialImageFileName.isEmpty()  ||
+         (mixImageFileNames.count() == 0) ) {
 
         QMessageBox::information(this, "mixan", "You do not select any file (");
         return;
@@ -71,31 +115,43 @@ void MainWindow::on_action_loadImages_activated() {
     ui->textBrowser_report->insertHtml(
                 "<hr><br><b>" +
                 QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
-                "</b><br>"
+                "</b><br><br><u>Selected files:</u><br>"
                 );
 
     //
-
-    probes.clear();
 
     ptrdiff_t filenum = 1;
 
     ui->textBrowser_report->insertHtml(
-                "<br><u>Selected files:</u><br>"
+                QString::number(filenum) +
+                ". " +
+                lightMaterialImageFileName +
+                "<br>"
                 );
 
-    //
+    filenum++;
 
-    for ( ptrdiff_t i=0; i<imageFiles.count(); i++ ) {
+    ui->textBrowser_report->insertHtml(
+                QString::number(filenum) +
+                ". " +
+                darkMaterialImageFileName +
+                "<br>"
+                );
+
+    filenum++;
+
+    probes.clear();
+
+    for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
 
         ui->textBrowser_report->insertHtml(
                     QString::number(filenum) +
                     ". " +
-                    imageFiles[i] +
+                    mixImageFileNames[i] +
                     "<br>"
                     );
 
-        probes.push_back(new Probe(imageFiles[i]));
+        probes.push_back(new GranularMix());
 
         filenum++;
     }
@@ -107,11 +163,13 @@ void MainWindow::on_action_loadImages_activated() {
 
 void MainWindow::on_action_createReport_activated() {
 
+    QString filters = "PDF files (*.pdf);;All files (*.*)";
+
     QString reportFileName(QFileDialog::getSaveFileName(
                                this,
-                               tr("Save report to PDF..."),
+                               "Save report to PDF...",
                                "noname.pdf",
-                               QString::fromAscii("PDF files (*.pdf);;All files (*.*)"),
+                               filters,
                                0,
                                0));
 
@@ -128,7 +186,11 @@ void MainWindow::on_action_createReport_activated() {
 
 void MainWindow::on_action_cleanReportWindow_activated() {
 
-    ui->textBrowser_report->setHtml("<br><b>mixan " + VERSION + "</b><br>Analyze of granular material mix.<br>");
+    ui->textBrowser_report->setHtml(
+                "<br><b>mixan " +
+                VERSION +
+                "</b><br>Analyze of granular material mix.<br>"
+                );
 }
 
 void MainWindow::on_action_quit_activated() {
@@ -138,33 +200,47 @@ void MainWindow::on_action_quit_activated() {
 
 void MainWindow::on_action_analyze_activated() {
 
-    if ( probes.isEmpty() ) {
-
-        QMessageBox::critical(this, "mixan", "No images for analysis!");
-        return;
-    }
-
     ui->textBrowser_report->moveCursor(QTextCursor::End);
-
-    //
 
     ui->textBrowser_report->insertHtml(
                 "<br><u>Analysis results:</u><br>"
                 );
 
+    //
+
+    if ( !lightMaterial->analyze(lightMaterialImageFileName) ) {
+
+        QMessageBox::critical(this, "mixan", "Analysis of image \"" +
+                              lightMaterialImageFileName + "\" fails!");
+        return;
+    }
+
+    if ( !darkMaterial->analyze(darkMaterialImageFileName) ) {
+
+        QMessageBox::critical(this, "mixan", "Analysis of image \"" +
+                              darkMaterialImageFileName + "\" fails!");
+        return;
+    }
+
+    QString imgname;
+
+    size_t lcol = lightMaterial->thresholdColor();
+    size_t dcol = darkMaterial->thresholdColor();
+
     for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
 
-        if ( !probes[i]->analyze() ) {
+        imgname = mixImageFileNames[i];
 
-            QMessageBox::warning(this, "mixan", "Analysis of image " + QString::number(i) + " fails!");
+        if ( !probes[i]->analyze(imgname, lcol, dcol) ) {
+
+            QMessageBox::critical(this, "mixan", "Analysis of image \"" +
+                                  imgname + "\" fails!");
             continue;
         }
 
         ui->textBrowser_report->insertHtml(
-                    "Image <b>" +
-                    QString::number(i+1) +
-                    "</b><br>Threshold color = 0x" +
-                    QString::number(probes[i]->thresholdColor(), 16).toUpper() +
+                    "Image: " +
+                    imgname +
                     "<br>Light component concentration = <b>" +
                     QString::number(probes[i]->concentration()) +
                     "</b><br>"
@@ -184,18 +260,26 @@ void MainWindow::on_action_about_mixan_activated() {
 
     QString str = "<b>mixan " + VERSION + "</b>\n"
             "<br><br>Analyze of granular material mix."
-            "<br><br>Copyright (C) 2011 Artem Petrov <a href= \"mailto:pa2311@gmail.com\" >pa2311@gmail.com</a>"
-            "<br><br>Web site: <a href= \"https://github.com/pa23/mixan\">https://github.com/pa23/mixan</a>"
-            "<br><br>This program is free software: you can redistribute it and/or modify "
-            "it under the terms of the GNU General Public License as published by "
+            "<br><br>Copyright (C) 2011 Artem Petrov "
+            "<a href= \"mailto:pa2311@gmail.com\" >pa2311@gmail.com</a>"
+            "<br><br>Web site: <a href= \"https://github.com/pa23/mixan\">"
+            "https://github.com/pa23/mixan</a>"
+            "<br><br>This program is free software: you can redistribute it "
+            "and/or modify "
+            "it under the terms of the GNU General Public License as published "
+            "by "
             "the Free Software Foundation, either version 3 of the License, or "
             "(at your option) any later version. "
-            "<br>This program is distributed in the hope that it will be useful, "
+            "<br>This program is distributed in the hope that it will be "
+            "useful, "
             "but WITHOUT ANY WARRANTY; without even the implied warranty of "
             "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the "
             "GNU General Public License for more details. "
-            "<br>You should have received a copy of the GNU General Public License "
-            "along with this program. If not, see <a href= \"http://www.gnu.org/licenses/\" >http://www.gnu.org/licenses/</a>.<br>";
+            "<br>You should have received a copy of the GNU General Public "
+            "License "
+            "along with this program. If not, see <a href= "
+            "\"http://www.gnu.org/licenses/\" >"
+            "http://www.gnu.org/licenses/</a>.<br>";
 
     QMessageBox::about(this, "About mixan", str);
 }

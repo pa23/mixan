@@ -2,7 +2,7 @@
     mixan
     Analyze of granular material mix.
 
-    File: numcompfuns.h
+    File: granularmix.h
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
@@ -18,14 +18,34 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef NUMCOMPFUNS_H
-#define NUMCOMPFUNS_H
+#ifndef GRANULARMIX_H
+#define GRANULARMIX_H
 
-#include <vector>
+#include "granularmaterial.h"
 
-bool polyapprox(std::vector<double> *,  // x
-                std::vector<double> *,  // y
-                std::vector<double> *); // coeff ( numCoeff = polyPower + 1 )
-                                        // size of x must be equal of size y
+#include <QString>
+#include <QImage>
 
-#endif // NUMCOMPFUNS_H
+class GranularMix : GranularMaterial {
+
+public:
+
+    explicit GranularMix();
+    virtual ~GranularMix();
+
+    bool analyze(QString, size_t, size_t);
+    double concentration() const;
+
+protected:
+
+    size_t lightThreshColor;
+    size_t darkThreshColor;
+
+    double conc;
+
+    bool defThreshColor();
+    bool defConc();
+
+};
+
+#endif // GRANULARMIX_H

@@ -23,8 +23,11 @@
 
 #include <QMainWindow>
 #include <QVector>
+#include <QString>
+#include <QStringList>
 
-#include "probe.h"
+#include "granularmaterial.h"
+#include "granularmix.h"
 
 namespace Ui {
 
@@ -44,11 +47,17 @@ private:
 
     Ui::MainWindow *ui;
 
-    QVector<Probe *> probes;
+    QString lightMaterialImageFileName;
+    QString darkMaterialImageFileName;
+    QStringList mixImageFileNames;
+
+    GranularMaterial *lightMaterial;
+    GranularMaterial *darkMaterial;
+    QVector<GranularMix *> probes;
 
 private slots:
 
-    void on_action_loadImages_activated();
+    void on_action_selectImages_activated();
     void on_action_createReport_activated();
     void on_action_cleanReportWindow_activated();
     void on_action_quit_activated();
