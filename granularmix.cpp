@@ -33,15 +33,14 @@ using std::vector;
 GranularMix::GranularMix() {
 
     threshColor = 0;
+    lightThreshColor = 0;
+    darkThreshColor = 0;
     conc = 0;
 
-    histogram = new size_t[256];
     for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
 }
 
 GranularMix::~GranularMix() {
-
-    delete histogram;
 }
 
 bool GranularMix::analyze(QString imgFileName,

@@ -35,8 +35,8 @@ public:
 
     bool isEmpty() const;
     bool analyze(QString);
-    QImage originalImage();
-    QImage blackwhiteImage();
+    QImage originalImage() const;
+    QImage blackwhiteImage() const;
     size_t thresholdColor() const;
     std::vector<double> polynomCoefficients() const;
 
@@ -44,7 +44,7 @@ protected:
 
     QImage origImage;
     QImage bwImage;
-    size_t *histogram;
+    size_t histogram[256];
     size_t threshColor;
     std::vector<double> polyCoeff;
 

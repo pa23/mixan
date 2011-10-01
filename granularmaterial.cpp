@@ -34,13 +34,10 @@ GranularMaterial::GranularMaterial() {
 
     threshColor = 0;
 
-    histogram = new size_t[256];
     for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
 }
 
 GranularMaterial::~GranularMaterial() {
-
-    delete histogram;
 }
 
 bool GranularMaterial::isEmpty() const {
@@ -64,12 +61,12 @@ bool GranularMaterial::analyze(QString imgFileName) {
     return true;
 }
 
-QImage GranularMaterial::originalImage() {
+QImage GranularMaterial::originalImage() const {
 
     return origImage;
 }
 
-QImage GranularMaterial::blackwhiteImage() {
+QImage GranularMaterial::blackwhiteImage() const {
 
     return bwImage;
 }

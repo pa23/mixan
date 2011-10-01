@@ -48,24 +48,23 @@ MainWindow::MainWindow(QWidget *parent) :
                 VERSION +
                 "</b><br>Analyze of granular material mix.<br>"
                 );
-
-    //
-
-    lightMaterial = new GranularMaterial();
-    darkMaterial = new GranularMaterial();
 }
 
 MainWindow::~MainWindow() {
 
     delete ui;
+}
 
-    delete lightMaterial;
-    delete darkMaterial;
+void MainWindow::forgetSelectedImages() {
 
-    probes.clear();
+    lightMaterialImageFileName = "";
+    darkMaterialImageFileName = "";
+    mixImageFileNames.clear();
 }
 
 void MainWindow::on_action_selectImages_activated() {
+
+    forgetSelectedImages();
 
     QString filters = "Images (*.jpg *.png *.bmp);;All files (*.*)";
 
@@ -136,8 +135,6 @@ void MainWindow::on_action_selectImages_activated() {
 
     filenum++;
 
-    probes.clear();
-
     for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
 
         ui->textBrowser_report->insertHtml(
@@ -146,8 +143,6 @@ void MainWindow::on_action_selectImages_activated() {
                     mixImageFileNames[i] +
                     "<br>"
                     );
-
-        probes.push_back(new GranularMix());
 
         filenum++;
     }
@@ -223,20 +218,34 @@ void MainWindow::on_action_analyze_activated() {
         return;
     }
 
+    //
+
+    GranularMaterial lightMaterial;
+    GranularMaterial darkMaterial;
+
+    QVector<GranularMix *> probes;
+
+    for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
+
+        probes.push_back( new GranularMix() );
+    }
+
+    //
+
     ui->textBrowser_report->insertHtml(
                 "<br><u>Analysis results:</u><br>"
                 );
 
     //
 
-    if ( !lightMaterial->analyze(lightMaterialImageFileName) ) {
+    if ( !lightMaterial.analyze(lightMaterialImageFileName) ) {
 
         QMessageBox::critical(this, "mixan", "Analysis of image \"" +
                               lightMaterialImageFileName + "\" fails!");
         return;
     }
 
-    if ( !darkMaterial->analyze(darkMaterialImageFileName) ) {
+    if ( !darkMaterial.analyze(darkMaterialImageFileName) ) {
 
         QMessageBox::critical(this, "mixan", "Analysis of image \"" +
                               darkMaterialImageFileName + "\" fails!");
@@ -245,8 +254,8 @@ void MainWindow::on_action_analyze_activated() {
 
     QString imgname;
 
-    size_t lcol = lightMaterial->thresholdColor();
-    size_t dcol = darkMaterial->thresholdColor();
+    size_t lcol = lightMaterial.thresholdColor();
+    size_t dcol = darkMaterial.thresholdColor();
 
     for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
 
@@ -271,6 +280,10 @@ void MainWindow::on_action_analyze_activated() {
     //
 
     ui->textBrowser_report->moveCursor(QTextCursor::End);
+
+    //
+
+    forgetSelectedImages();
 
     //
 

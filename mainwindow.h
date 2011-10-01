@@ -51,9 +51,7 @@ private:
     QString darkMaterialImageFileName;
     QStringList mixImageFileNames;
 
-    GranularMaterial *lightMaterial;
-    GranularMaterial *darkMaterial;
-    QVector<GranularMix *> probes;
+    void forgetSelectedImages();
 
 private slots:
 
