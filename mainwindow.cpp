@@ -62,11 +62,6 @@ MainWindow::~MainWindow() {
     delete darkMaterial;
 
     probes.clear();
-
-//    for (ptrdiff_t i=0; i<probes.count(); i++) {
-
-//        delete probes[i];
-//    }
 }
 
 void MainWindow::on_action_selectImages_activated() {
@@ -161,7 +156,7 @@ void MainWindow::on_action_selectImages_activated() {
     ui->textBrowser_report->moveCursor(QTextCursor::End);
 }
 
-void MainWindow::on_action_createReport_activated() {
+void MainWindow::on_action_saveReport_activated() {
 
     QString filters = "PDF files (*.pdf);;All files (*.*)";
 
@@ -173,6 +168,8 @@ void MainWindow::on_action_createReport_activated() {
                                0,
                                0));
 
+    if ( reportFileName.isEmpty() ) { return; }
+
     QPrinter printer;
 
     printer.setOrientation(QPrinter::Portrait);
@@ -182,6 +179,11 @@ void MainWindow::on_action_createReport_activated() {
     printer.setFontEmbeddingEnabled(true);
 
     ui->textBrowser_report->print(&printer);
+}
+
+void MainWindow::on_action_printReport_activated() {
+
+    //
 }
 
 void MainWindow::on_action_cleanReportWindow_activated() {

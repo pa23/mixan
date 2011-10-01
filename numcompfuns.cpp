@@ -18,10 +18,14 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "numcompfuns.h"
+
 #include <vector>
 #include <cmath>
 
 using std::vector;
+using std::ptrdiff_t;
+using std::size_t;
 
 bool polyapprox(vector<double> *x, vector<double> *y, vector<double> *coeff) {
 

@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/edit-clear.svg</file>
+        <file>icons/file-open.svg</file>
+        <file>icons/file-print.svg</file>
+        <file>icons/file-quit.svg</file>
+        <file>icons/file-save.svg</file>
+        <file>icons/mixan.png</file>
+        <file>icons/tools-analyze.svg</file>
+    </qresource>
+</RCC>

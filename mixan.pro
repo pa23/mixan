@@ -34,3 +34,7 @@ win32: {
         OBJECTS_DIR = build\\win\\release
     }
 }
+
+RESOURCES += \
+    mixan_icons.qrc
+
