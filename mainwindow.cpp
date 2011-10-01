@@ -31,6 +31,7 @@
 #include <QPixmap>
 #include <QMessageBox>
 #include <QPrinter>
+#include <QPrintDialog>
 #include <QTextCursor>
 #include <QDateTime>
 
@@ -183,7 +184,17 @@ void MainWindow::on_action_saveReport_activated() {
 
 void MainWindow::on_action_printReport_activated() {
 
-    //
+    QPrinter printer;
+
+    printer.setOrientation(QPrinter::Portrait);
+    printer.setPageMargins(20, 15, 15, 15, QPrinter::Millimeter);
+
+    QPrintDialog printDialog(&printer, this);
+
+    if (printDialog.exec() == QDialog::Accepted) {
+
+        ui->textBrowser_report->print(&printer);
+    }
 }
 
 void MainWindow::on_action_cleanReportWindow_activated() {
@@ -203,6 +214,14 @@ void MainWindow::on_action_quit_activated() {
 void MainWindow::on_action_analyze_activated() {
 
     ui->textBrowser_report->moveCursor(QTextCursor::End);
+
+    if ( lightMaterialImageFileName.isEmpty() ||
+         darkMaterialImageFileName.isEmpty()  ||
+         (mixImageFileNames.count() == 0) ) {
+
+        QMessageBox::information(this, "mixan", "You do not select any file (");
+        return;
+    }
 
     ui->textBrowser_report->insertHtml(
                 "<br><u>Analysis results:</u><br>"
