@@ -5,12 +5,14 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     numcompfuns.cpp \
     granularmaterial.cpp \
-    granularmix.cpp
+    granularmix.cpp \
+    mixfuns.cpp
 HEADERS += mainwindow.h \
     constants.h \
     numcompfuns.h \
     granularmaterial.h \
-    granularmix.h
+    granularmix.h \
+    mixfuns.h
 FORMS += mainwindow.ui
 unix: {
     DESTDIR = build/unix/bin
@@ -35,6 +37,6 @@ win32: {
     }
 }
 
-RESOURCES += \
-    mixan_icons.qrc
+RESOURCES += mixan_icons.qrc
+
 

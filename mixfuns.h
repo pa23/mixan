@@ -2,7 +2,7 @@
     mixan
     Analyze of granular material mix.
 
-    File: constants.h
+    File: mixfuns.h
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
@@ -18,15 +18,11 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef MIXFUNS_H
+#define MIXFUNS_H
 
-#include <QString>
+#include <vector>
 
-const QString VERSION = "v1.0";
-const ptrdiff_t POLYPOWER = 6;
-const size_t IMGWIDTH = 300; // px
-const double IDEALCONC = 0.5;
-const double INTERSECTACCUR = 0.5;
+double Vc(std::vector<double> *);
 
-#endif // CONSTANTS_H
+#endif // MIXFUNS_H

@@ -23,6 +23,7 @@
 #include "constants.h"
 #include "granularmaterial.h"
 #include "granularmix.h"
+#include "mixfuns.h"
 
 #include <QString>
 #include <QStringList>
@@ -34,6 +35,10 @@
 #include <QPrintDialog>
 #include <QTextCursor>
 #include <QDateTime>
+
+#include <vector>
+
+using std::vector;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -100,7 +105,7 @@ void MainWindow::on_action_selectImages_activated() {
          (mixImageFileNames.count() == 0) ) {
 
         QMessageBox::information(this, "mixan",
-                                 "You do not select any file :(");
+                                 "Not enough images for analysis :(");
         return;
     }
 
@@ -216,7 +221,7 @@ void MainWindow::on_action_analyze_activated() {
          (mixImageFileNames.count() == 0) ) {
 
         QMessageBox::information(this, "mixan",
-                                 "You do not select any file :(");
+                                 "Not enough images for analysis :(");
         return;
     }
 
@@ -259,6 +264,9 @@ void MainWindow::on_action_analyze_activated() {
     size_t lcol = lightMaterial.thresholdColor();
     size_t dcol = darkMaterial.thresholdColor();
 
+    double conc = 0;
+    vector<double> concs;
+
     for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
 
         imgname = mixImageFileNames[i];
@@ -283,12 +291,21 @@ void MainWindow::on_action_analyze_activated() {
                     probes[i]->blackwhiteImage().scaledToWidth(IMGWIDTH)
                     );
 
+        conc = probes[i]->concentration();
+        concs.push_back(conc);
+
         ui->textBrowser_report->insertHtml(
                     "<br>Light component concentration = <b>" +
-                    QString::number(probes[i]->concentration()) +
+                    QString::number(conc) +
                     "</b><br><br>"
                     );
     }
+
+    ui->textBrowser_report->insertHtml(
+                "<b>Vc = " +
+                QString::number(Vc(&concs)) +
+                "</b><br>"
+                );
 
     //
 
@@ -311,6 +328,9 @@ void MainWindow::on_action_about_mixan_activated() {
             "<a href= \"mailto:pa2311@gmail.com\" >pa2311@gmail.com</a>"
             "<br><br>Web site: <a href= \"https://github.com/pa23/mixan\">"
             "https://github.com/pa23/mixan</a>"
+            "<br>Author's blog (RU): "
+            "<a href= \"http://pa2311.blogspot.com\">"
+            "http://pa2311.blogspot.com</a>"
             "<br><br>This program is free software: you can redistribute it "
             "and/or modify "
             "it under the terms of the GNU General Public License as published "

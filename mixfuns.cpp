@@ -2,7 +2,7 @@
     mixan
     Analyze of granular material mix.
 
-    File: constants.h
+    File: mixfuns.cpp
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
@@ -18,15 +18,25 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#include "mixfuns.h"
+#include "constants.h"
 
-#include <QString>
+#include <vector>
+#include <cmath>
 
-const QString VERSION = "v1.0";
-const ptrdiff_t POLYPOWER = 6;
-const size_t IMGWIDTH = 300; // px
-const double IDEALCONC = 0.5;
-const double INTERSECTACCUR = 0.5;
+using std::size_t;
+using std::vector;
 
-#endif // CONSTANTS_H
+double Vc(vector<double> *concentrations) {
+
+    double summ_concdiff = 0;
+    size_t probesnum = concentrations->size();
+
+    for ( size_t i=0; i<probesnum; i++ ) {
+
+        summ_concdiff += pow( (concentrations->at(i) - IDEALCONC), 2 );
+    }
+
+    return 100.0 / IDEALCONC *
+            pow( 1.0 / ( probesnum - 1.0 ) * summ_concdiff, 0.5 );
+}
