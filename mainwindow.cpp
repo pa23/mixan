@@ -71,25 +71,29 @@ void MainWindow::on_action_selectImages_activated() {
 
     forgetSelectedImages();
 
-    QString filters = "Images (*.jpg *.png *.bmp);;All files (*.*)";
+    QString filters = "Images (*.png *.bmp);;All files (*.*)";
 
-    lightMaterialImageFileName =
-            QFileDialog::getOpenFileName(
-                this,
-                tr("Select light component image file..."),
-                QDir::currentPath(),
-                filters,
-                0,
-                0);
+    lightMaterialImageFileName = QDir::toNativeSeparators(
+                QFileDialog::getOpenFileName(
+                    this,
+                    tr("Select light component image file..."),
+                    QDir::currentPath(),
+                    filters,
+                    0,
+                    0
+                    )
+                );
 
-    darkMaterialImageFileName =
-            QFileDialog::getOpenFileName(
-                this,
-                tr("Select dark component image file..."),
-                QDir::currentPath(),
-                filters,
-                0,
-                0);
+    darkMaterialImageFileName = QDir::toNativeSeparators(
+                QFileDialog::getOpenFileName(
+                    this,
+                    tr("Select dark component image file..."),
+                    QDir::currentPath(),
+                    filters,
+                    0,
+                    0
+                    )
+                );
 
     mixImageFileNames =
             QFileDialog::getOpenFileNames(
@@ -99,6 +103,11 @@ void MainWindow::on_action_selectImages_activated() {
                 filters,
                 0,
                 0);
+
+    for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
+
+        mixImageFileNames[i] = QDir::toNativeSeparators(mixImageFileNames[i]);
+    }
 
     if ( lightMaterialImageFileName.isEmpty() ||
          darkMaterialImageFileName.isEmpty()  ||

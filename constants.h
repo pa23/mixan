@@ -23,7 +23,7 @@
 
 #include <QString>
 
-const QString VERSION = "v1.1";
+const QString VERSION = "v1.2";
 const ptrdiff_t POLYPOWER = 6;
 const size_t IMGWIDTH = 300; // px
 const double IDEALCONC = 0.5;
