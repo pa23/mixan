@@ -25,7 +25,8 @@
 
 const QString VERSION = "v1.0 DEV";
 const ptrdiff_t POLYPOWER = 6;
-const size_t IMGWIDTH = 600; // px
+const size_t IMGWIDTH = 300; // px
 const double IDEALCONC = 0.5;
+const double INTERSECTACCUR = 0.5;
 
 #endif // CONSTANTS_H

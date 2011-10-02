@@ -99,7 +99,8 @@ void MainWindow::on_action_selectImages_activated() {
          darkMaterialImageFileName.isEmpty()  ||
          (mixImageFileNames.count() == 0) ) {
 
-        QMessageBox::information(this, "mixan", "You do not select any file (");
+        QMessageBox::information(this, "mixan",
+                                 "You do not select any file :(");
         return;
     }
 
@@ -110,7 +111,7 @@ void MainWindow::on_action_selectImages_activated() {
     ui->textBrowser_report->insertHtml(
                 "<hr><br><b>" +
                 QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
-                "</b><br><br><u>Selected files:</u><br>"
+                "</b><br><br><u>Selected files:</u><br><br>"
                 );
 
     //
@@ -182,7 +183,7 @@ void MainWindow::on_action_printReport_activated() {
     QPrinter printer;
 
     printer.setOrientation(QPrinter::Portrait);
-    printer.setPageMargins(20, 15, 15, 15, QPrinter::Millimeter);
+    printer.setPageMargins(25, 15, 15, 15, QPrinter::Millimeter);
 
     QPrintDialog printDialog(&printer, this);
 
@@ -214,7 +215,8 @@ void MainWindow::on_action_analyze_activated() {
          darkMaterialImageFileName.isEmpty()  ||
          (mixImageFileNames.count() == 0) ) {
 
-        QMessageBox::information(this, "mixan", "You do not select any file (");
+        QMessageBox::information(this, "mixan",
+                                 "You do not select any file :(");
         return;
     }
 
@@ -233,7 +235,7 @@ void MainWindow::on_action_analyze_activated() {
     //
 
     ui->textBrowser_report->insertHtml(
-                "<br><u>Analysis results:</u><br>"
+                "<br><u>Analysis results:</u><br><br>"
                 );
 
     //
@@ -271,9 +273,20 @@ void MainWindow::on_action_analyze_activated() {
         ui->textBrowser_report->insertHtml(
                     "Image: " +
                     imgname +
+                    "<br>"
+                    );
+
+        ui->textBrowser_report->textCursor().insertImage(
+                    probes[i]->originalImage().scaledToWidth(IMGWIDTH));
+
+        ui->textBrowser_report->textCursor().insertImage(
+                    probes[i]->blackwhiteImage().scaledToWidth(IMGWIDTH)
+                    );
+
+        ui->textBrowser_report->insertHtml(
                     "<br>Light component concentration = <b>" +
                     QString::number(probes[i]->concentration()) +
-                    "</b><br>"
+                    "</b><br><br>"
                     );
     }
 

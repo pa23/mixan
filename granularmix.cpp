@@ -68,6 +68,16 @@ double GranularMix::concentration() const {
     return conc;
 }
 
+QImage GranularMix::originalImage() const {
+
+    return origImage;
+}
+
+QImage GranularMix::blackwhiteImage() const {
+
+    return bwImage;
+}
+
 bool GranularMix::defThreshColor() {
 
     threshColor = (lightThreshColor + darkThreshColor) / 2;

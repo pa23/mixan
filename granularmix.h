@@ -35,6 +35,8 @@ public:
 
     bool analyze(QString, size_t, size_t);
     double concentration() const;
+    QImage originalImage() const;
+    QImage blackwhiteImage() const;
 
 protected:
 
