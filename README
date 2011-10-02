@@ -17,6 +17,5 @@ Dependences
   MS Windows x86 (all the necessary components are included in the binary
                   package)
     Qt x86 >=4.7.4 (QtCore4.dll, QtGui4.dll)
-    MinGW (libgcc_s_dw2-1.dll)
+    MinGW (libgcc_s_dw2-1.dll, mingwm10.dll)
 --------------------------------------------------------------------------------
-

@@ -7,5 +7,11 @@
         <file>icons/file-save.svg</file>
         <file>icons/mixan.png</file>
         <file>icons/tools-analyze.svg</file>
+        <file>icons/edit-clear.png</file>
+        <file>icons/file-open.png</file>
+        <file>icons/file-print.png</file>
+        <file>icons/file-quit.png</file>
+        <file>icons/file-save.png</file>
+        <file>icons/tools-analyze.png</file>
     </qresource>
 </RCC>
