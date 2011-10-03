@@ -80,7 +80,8 @@ QImage GranularMix::blackwhiteImage() const {
 
 bool GranularMix::defThreshColor() {
 
-    threshColor = (lightThreshColor + darkThreshColor) / 2;
+    threshColor = ((unsigned long long)lightThreshColor +
+                   (unsigned long long)darkThreshColor) / 2;
 
     return true;
 }
