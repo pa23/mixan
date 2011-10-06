@@ -35,6 +35,7 @@ public:
 
     bool isEmpty() const;
     bool analyze(QString);
+    QString imageFileName() const;
     QImage originalImage() const;
     QImage blackwhiteImage() const;
     size_t thresholdColor() const;
@@ -42,6 +43,7 @@ public:
 
 protected:
 
+    QString fileName;
     QImage origImage;
     QImage bwImage;
     size_t histogram[256];

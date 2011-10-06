@@ -25,6 +25,8 @@
 #include <QVector>
 #include <QString>
 #include <QStringList>
+#include <QProgressDialog>
+#include <QFutureWatcher>
 
 #include "granularmaterial.h"
 #include "granularmix.h"
@@ -51,6 +53,14 @@ private:
     QString darkMaterialImageFileName;
     QStringList mixImageFileNames;
 
+    GranularMaterial *lightMaterial;
+    GranularMaterial *darkMaterial;
+    QVector<GranularMix *> probes;
+
+    QProgressDialog *progressDialog;
+    QFutureWatcher<void> *futureWatcher;
+
+    void runAnalysis();
     void forgetSelectedImages();
 
 private slots:

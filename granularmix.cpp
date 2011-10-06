@@ -43,8 +43,12 @@ GranularMix::GranularMix() {
 GranularMix::~GranularMix() {
 }
 
-bool GranularMix::analyze(QString imgFileName,
-                          size_t lcol, size_t dcol) {
+bool GranularMix::analyze(QString imgFileName, size_t lcol, size_t dcol) {
+
+    fileName = "";
+    for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
+
+    //
 
     if ( !origImage.load(imgFileName) ) { return false; }
     bwImage = origImage;
@@ -52,15 +56,20 @@ bool GranularMix::analyze(QString imgFileName,
     lightThreshColor = lcol;
     darkThreshColor = dcol;
 
-    //
-
     if ( !colorToBW()      ) { return false; }
     if ( !defThreshColor() ) { return false; }
     if ( !defConc()        ) { return false; }
 
-    for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
+    fileName = imgFileName;
+
+    //
 
     return true;
+}
+
+QString GranularMix::imageFileName() const {
+
+    return fileName;
 }
 
 double GranularMix::concentration() const {

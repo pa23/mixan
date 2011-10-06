@@ -35,6 +35,10 @@
 #include <QPrintDialog>
 #include <QTextCursor>
 #include <QDateTime>
+#include <QThread>
+#include <QtConcurrentRun>
+#include <QFutureWatcher>
+#include <QProgressDialog>
 
 #include <vector>
 
@@ -48,6 +52,42 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setWindowTitle("mixan " + VERSION);
 
+    //
+
+    lightMaterial = new GranularMaterial;
+    darkMaterial = new GranularMaterial;
+
+    //
+
+    progressDialog = new QProgressDialog;
+    progressDialog->setWindowTitle("mixan");
+    progressDialog->setLabelText("Images analysis. Please wait...");
+
+    futureWatcher = new QFutureWatcher<void>;
+
+    connect(futureWatcher,
+            SIGNAL(finished()),
+            progressDialog,
+            SLOT(reset())
+            );
+    connect(progressDialog,
+            SIGNAL(canceled()),
+            futureWatcher,
+            SLOT(cancel())
+            );
+    connect(futureWatcher,
+            SIGNAL(progressRangeChanged(int,int)),
+            progressDialog,
+            SLOT(setRange(int,int))
+            );
+    connect(futureWatcher,
+            SIGNAL(progressValueChanged(int)),
+            progressDialog,
+            SLOT(setValue(int))
+            );
+
+    //
+
     ui->textBrowser_report->setHtml(
                 "<br><b>mixan " +
                 VERSION +
@@ -58,6 +98,36 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow() {
 
     delete ui;
+
+    delete lightMaterial;
+    delete darkMaterial;
+
+    delete progressDialog;
+    delete futureWatcher;
+}
+
+void MainWindow::runAnalysis() {
+
+    if ( !lightMaterial->analyze(lightMaterialImageFileName) ) { return; }
+    if ( !darkMaterial->analyze(darkMaterialImageFileName)   ) { return; }
+
+    //
+
+    size_t lcol = lightMaterial->thresholdColor();
+    size_t dcol = darkMaterial->thresholdColor();
+
+    GranularMix *probe;
+
+    probes.clear();
+
+    for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
+
+        probe = new GranularMix;
+
+        if ( !probe->analyze(mixImageFileNames[i], lcol, dcol) ) { continue; }
+
+        probes.push_back(probe);
+    }
 }
 
 void MainWindow::forgetSelectedImages() {
@@ -71,28 +141,26 @@ void MainWindow::on_action_selectImages_activated() {
 
     forgetSelectedImages();
 
-    QString filters = "Images (*.png *.bmp);;All files (*.*)";
+    QString filters = "Images (*.png *.jpg *.jpeg *.bmp);;All files (*.*)";
 
-    lightMaterialImageFileName = QDir::toNativeSeparators(
-                QFileDialog::getOpenFileName(
-                    this,
-                    tr("Select light component image file..."),
-                    QDir::currentPath(),
-                    filters,
-                    0,
-                    0
-                    )
+    lightMaterialImageFileName =
+            QFileDialog::getOpenFileName(
+                this,
+                tr("Select light component image file..."),
+                QDir::currentPath(),
+                filters,
+                0,
+                0
                 );
 
-    darkMaterialImageFileName = QDir::toNativeSeparators(
-                QFileDialog::getOpenFileName(
-                    this,
-                    tr("Select dark component image file..."),
-                    QDir::currentPath(),
-                    filters,
-                    0,
-                    0
-                    )
+    darkMaterialImageFileName =
+            QFileDialog::getOpenFileName(
+                this,
+                tr("Select dark component image file..."),
+                QDir::currentPath(),
+                filters,
+                0,
+                0
                 );
 
     mixImageFileNames =
@@ -103,11 +171,6 @@ void MainWindow::on_action_selectImages_activated() {
                 filters,
                 0,
                 0);
-
-    for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
-
-        mixImageFileNames[i] = QDir::toNativeSeparators(mixImageFileNames[i]);
-    }
 
     if ( lightMaterialImageFileName.isEmpty() ||
          darkMaterialImageFileName.isEmpty()  ||
@@ -122,45 +185,31 @@ void MainWindow::on_action_selectImages_activated() {
 
     ui->textBrowser_report->moveCursor(QTextCursor::End);
 
-    ui->textBrowser_report->insertHtml(
-                "<hr><br><b>" +
-                QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
-                "</b><br><br><u>Selected files:</u><br><br>"
-                );
-
-    //
+    QString message = "<hr><br><b>" +
+            QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
+            "</b><br><br><u>Selected files:</u><br><br>";
 
     ptrdiff_t filenum = 1;
 
-    ui->textBrowser_report->insertHtml(
-                QString::number(filenum) +
-                ". " +
-                lightMaterialImageFileName +
-                "<br>"
-                );
+    message += QString::number(filenum) + ". " +
+            lightMaterialImageFileName + "<br>";
 
     filenum++;
 
-    ui->textBrowser_report->insertHtml(
-                QString::number(filenum) +
-                ". " +
-                darkMaterialImageFileName +
-                "<br>"
-                );
+    message += QString::number(filenum) + ". " +
+            darkMaterialImageFileName + "<br>";
 
     filenum++;
 
     for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
 
-        ui->textBrowser_report->insertHtml(
-                    QString::number(filenum) +
-                    ". " +
-                    mixImageFileNames[i] +
-                    "<br>"
-                    );
+        message += QString::number(filenum) + ". " +
+                mixImageFileNames[i] + "<br>";
 
         filenum++;
     }
+
+    ui->textBrowser_report->insertHtml(message);
 
     //
 
@@ -236,54 +285,35 @@ void MainWindow::on_action_analyze_activated() {
 
     //
 
-    GranularMaterial lightMaterial;
-    GranularMaterial darkMaterial;
-
-    QVector<GranularMix *> probes;
-
-    for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
-
-        probes.push_back( new GranularMix() );
-    }
-
-    //
-
     ui->textBrowser_report->insertHtml(
                 "<br><u>Analysis results:</u><br><br>"
                 );
 
     //
 
-    if ( !lightMaterial.analyze(lightMaterialImageFileName) ) {
+    futureWatcher->setFuture(QtConcurrent::run(this, &MainWindow::runAnalysis));
+    progressDialog->exec();
+    futureWatcher->waitForFinished();
 
-        QMessageBox::critical(this, "mixan", "Analysis of image \"" +
-                              lightMaterialImageFileName + "\" fails!");
-        return;
-    }
-
-    if ( !darkMaterial.analyze(darkMaterialImageFileName) ) {
-
-        QMessageBox::critical(this, "mixan", "Analysis of image \"" +
-                              darkMaterialImageFileName + "\" fails!");
-        return;
-    }
+    //
 
     QString imgname;
-
-    size_t lcol = lightMaterial.thresholdColor();
-    size_t dcol = darkMaterial.thresholdColor();
 
     double conc = 0;
     vector<double> concs;
 
     for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
 
-        imgname = mixImageFileNames[i];
+        imgname = probes[i]->imageFileName();
 
-        if ( !probes[i]->analyze(imgname, lcol, dcol) ) {
+        if ( imgname.isEmpty() ) {
 
-            QMessageBox::critical(this, "mixan", "Analysis of image \"" +
-                                  imgname + "\" fails!");
+            ui->textBrowser_report->insertHtml(
+                        "<b>Analysis of image " +
+                        imgname +
+                        " failed.</b><br>"
+                        );
+
             continue;
         }
 
@@ -294,11 +324,12 @@ void MainWindow::on_action_analyze_activated() {
                     );
 
         ui->textBrowser_report->textCursor().insertImage(
-                    probes[i]->originalImage().scaledToWidth(IMGWIDTH));
-
-        ui->textBrowser_report->textCursor().insertImage(
-                    probes[i]->blackwhiteImage().scaledToWidth(IMGWIDTH)
+                    probes[i]->originalImage().scaledToWidth(IMGWIDTH)
                     );
+
+//        ui->textBrowser_report->textCursor().insertImage(
+//                    probes[i]->blackwhiteImage().scaledToWidth(IMGWIDTH)
+//                    );
 
         conc = probes[i]->concentration();
         concs.push_back(conc);
@@ -316,13 +347,12 @@ void MainWindow::on_action_analyze_activated() {
                 "</b><br>"
                 );
 
-    //
-
     ui->textBrowser_report->moveCursor(QTextCursor::End);
 
     //
 
     forgetSelectedImages();
+    probes.clear();
 
     //
 

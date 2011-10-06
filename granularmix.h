@@ -34,6 +34,7 @@ public:
     virtual ~GranularMix();
 
     bool analyze(QString, size_t, size_t);
+    QString imageFileName() const;
     double concentration() const;
     QImage originalImage() const;
     QImage blackwhiteImage() const;
