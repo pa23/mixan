@@ -187,27 +187,9 @@ void MainWindow::on_action_selectImages_activated() {
 
     QString message = "<hr><br><b>" +
             QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
-            "</b><br><br><u>Selected files:</u><br><br>";
-
-    ptrdiff_t filenum = 1;
-
-    message += QString::number(filenum) + ". " +
-            lightMaterialImageFileName + "<br>";
-
-    filenum++;
-
-    message += QString::number(filenum) + ". " +
-            darkMaterialImageFileName + "<br>";
-
-    filenum++;
-
-    for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
-
-        message += QString::number(filenum) + ". " +
-                mixImageFileNames[i] + "<br>";
-
-        filenum++;
-    }
+            "</b><br><br>Images of material and " +
+            QString::number(mixImageFileNames.count()) +
+            " probe images selected.<br><br>";
 
     ui->textBrowser_report->insertHtml(message);
 
@@ -286,7 +268,7 @@ void MainWindow::on_action_analyze_activated() {
     //
 
     ui->textBrowser_report->insertHtml(
-                "<br><u>Analysis results:</u><br><br>"
+                "<u>Analysis results:</u><br><br>"
                 );
 
     //
@@ -311,7 +293,7 @@ void MainWindow::on_action_analyze_activated() {
             ui->textBrowser_report->insertHtml(
                         "<b>Analysis of image " +
                         imgname +
-                        " failed.</b><br>"
+                        " failed or canceled.</b><br>"
                         );
 
             continue;
