@@ -65,7 +65,8 @@ private:
 
 private slots:
 
-    void on_action_selectImages_activated();
+    void on_action_selectMaterialImages_activated();
+    void on_action_selectProbeImages_activated();
     void on_action_saveReport_activated();
     void on_action_printReport_activated();
     void on_action_cleanReportWindow_activated();

@@ -2,10 +2,11 @@
     <qresource prefix="/icons">
         <file>icons/mixan.png</file>
         <file>icons/edit-clear.png</file>
-        <file>icons/file-open.png</file>
         <file>icons/file-print.png</file>
         <file>icons/file-quit.png</file>
         <file>icons/file-save.png</file>
         <file>icons/tools-analyze.png</file>
+        <file>icons/file-open-m.png</file>
+        <file>icons/file-open-p.png</file>
     </qresource>
 </RCC>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>650</height>
+    <width>900</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>850</width>
+     <width>900</width>
      <height>25</height>
     </rect>
    </property>
@@ -37,7 +37,8 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="action_selectImages"/>
+    <addaction name="action_selectMaterialImages"/>
+    <addaction name="action_selectProbeImages"/>
     <addaction name="separator"/>
     <addaction name="action_saveReport"/>
     <addaction name="action_printReport"/>
@@ -71,13 +72,21 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="iconSize">
+    <size>
+     <width>36</width>
+     <height>36</height>
+    </size>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="action_selectImages"/>
+   <addaction name="action_selectMaterialImages"/>
+   <addaction name="action_selectProbeImages"/>
+   <addaction name="separator"/>
    <addaction name="action_saveReport"/>
    <addaction name="action_printReport"/>
    <addaction name="separator"/>
@@ -87,16 +96,16 @@
    <addaction name="separator"/>
    <addaction name="action_quit"/>
   </widget>
-  <action name="action_selectImages">
+  <action name="action_selectProbeImages">
    <property name="icon">
     <iconset resource="mixan_icons.qrc">
-     <normaloff>:/icons/icons/file-open.png</normaloff>:/icons/icons/file-open.png</iconset>
+     <normaloff>:/icons/icons/file-open-p.png</normaloff>:/icons/icons/file-open-p.png</iconset>
    </property>
    <property name="text">
-    <string>Select Images...</string>
+    <string>Select Probe Images...</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+O</string>
+    <string>Ctrl+Shift+O</string>
    </property>
   </action>
   <action name="action_saveReport">
@@ -162,6 +171,18 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="action_selectMaterialImages">
+   <property name="icon">
+    <iconset resource="mixan_icons.qrc">
+     <normaloff>:/icons/icons/file-open-m.png</normaloff>:/icons/icons/file-open-m.png</iconset>
+   </property>
+   <property name="text">
+    <string>Select Material Images...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>

@@ -101,7 +101,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textBrowser_report->setHtml(
                 "<br><b>mixan " +
                 VERSION +
-                "</b><br>Analyze of granular material mix.<br>"
+                "</b><br>Analyze of granular material mix.<br><br><b>" +
+                QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
+                "</b><br><hr><br>"
                 );
 }
 
@@ -147,9 +149,10 @@ void MainWindow::runAnalysis() {
     }
 }
 
-void MainWindow::on_action_selectImages_activated() {
+void MainWindow::on_action_selectMaterialImages_activated() {
 
-    forgetSelectedImages();
+    lightMaterialImageFileName = "";
+    darkMaterialImageFileName = "";
 
     QString filters = "Images (*.png *.jpg *.jpeg *.bmp);;All files (*.*)";
 
@@ -173,18 +176,8 @@ void MainWindow::on_action_selectImages_activated() {
                 0
                 );
 
-    mixImageFileNames =
-            QFileDialog::getOpenFileNames(
-                this,
-                tr("Select image files of mix..."),
-                QDir::currentPath(),
-                filters,
-                0,
-                0);
-
     if ( lightMaterialImageFileName.isEmpty() ||
-         darkMaterialImageFileName.isEmpty()  ||
-         (mixImageFileNames.count() == 0) ) {
+         darkMaterialImageFileName.isEmpty() ) {
 
         QMessageBox::information(this, "mixan",
                                  "Not enough images for analysis :(");
@@ -195,13 +188,43 @@ void MainWindow::on_action_selectImages_activated() {
 
     ui->textBrowser_report->moveCursor(QTextCursor::End);
 
-    QString message = "<hr><br><b>" +
-            QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
-            "</b><br><br>Material images and " +
-            QString::number(mixImageFileNames.count()) +
-            " probe images selected.<br><br>";
+    ui->textBrowser_report->insertHtml(
+                "Material images selected.<br>"
+                );
 
-    ui->textBrowser_report->insertHtml(message);
+    //
+
+    ui->textBrowser_report->moveCursor(QTextCursor::End);
+}
+
+void MainWindow::on_action_selectProbeImages_activated() {
+
+    mixImageFileNames.clear();
+
+    mixImageFileNames =
+            QFileDialog::getOpenFileNames(
+                this,
+                tr("Select image files of mix..."),
+                QDir::currentPath(),
+                "Images (*.png *.jpg *.jpeg *.bmp);;All files (*.*)",
+                0,
+                0);
+
+    if ( mixImageFileNames.count() == 0 ) {
+
+        QMessageBox::information(this, "mixan",
+                                 "Not enough images for analysis :(");
+        return;
+    }
+
+    //
+
+    ui->textBrowser_report->moveCursor(QTextCursor::End);
+
+    ui->textBrowser_report->insertHtml(
+                QString::number(mixImageFileNames.count()) +
+                " probe images selected.<br>"
+                );
 
     //
 
@@ -253,7 +276,9 @@ void MainWindow::on_action_cleanReportWindow_activated() {
     ui->textBrowser_report->setHtml(
                 "<br><b>mixan " +
                 VERSION +
-                "</b><br>Analyze of granular material mix.<br>"
+                "</b><br>Analyze of granular material mix.<br><br><b>" +
+                QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
+                "</b><br><hr><br>"
                 );
 }
 
@@ -278,7 +303,7 @@ void MainWindow::on_action_analyze_activated() {
     //
 
     ui->textBrowser_report->insertHtml(
-                "<u>Analysis results:</u><br><br>"
+                "<br><u>Analysis results:</u><br><br>"
                 );
 
     //
@@ -369,7 +394,7 @@ void MainWindow::showAnalysisResults() {
     ui->textBrowser_report->insertHtml(
                 "<b>Vc = " +
                 QString::number(Vc(&concs)) +
-                "</b><br>"
+                "</b><br><br><hr><br><br>"
                 );
 
     ui->textBrowser_report->moveCursor(QTextCursor::End);
