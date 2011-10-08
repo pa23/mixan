@@ -61,9 +61,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
     progressDialog = new QProgressDialog;
     progressDialog->setWindowTitle("mixan");
-    progressDialog->setLabelText("Images analysis. Please wait...");
 
     futureWatcher = new QFutureWatcher<void>;
+
+    connect(futureWatcher,
+            SIGNAL(finished()),
+            this,
+            SLOT(showAnalysisResults())
+            );
+    connect(progressDialog,
+            SIGNAL(canceled()),
+            this,
+            SLOT(resetResults())
+            );
 
     connect(futureWatcher,
             SIGNAL(finished()),
@@ -106,6 +116,13 @@ MainWindow::~MainWindow() {
     delete futureWatcher;
 }
 
+void MainWindow::forgetSelectedImages() {
+
+    lightMaterialImageFileName = "";
+    darkMaterialImageFileName = "";
+    mixImageFileNames.clear();
+}
+
 void MainWindow::runAnalysis() {
 
     if ( !lightMaterial->analyze(lightMaterialImageFileName) ) { return; }
@@ -128,13 +145,6 @@ void MainWindow::runAnalysis() {
 
         probes.push_back(probe);
     }
-}
-
-void MainWindow::forgetSelectedImages() {
-
-    lightMaterialImageFileName = "";
-    darkMaterialImageFileName = "";
-    mixImageFileNames.clear();
 }
 
 void MainWindow::on_action_selectImages_activated() {
@@ -187,7 +197,7 @@ void MainWindow::on_action_selectImages_activated() {
 
     QString message = "<hr><br><b>" +
             QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
-            "</b><br><br>Images of material and " +
+            "</b><br><br>Material images and " +
             QString::number(mixImageFileNames.count()) +
             " probe images selected.<br><br>";
 
@@ -273,72 +283,14 @@ void MainWindow::on_action_analyze_activated() {
 
     //
 
+    progressDialog->setLabelText("Images analysis. Please wait...");
     futureWatcher->setFuture(QtConcurrent::run(this, &MainWindow::runAnalysis));
     progressDialog->exec();
     futureWatcher->waitForFinished();
 
     //
 
-    QString imgname;
-
-    double conc = 0;
-    vector<double> concs;
-
-    for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
-
-        imgname = probes[i]->imageFileName();
-
-        if ( imgname.isEmpty() ) {
-
-            ui->textBrowser_report->insertHtml(
-                        "<b>Analysis of image " +
-                        imgname +
-                        " failed or canceled.</b><br>"
-                        );
-
-            continue;
-        }
-
-        ui->textBrowser_report->insertHtml(
-                    "Image: " +
-                    imgname +
-                    "<br>"
-                    );
-
-        ui->textBrowser_report->textCursor().insertImage(
-                    probes[i]->originalImage().scaledToWidth(IMGWIDTH)
-                    );
-
-//        ui->textBrowser_report->textCursor().insertImage(
-//                    probes[i]->blackwhiteImage().scaledToWidth(IMGWIDTH)
-//                    );
-
-        conc = probes[i]->concentration();
-        concs.push_back(conc);
-
-        ui->textBrowser_report->insertHtml(
-                    "<br>Light component concentration = <b>" +
-                    QString::number(conc) +
-                    "</b><br><br>"
-                    );
-    }
-
-    ui->textBrowser_report->insertHtml(
-                "<b>Vc = " +
-                QString::number(Vc(&concs)) +
-                "</b><br>"
-                );
-
-    ui->textBrowser_report->moveCursor(QTextCursor::End);
-
-    //
-
-    forgetSelectedImages();
-    probes.clear();
-
-    //
-
-    QMessageBox::information(this, "mixan", "Analyze completed!");
+    QMessageBox::information(this, "mixan", "Analysis completed!");
 }
 
 void MainWindow::on_action_about_mixan_activated() {
@@ -370,4 +322,65 @@ void MainWindow::on_action_about_mixan_activated() {
             "http://www.gnu.org/licenses/</a>.<br>";
 
     QMessageBox::about(this, "About mixan", str);
+}
+
+void MainWindow::showAnalysisResults() {
+
+    QString imgname;
+
+    double conc = 0;
+    vector<double> concs;
+
+    for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
+
+        imgname = probes[i]->imageFileName();
+
+        if ( imgname.isEmpty() ) {
+
+            ui->textBrowser_report->insertHtml(
+                        "<b>Analysis of image " +
+                        imgname +
+                        " failed or canceled.</b><br>"
+                        );
+
+            continue;
+        }
+
+        ui->textBrowser_report->insertHtml(
+                    "Image: " +
+                    imgname +
+                    "<br>"
+                    );
+
+        ui->textBrowser_report->textCursor().insertImage(
+                    probes[i]->originalImage().scaledToWidth(IMGWIDTH)
+                    );
+
+        conc = probes[i]->concentration();
+        concs.push_back(conc);
+
+        ui->textBrowser_report->insertHtml(
+                    "<br>Light component concentration = <b>" +
+                    QString::number(conc) +
+                    "</b><br><br>"
+                    );
+    }
+
+    ui->textBrowser_report->insertHtml(
+                "<b>Vc = " +
+                QString::number(Vc(&concs)) +
+                "</b><br>"
+                );
+
+    ui->textBrowser_report->moveCursor(QTextCursor::End);
+
+    //
+
+    resetResults();
+}
+
+void MainWindow::resetResults() {
+
+    forgetSelectedImages();
+    probes.clear();
 }

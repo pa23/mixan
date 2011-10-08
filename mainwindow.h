@@ -60,8 +60,8 @@ private:
     QProgressDialog *progressDialog;
     QFutureWatcher<void> *futureWatcher;
 
-    void runAnalysis();
     void forgetSelectedImages();
+    void runAnalysis();
 
 private slots:
 
@@ -72,6 +72,9 @@ private slots:
     void on_action_quit_activated();
     void on_action_analyze_activated();
     void on_action_about_mixan_activated();
+
+    void showAnalysisResults();
+    void resetResults();
 
 };
 
