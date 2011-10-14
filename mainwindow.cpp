@@ -41,6 +41,8 @@
 #include <QtConcurrentRun>
 #include <QFutureWatcher>
 #include <QProgressDialog>
+#include <QSettings>
+#include <QRect>
 
 #include <qwt/qwt_plot.h>
 #include <qwt/qwt_plot_curve.h>
@@ -53,7 +55,8 @@ using std::vector;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow) {
+    ui(new Ui::MainWindow),
+    mixanSettings("pa23software", "mixan"){
 
     ui->setupUi(this);
 
@@ -112,9 +115,15 @@ MainWindow::MainWindow(QWidget *parent) :
                 QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
                 "</b><br><hr><br>"
                 );
+
+    //
+
+    readProgramSettings();
 }
 
 MainWindow::~MainWindow() {
+
+    writeProgramSettings();
 
     delete ui;
 
@@ -158,6 +167,22 @@ void MainWindow::runAnalysis() {
 
         probes.push_back(probe);
     }
+}
+
+void MainWindow::writeProgramSettings() {
+
+    mixanSettings.beginGroup("/Settings");
+    mixanSettings.setValue("/window_geometry", geometry());
+    mixanSettings.setValue("/panels_state", QMainWindow::saveState());
+    mixanSettings.endGroup();
+}
+
+void MainWindow::readProgramSettings() {
+
+    mixanSettings.beginGroup("/Settings");
+    setGeometry(mixanSettings.value("/window_geometry", QRect(20, 40, 0, 0)).toRect());
+    restoreState(mixanSettings.value("/panels_state").toByteArray());
+    mixanSettings.endGroup();
 }
 
 void MainWindow::on_action_selectMaterialImages_activated() {

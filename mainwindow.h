@@ -28,6 +28,7 @@
 #include <QProgressDialog>
 #include <QFutureWatcher>
 #include <QImage>
+#include <QSettings>
 
 #include "granularmaterial.h"
 #include "granularmix.h"
@@ -50,6 +51,8 @@ private:
 
     Ui::MainWindow *ui;
 
+    QSettings mixanSettings;
+
     QString lightMaterialImageFileName;
     QString darkMaterialImageFileName;
     QStringList mixImageFileNames;
@@ -63,6 +66,9 @@ private:
 
     void forgetSelectedImages();
     void runAnalysis();
+
+    void writeProgramSettings();
+    void readProgramSettings();
 
 private slots:
 
