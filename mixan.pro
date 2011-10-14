@@ -16,7 +16,7 @@ HEADERS += mainwindow.h \
 FORMS += mainwindow.ui
 unix: {
     INCLUDEPATH += . \
-        /usr/include
+        /usr/include/qwt
     LIBS += -L/usr/lib \
         -lqwt \
         -Wl,-rpath,.

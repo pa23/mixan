@@ -44,10 +44,10 @@
 #include <QSettings>
 #include <QRect>
 
-#include <qwt/qwt_plot.h>
-#include <qwt/qwt_plot_curve.h>
-#include <qwt/qwt_plot_item.h>
-#include <qwt/qwt_symbol.h>
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_item.h>
+#include <qwt_symbol.h>
 
 #include <vector>
 
