@@ -14,8 +14,11 @@ Analyze of granular material mix.
 Dependences
   GNU/Linux
     Qt >=4.7.4 (libQtCore.so.4, libQtGui.so.4)
+    Qwt >= 6.0.0 (libqwt.so.6)
   MS Windows x86 (all the necessary components are included in the binary
                   package)
     Qt x86 >=4.7.4 (QtCore4.dll, QtGui4.dll)
+    Qwt >= 6.0.0 (qwt.dll)
     MinGW (libgcc_s_dw2-1.dll, mingwm10.dll)
 --------------------------------------------------------------------------------
+

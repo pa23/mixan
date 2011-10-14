@@ -34,23 +34,30 @@ public:
     virtual ~GranularMaterial();
 
     bool isEmpty() const;
+
     bool analyze(QString);
+
     QString imageFileName() const;
     QImage originalImage() const;
-    QImage blackwhiteImage() const;
-    size_t thresholdColor() const;
-    std::vector<double> polynomCoefficients() const;
 
-protected:
+    size_t thresholdColor() const; // gray color
+
+    std::vector<size_t> histogramValues() const;
+    std::vector<double> polynomCoefficients() const;
+    std::vector<double> polynomValues() const;
+
+private:
 
     QString fileName;
     QImage origImage;
-    QImage bwImage;
+
     size_t histogram[256];
     size_t threshColor;
-    std::vector<double> polyCoeff;
 
-    bool colorToBW();
+    std::vector<double> polyCoeff;
+    std::vector<double> polyVal;
+
+    bool defHistogram();
     bool defThreshColor();
 
 };

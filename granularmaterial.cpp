@@ -29,12 +29,14 @@
 #include <QImage>
 
 using std::vector;
+using std::size_t;
+using std::ptrdiff_t;
 
 GranularMaterial::GranularMaterial() {
 
-    threshColor = 0;
-
     for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
+
+    threshColor = 0;
 }
 
 GranularMaterial::~GranularMaterial() {
@@ -54,9 +56,8 @@ bool GranularMaterial::analyze(QString imgFileName) {
     //
 
     if ( !origImage.load(imgFileName) ) { return false; }
-    bwImage = origImage;
 
-    if ( !colorToBW()      ) { return false; }
+    if ( !defHistogram()   ) { return false; }
     if ( !defThreshColor() ) { return false; }
 
     fileName = imgFileName;
@@ -76,14 +77,18 @@ QImage GranularMaterial::originalImage() const {
     return origImage;
 }
 
-QImage GranularMaterial::blackwhiteImage() const {
-
-    return bwImage;
-}
-
 size_t GranularMaterial::thresholdColor() const {
 
     return threshColor;
+}
+
+vector<size_t> GranularMaterial::histogramValues() const {
+
+    vector<size_t> hv(256, 0);
+
+    for ( ptrdiff_t i=0; i<256; i++ ) { hv[i] = histogram[i]; }
+
+    return hv;
 }
 
 vector<double> GranularMaterial::polynomCoefficients() const {
@@ -91,20 +96,20 @@ vector<double> GranularMaterial::polynomCoefficients() const {
     return polyCoeff;
 }
 
-bool GranularMaterial::colorToBW() {
+vector<double> GranularMaterial::polynomValues() const {
+
+    return polyVal;
+}
+
+bool GranularMaterial::defHistogram() {
 
     if ( origImage.isNull() ) { return false; }
-
-    size_t gray = 0;
 
     for ( ptrdiff_t i=0; i<origImage.width(); i++ ) {
 
         for ( ptrdiff_t j=0; j<origImage.height(); j++ ) {
 
-            gray = qGray(origImage.pixel(i, j));
-            bwImage.setPixel(i, j, qRgb(gray, gray, gray));
-
-            histogram[gray]++;
+            histogram[(size_t)qGray(origImage.pixel(i, j))]++;
         }
     }
 
@@ -131,7 +136,9 @@ bool GranularMaterial::defThreshColor() {
 
     //
 
-    QVector<double> poly(256, 0);
+    polyVal.clear();
+    polyVal.resize(256, 0);
+
     double p = 0;
 
     for ( ptrdiff_t i=0; i<256; i++ ) {
@@ -141,25 +148,22 @@ bool GranularMaterial::defThreshColor() {
             p += polyCoeff[n] * pow( x[i], n );
         }
 
-        poly[i] = p;
+        polyVal[i] = p;
         p = 0;
     }
 
     //
 
     ptrdiff_t maxpoly = 0;
-    size_t iextr = 0;
 
     for ( ptrdiff_t i=0; i<256; i++ ) {
 
-        if ( poly[i] > maxpoly ) {
+        if ( polyVal[i] > maxpoly ) {
 
-            maxpoly = poly[i];
-            iextr = i;
+            maxpoly = polyVal[i];
+            threshColor = i;
         }
     }
-
-    threshColor = (size_t)qRgb(iextr, iextr, iextr);
 
     return true;
 }

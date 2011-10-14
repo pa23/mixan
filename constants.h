@@ -24,7 +24,7 @@
 #include <QString>
 
 const QString VERSION = "v1.5.0";
-const ptrdiff_t POLYPOWER = 6;
+const ptrdiff_t POLYPOWER = 10;
 const size_t IMGWIDTH = 400; // px
 const double IDEALCONC = 0.5;
 const double INTERSECTACCUR = 0.5;

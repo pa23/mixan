@@ -30,35 +30,35 @@
 
 using std::vector;
 
-GranularMix::GranularMix() {
-
-    threshColor = 0;
-    lightThreshColor = 0;
-    darkThreshColor = 0;
-    conc = 0;
-
-    for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
+GranularMix::GranularMix() :
+    threshColor(0),
+    conc(0) {
 }
 
 GranularMix::~GranularMix() {
 }
 
-bool GranularMix::analyze(QString imgFileName, size_t lcol, size_t dcol) {
+size_t GranularMix::defThreshColor(size_t lcol, size_t dcol) {
+
+    return (lcol + dcol) / 2;
+}
+
+bool GranularMix::isEmpty() const {
+
+    if ( origImage.isNull() ) { return true;  }
+    else                      { return false; }
+}
+
+bool GranularMix::analyze(QString imgFileName, size_t threshCol) {
 
     fileName = "";
-    for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
 
     //
 
+    threshColor = threshCol;
+
     if ( !origImage.load(imgFileName) ) { return false; }
-    bwImage = origImage;
-
-    lightThreshColor = lcol;
-    darkThreshColor = dcol;
-
-    if ( !colorToBW()      ) { return false; }
-    if ( !defThreshColor() ) { return false; }
-    if ( !defConc()        ) { return false; }
+    if ( !defConc()                   ) { return false; }
 
     fileName = imgFileName;
 
@@ -72,45 +72,40 @@ QString GranularMix::imageFileName() const {
     return fileName;
 }
 
-double GranularMix::concentration() const {
-
-    return conc;
-}
-
 QImage GranularMix::originalImage() const {
 
     return origImage;
 }
 
-QImage GranularMix::blackwhiteImage() const {
+size_t GranularMix::thresholdColor() const {
 
-    return bwImage;
+    return threshColor;
 }
 
-bool GranularMix::defThreshColor() {
+double GranularMix::concentration() const {
 
-    threshColor = ((unsigned long long)lightThreshColor +
-                   (unsigned long long)darkThreshColor) / 2;
-
-    return true;
+    return conc;
 }
 
 bool GranularMix::defConc() {
 
-    if ( bwImage.isNull() ) { return false; }
+    if ( origImage.isNull() ) { return false; }
 
-    size_t curColor = 0;
     size_t part1 = 0; // light
     size_t part2 = 0; // dark
 
-    for (ptrdiff_t i=0; i<bwImage.width(); i++) {
+    for (ptrdiff_t i=0; i<origImage.width(); i++) {
 
-        for (ptrdiff_t j=0; j<bwImage.height(); j++) {
+        for (ptrdiff_t j=0; j<origImage.height(); j++) {
 
-            curColor = (size_t)bwImage.pixel(i, j);
+            if ( (size_t)qGray(origImage.pixel(i, j)) < threshColor ) {
 
-            if ( curColor < threshColor ) { part2++; }
-            else                          { part1++; }
+                part2++;
+            }
+            else {
+
+                part1++;
+            }
         }
     }
 

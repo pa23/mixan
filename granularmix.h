@@ -21,32 +21,36 @@
 #ifndef GRANULARMIX_H
 #define GRANULARMIX_H
 
-#include "granularmaterial.h"
-
 #include <QString>
 #include <QImage>
 
-class GranularMix : GranularMaterial {
+class GranularMix {
 
 public:
 
     explicit GranularMix();
     virtual ~GranularMix();
 
-    bool analyze(QString, size_t, size_t);
+    static size_t defThreshColor(size_t, size_t);
+
+    bool isEmpty() const;
+
+    bool analyze(QString, size_t);
+
     QString imageFileName() const;
-    double concentration() const;
     QImage originalImage() const;
-    QImage blackwhiteImage() const;
 
-protected:
+    size_t thresholdColor() const;
+    double concentration() const;
 
-    size_t lightThreshColor;
-    size_t darkThreshColor;
+private:
 
+    QString fileName;
+    QImage origImage;
+
+    size_t threshColor;
     double conc;
 
-    bool defThreshColor();
     bool defConc();
 
 };

@@ -27,6 +27,7 @@
 #include <QStringList>
 #include <QProgressDialog>
 #include <QFutureWatcher>
+#include <QImage>
 
 #include "granularmaterial.h"
 #include "granularmix.h"
@@ -76,6 +77,7 @@ private slots:
 
     void showAnalysisResults();
     void resetResults();
+    QVector<QImage> createGraphics();
 
 };
 

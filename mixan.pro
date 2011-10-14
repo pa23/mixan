@@ -15,6 +15,11 @@ HEADERS += mainwindow.h \
     mixfuns.h
 FORMS += mainwindow.ui
 unix: {
+    INCLUDEPATH += . \
+        /usr/include
+    LIBS += -L/usr/lib \
+        -lqwt \
+        -Wl,-rpath,.
     DESTDIR = build/unix/bin
     MOC_DIR = build/unix/moc
     RCC_DIR = build/unix/rc
@@ -26,6 +31,11 @@ unix: {
     }
 }
 win32: {
+    INCLUDEPATH += . \
+        c:\\qwt\\src
+    LIBS += -Lc:\\qwt\\lib \
+        -lqwt \
+        -Wl,-rpath,.
     DESTDIR = build\\win\\bin
     MOC_DIR = build\\win\\moc
     RCC_DIR = build\\win\\rc
