@@ -53,12 +53,12 @@ private:
 
     QSettings mixanSettings;
 
-    QString lightMaterialImageFileName;
-    QString darkMaterialImageFileName;
+    QString mat1ImageFileName;
+    QString mat2ImageFileName;
     QStringList mixImageFileNames;
 
-    GranularMaterial *lightMaterial;
-    GranularMaterial *darkMaterial;
+    GranularMaterial *material1;
+    GranularMaterial *material2;
     QVector<GranularMix *> probes;
 
     QProgressDialog *progressDialog;

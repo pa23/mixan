@@ -44,6 +44,8 @@
 #include <QSettings>
 #include <QRect>
 
+//#include <omp.h>
+
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 #include <qwt_plot_item.h>
@@ -64,8 +66,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //
 
-    lightMaterial = new GranularMaterial;
-    darkMaterial = new GranularMaterial;
+    material1 = new GranularMaterial;
+    material2 = new GranularMaterial;
 
     //
 
@@ -127,8 +129,8 @@ MainWindow::~MainWindow() {
 
     delete ui;
 
-    delete lightMaterial;
-    delete darkMaterial;
+    delete material1;
+    delete material2;
 
     delete progressDialog;
     delete futureWatcher;
@@ -136,28 +138,29 @@ MainWindow::~MainWindow() {
 
 void MainWindow::forgetSelectedImages() {
 
-    lightMaterialImageFileName = "";
-    darkMaterialImageFileName = "";
+    mat1ImageFileName = "";
+    mat2ImageFileName = "";
     mixImageFileNames.clear();
 }
 
 void MainWindow::runAnalysis() {
 
-    if ( !lightMaterial->analyze(lightMaterialImageFileName) ) { return; }
-    if ( !darkMaterial->analyze(darkMaterialImageFileName)   ) { return; }
+    if ( !material1->analyze(mat1ImageFileName) ) { return; }
+    if ( !material2->analyze(mat2ImageFileName) ) { return; }
 
     //
 
-    size_t lcol = lightMaterial->thresholdColor();
-    size_t dcol = darkMaterial->thresholdColor();
-
-    GranularMix *probe;
+    size_t lcol = material1->thresholdColor();
+    size_t dcol = material2->thresholdColor();
 
     probes.clear();
 
+//    ptrdiff_t i = 0;
+//#pragma omp parallel for shared(lcol, dcol) private(i)
+
     for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
 
-        probe = new GranularMix;
+        GranularMix *probe = new GranularMix;
 
         if ( !probe->analyze( mixImageFileNames[i],
                              GranularMix::defThreshColor(lcol, dcol) ) ) {
@@ -187,33 +190,33 @@ void MainWindow::readProgramSettings() {
 
 void MainWindow::on_action_selectMaterialImages_activated() {
 
-    lightMaterialImageFileName = "";
-    darkMaterialImageFileName = "";
+    mat1ImageFileName = "";
+    mat2ImageFileName = "";
 
     QString filters = "Images (*.png *.jpg *.jpeg *.bmp);;All files (*.*)";
 
-    lightMaterialImageFileName =
+    mat1ImageFileName =
             QFileDialog::getOpenFileName(
                 this,
-                tr("Select light component image file..."),
+                tr("Select first component image file..."),
                 QDir::currentPath(),
                 filters,
                 0,
                 0
                 );
 
-    darkMaterialImageFileName =
+    mat2ImageFileName =
             QFileDialog::getOpenFileName(
                 this,
-                tr("Select dark component image file..."),
+                tr("Select second component image file..."),
                 QDir::currentPath(),
                 filters,
                 0,
                 0
                 );
 
-    if ( lightMaterialImageFileName.isEmpty() ||
-         darkMaterialImageFileName.isEmpty() ) {
+    if ( mat1ImageFileName.isEmpty() ||
+         mat2ImageFileName.isEmpty() ) {
 
         QMessageBox::information(this, "mixan",
                                  "Not enough images for analysis :(");
@@ -327,8 +330,8 @@ void MainWindow::on_action_analyze_activated() {
 
     ui->textBrowser_report->moveCursor(QTextCursor::End);
 
-    if ( lightMaterialImageFileName.isEmpty() ||
-         darkMaterialImageFileName.isEmpty()  ||
+    if ( mat1ImageFileName.isEmpty() ||
+         mat2ImageFileName.isEmpty() ||
          (mixImageFileNames.count() == 0) ) {
 
         QMessageBox::information(this, "mixan",
@@ -396,31 +399,32 @@ void MainWindow::showAnalysisResults() {
     //
 
     ui->textBrowser_report->insertHtml(
-                "<br>Light material image:<br>"
+                "<br>Image of the first material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
-                lightMaterial->originalImage().scaledToWidth(IMGWIDTH)
+                material1->originalImage().scaledToWidth(IMGWIDTH)
                 );
 
     ui->textBrowser_report->insertHtml(
-                "<br><br>Light material characteristic:<br>"
+                "<br><br>Characteristic of the first material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(graphics[0]);
 
     ui->textBrowser_report->insertHtml(
-                "<br><br>Dark material image:<br>"
+                "<br><br>Image of the second material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
-                darkMaterial->originalImage().scaledToWidth(IMGWIDTH)
+                material2->originalImage().scaledToWidth(IMGWIDTH)
                 );
 
     ui->textBrowser_report->insertHtml(
-                "<br><br>Dark material characteristic:<br>"
+                "<br><br>Characteristic of the second material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(graphics[1]);
 
     ui->textBrowser_report->insertHtml(
-                "<br><br>Calculated gray threshold color visualization:<br>"
+                "<br><br>Visualization of the calculated "
+                "gray color threshold:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(graphics[2]);
 
@@ -454,7 +458,7 @@ void MainWindow::showAnalysisResults() {
         concs.push_back(conc);
 
         ui->textBrowser_report->insertHtml(
-                    "<br>Image:<br>"
+                    "<br>Mix image:<br>"
                     );
 
         ui->textBrowser_report->textCursor().insertImage(
@@ -464,7 +468,7 @@ void MainWindow::showAnalysisResults() {
         ui->textBrowser_report->insertHtml(
                     "<br>File path: " +
                     imgname +
-                    "<br>Light component concentration = <b>" +
+                    "<br>Concentration of the first component = <b>" +
                     QString::number(conc) +
                     "</b><br>"
                     );
@@ -511,7 +515,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve11->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                       QPen(Qt::black), QSize(1, 1)) );
 
-    vector<size_t> v11 = lightMaterial->histogramValues();
+    vector<size_t> v11 = material1->histogramValues();
     double *y11 = new double[256];
     for ( ptrdiff_t i=0; i<256; i++ ) { y11[i] = v11[i]; }
 
@@ -523,7 +527,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve12->setStyle(QwtPlotCurve::Lines);
     curve12->setPen(QPen(Qt::red));
 
-    vector<double> v12 = lightMaterial->polynomValues();
+    vector<double> v12 = material1->polynomValues();
     double *y12 = new double[256];
     for ( ptrdiff_t i=0; i<256; i++ ) { y12[i] = v12[i]; }
 
@@ -551,7 +555,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve21->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                       QPen(Qt::black), QSize(1, 1)) );
 
-    vector<size_t> v21 = darkMaterial->histogramValues();
+    vector<size_t> v21 = material2->histogramValues();
     double *y21 = new double[256];
     for ( ptrdiff_t i=0; i<256; i++ ) { y21[i] = v21[i]; }
 
@@ -563,7 +567,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve22->setStyle(QwtPlotCurve::Lines);
     curve22->setPen(QPen(Qt::blue));
 
-    vector<double> v22 = darkMaterial->polynomValues();
+    vector<double> v22 = material2->polynomValues();
     double *y22 = new double[256];
     for ( ptrdiff_t i=0; i<256; i++ ) { y22[i] = v22[i]; }
 
@@ -604,8 +608,8 @@ QVector<QImage> MainWindow::createGraphics() {
     curve33->setStyle(QwtPlotCurve::Lines);
     curve33->setPen(QPen(Qt::black));
 
-    size_t lcol = lightMaterial->thresholdColor();
-    size_t dcol = darkMaterial->thresholdColor();
+    size_t lcol = material1->thresholdColor();
+    size_t dcol = material2->thresholdColor();
     double tcol = GranularMix::defThreshColor(lcol, dcol);
 
     size_t max1 = 0;

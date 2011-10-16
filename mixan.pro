@@ -14,6 +14,8 @@ HEADERS += mainwindow.h \
     granularmix.h \
     mixfuns.h
 FORMS += mainwindow.ui
+#QMAKE_CXXFLAGS += -fopenmp
+#LIBS += -fopenmp
 unix: {
     INCLUDEPATH += . \
         /usr/include/qwt
