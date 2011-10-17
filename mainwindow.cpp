@@ -1,6 +1,6 @@
 /*
     mixan
-    Analyze of granular material mix.
+    Analysis of granular material mix.
 
     File: mainwindow.cpp
 
@@ -113,7 +113,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textBrowser_report->setHtml(
                 "<br><b>mixan " +
                 VERSION +
-                "</b><br>Analyze of granular material mix.<br><br><b>" +
+                "</b><br>Analysis of granular material mix.<br><br><b>" +
                 QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
                 "</b><br><hr><br>"
                 );
@@ -143,7 +143,13 @@ void MainWindow::forgetSelectedImages() {
     mixImageFileNames.clear();
 }
 
-void MainWindow::runAnalysis() {
+void MainWindow::runMaterialsAnalysis() {
+
+    if ( !material1->analyze(mat1ImageFileName) ) { return; }
+    if ( !material2->analyze(mat2ImageFileName) ) { return; }
+}
+
+void MainWindow::runMixAnalysis() {
 
     if ( !material1->analyze(mat1ImageFileName) ) { return; }
     if ( !material2->analyze(mat2ImageFileName) ) { return; }
@@ -315,7 +321,7 @@ void MainWindow::on_action_cleanReportWindow_activated() {
     ui->textBrowser_report->setHtml(
                 "<br><b>mixan " +
                 VERSION +
-                "</b><br>Analyze of granular material mix.<br><br><b>" +
+                "</b><br>Analysis of granular material mix.<br><br><b>" +
                 QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
                 "</b><br><hr><br>"
                 );
@@ -326,7 +332,38 @@ void MainWindow::on_action_quit_activated() {
     close();
 }
 
-void MainWindow::on_action_analyze_activated() {
+void MainWindow::on_action_AnalyzeMaterials_activated() {
+
+    ui->textBrowser_report->moveCursor(QTextCursor::End);
+
+    if ( mat1ImageFileName.isEmpty() ||
+         mat2ImageFileName.isEmpty() ) {
+
+        QMessageBox::information(this, "mixan",
+                                 "Not enough images for analysis :(");
+        return;
+    }
+
+    //
+
+    ui->textBrowser_report->insertHtml(
+                "<br><b><u>Results of materials analysis:</u></b><br>"
+                );
+
+    //
+
+    progressDialog->setLabelText("Images analysis. Please wait...");
+    futureWatcher->setFuture(QtConcurrent::
+                             run(this, &MainWindow::runMaterialsAnalysis));
+    progressDialog->exec();
+    futureWatcher->waitForFinished();
+
+    //
+
+    QMessageBox::information(this, "mixan", "Analysis completed!");
+}
+
+void MainWindow::on_action_analyzeMix_activated() {
 
     ui->textBrowser_report->moveCursor(QTextCursor::End);
 
@@ -342,13 +379,13 @@ void MainWindow::on_action_analyze_activated() {
     //
 
     ui->textBrowser_report->insertHtml(
-                "<br><b><u>Analysis results:</u></b><br>"
+                "<br><b><u>Results of mix analysis:</u></b><br>"
                 );
 
     //
 
     progressDialog->setLabelText("Images analysis. Please wait...");
-    futureWatcher->setFuture(QtConcurrent::run(this, &MainWindow::runAnalysis));
+    futureWatcher->setFuture(QtConcurrent::run(this, &MainWindow::runMixAnalysis));
     progressDialog->exec();
     futureWatcher->waitForFinished();
 
@@ -390,10 +427,6 @@ void MainWindow::on_action_about_mixan_activated() {
 
 void MainWindow::showAnalysisResults() {
 
-    if ( probes.size() == 0 ) { return; }
-
-    //
-
     QVector<QImage> graphics = createGraphics();
 
     //
@@ -433,6 +466,19 @@ void MainWindow::showAnalysisResults() {
                 );
 
     //
+
+    if ( probes.size() == 0 ) {
+
+        ui->textBrowser_report->insertHtml(
+                    "<br><hr><br>"
+                    );
+
+        ui->textBrowser_report->moveCursor(QTextCursor::End);
+
+        resetResults();
+
+        return;
+    }
 
     QString imgname;
 

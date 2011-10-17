@@ -1,6 +1,5 @@
 Makefile
 mixan.pro.user
 build/
-releases/
 ui_mainwindow.h
 

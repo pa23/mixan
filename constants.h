@@ -1,6 +1,6 @@
 /*
     mixan
-    Analyze of granular material mix.
+    Analysis of granular material mix.
 
     File: constants.h
 
@@ -23,7 +23,7 @@
 
 #include <QString>
 
-const QString VERSION = "v1.5.2";
+const QString VERSION = "v1.6.0";
 const ptrdiff_t POLYPOWER = 10;
 const size_t IMGWIDTH = 400; // px
 const double IDEALCONC = 0.5;

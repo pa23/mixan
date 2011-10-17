@@ -55,7 +55,8 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="action_analyze"/>
+    <addaction name="action_AnalyzeMaterials"/>
+    <addaction name="action_analyzeMix"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -98,7 +99,7 @@
    <addaction name="separator"/>
    <addaction name="action_cleanReportWindow"/>
    <addaction name="separator"/>
-   <addaction name="action_analyze"/>
+   <addaction name="action_analyzeMix"/>
    <addaction name="separator"/>
    <addaction name="action_quit"/>
   </widget>
@@ -138,13 +139,13 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="action_analyze">
+  <action name="action_analyzeMix">
    <property name="icon">
     <iconset resource="mixan_icons.qrc">
      <normaloff>:/icons/icons/tools-analyze.png</normaloff>:/icons/icons/tools-analyze.png</iconset>
    </property>
    <property name="text">
-    <string>Analyze</string>
+    <string>Analyze mix</string>
    </property>
    <property name="shortcut">
     <string>F9</string>
@@ -189,6 +190,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_AnalyzeMaterials">
+   <property name="text">
+    <string>Analyze materials</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F9</string>
    </property>
   </action>
  </widget>

@@ -1,6 +1,6 @@
 /*
     mixan
-    Analyze of granular material mix.
+    Analysis of granular material mix.
 
     File: mainwindow.h
 
@@ -65,7 +65,8 @@ private:
     QFutureWatcher<void> *futureWatcher;
 
     void forgetSelectedImages();
-    void runAnalysis();
+    void runMaterialsAnalysis();
+    void runMixAnalysis();
 
     void writeProgramSettings();
     void readProgramSettings();
@@ -78,7 +79,8 @@ private slots:
     void on_action_printReport_activated();
     void on_action_cleanReportWindow_activated();
     void on_action_quit_activated();
-    void on_action_analyze_activated();
+    void on_action_AnalyzeMaterials_activated();
+    void on_action_analyzeMix_activated();
     void on_action_about_mixan_activated();
 
     void showAnalysisResults();

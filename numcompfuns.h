@@ -1,6 +1,6 @@
 /*
     mixan
-    Analyze of granular material mix.
+    Analysis of granular material mix.
 
     File: numcompfuns.h
 
