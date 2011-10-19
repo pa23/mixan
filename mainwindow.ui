@@ -55,8 +55,10 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="action_AnalyzeMaterials"/>
+    <addaction name="action_analyzeMaterials"/>
     <addaction name="action_analyzeMix"/>
+    <addaction name="separator"/>
+    <addaction name="action_settings"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -99,7 +101,9 @@
    <addaction name="separator"/>
    <addaction name="action_cleanReportWindow"/>
    <addaction name="separator"/>
+   <addaction name="action_analyzeMaterials"/>
    <addaction name="action_analyzeMix"/>
+   <addaction name="action_settings"/>
    <addaction name="separator"/>
    <addaction name="action_quit"/>
   </widget>
@@ -142,7 +146,7 @@
   <action name="action_analyzeMix">
    <property name="icon">
     <iconset resource="mixan_icons.qrc">
-     <normaloff>:/icons/icons/tools-analyze.png</normaloff>:/icons/icons/tools-analyze.png</iconset>
+     <normaloff>:/icons/icons/tools-analyze_mix.png</normaloff>:/icons/icons/tools-analyze_mix.png</iconset>
    </property>
    <property name="text">
     <string>Analyze mix</string>
@@ -166,6 +170,9 @@
    </property>
    <property name="text">
     <string>Clean report window</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
   <action name="action_printReport">
@@ -192,12 +199,28 @@
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="action_AnalyzeMaterials">
+  <action name="action_analyzeMaterials">
+   <property name="icon">
+    <iconset resource="mixan_icons.qrc">
+     <normaloff>:/icons/icons/tools-analyze_mat.png</normaloff>:/icons/icons/tools-analyze_mat.png</iconset>
+   </property>
    <property name="text">
     <string>Analyze materials</string>
    </property>
    <property name="shortcut">
     <string>Shift+F9</string>
+   </property>
+  </action>
+  <action name="action_settings">
+   <property name="icon">
+    <iconset resource="mixan_icons.qrc">
+     <normaloff>:/icons/icons/tools-settings.png</normaloff>:/icons/icons/tools-settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Settings...</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
    </property>
   </action>
  </widget>

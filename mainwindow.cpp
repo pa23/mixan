@@ -24,6 +24,7 @@
 #include "granularmaterial.h"
 #include "granularmix.h"
 #include "mixfuns.h"
+#include "settingsdialog.h"
 
 #include <QString>
 #include <QStringList>
@@ -43,6 +44,9 @@
 #include <QProgressDialog>
 #include <QSettings>
 #include <QRect>
+#include <QPushButton>
+#include <QSpinBox>
+#include <QCheckBox>
 
 //#include <omp.h>
 
@@ -58,7 +62,10 @@ using std::vector;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    mixanSettings("pa23software", "mixan"){
+    mixanSettings("pa23software", "mixan"),
+    polynomPower(10),
+    imageWidth(400),
+    reportReadOnly(1) {
 
     ui->setupUi(this);
 
@@ -120,6 +127,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //
 
+    settingsDialog = new SettingsDialog();
+
+    pushButton_settingsOK = settingsDialog->
+            findChild<QPushButton *>("pushButton_OK");
+
+    connect(pushButton_settingsOK,
+            SIGNAL(clicked()),
+            this,
+            SLOT(saveSettings())
+            );
+
+    //
+
     readProgramSettings();
 }
 
@@ -134,6 +154,8 @@ MainWindow::~MainWindow() {
 
     delete progressDialog;
     delete futureWatcher;
+
+    delete settingsDialog;
 }
 
 void MainWindow::forgetSelectedImages() {
@@ -145,14 +167,14 @@ void MainWindow::forgetSelectedImages() {
 
 void MainWindow::runMaterialsAnalysis() {
 
-    if ( !material1->analyze(mat1ImageFileName) ) { return; }
-    if ( !material2->analyze(mat2ImageFileName) ) { return; }
+    if ( !material1->analyze(mat1ImageFileName, polynomPower) ) { return; }
+    if ( !material2->analyze(mat2ImageFileName, polynomPower) ) { return; }
 }
 
 void MainWindow::runMixAnalysis() {
 
-    if ( !material1->analyze(mat1ImageFileName) ) { return; }
-    if ( !material2->analyze(mat2ImageFileName) ) { return; }
+    if ( !material1->analyze(mat1ImageFileName, polynomPower) ) { return; }
+    if ( !material2->analyze(mat2ImageFileName, polynomPower) ) { return; }
 
     //
 
@@ -183,14 +205,21 @@ void MainWindow::writeProgramSettings() {
     mixanSettings.beginGroup("/Settings");
     mixanSettings.setValue("/window_geometry", geometry());
     mixanSettings.setValue("/panels_state", QMainWindow::saveState());
+    mixanSettings.setValue("/polynom_power", (int)polynomPower);
+    mixanSettings.setValue("/image_width", (uint)imageWidth);
+    mixanSettings.setValue("/report_is_read_only", reportReadOnly);
     mixanSettings.endGroup();
 }
 
 void MainWindow::readProgramSettings() {
 
     mixanSettings.beginGroup("/Settings");
-    setGeometry(mixanSettings.value("/window_geometry", QRect(20, 40, 0, 0)).toRect());
+    setGeometry(mixanSettings.value("/window_geometry",
+                                    QRect(20, 40, 0, 0)).toRect());
     restoreState(mixanSettings.value("/panels_state").toByteArray());
+    polynomPower = mixanSettings.value("/polynom_power", 10).toInt();
+    imageWidth = mixanSettings.value("/image_width", 400).toUInt();
+    reportReadOnly = mixanSettings.value("/report_is_read_only", true).toBool();
     mixanSettings.endGroup();
 }
 
@@ -332,9 +361,7 @@ void MainWindow::on_action_quit_activated() {
     close();
 }
 
-void MainWindow::on_action_AnalyzeMaterials_activated() {
-
-    ui->textBrowser_report->moveCursor(QTextCursor::End);
+void MainWindow::on_action_analyzeMaterials_activated() {
 
     if ( mat1ImageFileName.isEmpty() ||
          mat2ImageFileName.isEmpty() ) {
@@ -345,6 +372,8 @@ void MainWindow::on_action_AnalyzeMaterials_activated() {
     }
 
     //
+
+    ui->textBrowser_report->moveCursor(QTextCursor::End);
 
     ui->textBrowser_report->insertHtml(
                 "<br><b><u>Results of materials analysis:</u></b><br>"
@@ -365,8 +394,6 @@ void MainWindow::on_action_AnalyzeMaterials_activated() {
 
 void MainWindow::on_action_analyzeMix_activated() {
 
-    ui->textBrowser_report->moveCursor(QTextCursor::End);
-
     if ( mat1ImageFileName.isEmpty() ||
          mat2ImageFileName.isEmpty() ||
          (mixImageFileNames.count() == 0) ) {
@@ -378,6 +405,8 @@ void MainWindow::on_action_analyzeMix_activated() {
 
     //
 
+    ui->textBrowser_report->moveCursor(QTextCursor::End);
+
     ui->textBrowser_report->insertHtml(
                 "<br><b><u>Results of mix analysis:</u></b><br>"
                 );
@@ -385,13 +414,19 @@ void MainWindow::on_action_analyzeMix_activated() {
     //
 
     progressDialog->setLabelText("Images analysis. Please wait...");
-    futureWatcher->setFuture(QtConcurrent::run(this, &MainWindow::runMixAnalysis));
+    futureWatcher->setFuture(QtConcurrent::run(this,
+                                               &MainWindow::runMixAnalysis));
     progressDialog->exec();
     futureWatcher->waitForFinished();
 
     //
 
     QMessageBox::information(this, "mixan", "Analysis completed!");
+}
+
+void MainWindow::on_action_settings_activated() {
+
+    settingsDialog->exec();
 }
 
 void MainWindow::on_action_about_mixan_activated() {
@@ -435,7 +470,7 @@ void MainWindow::showAnalysisResults() {
                 "<br>Image of the first material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
-                material1->originalImage().scaledToWidth(IMGWIDTH)
+                material1->originalImage().scaledToWidth(imageWidth)
                 );
 
     ui->textBrowser_report->insertHtml(
@@ -447,7 +482,7 @@ void MainWindow::showAnalysisResults() {
                 "<br><br>Image of the second material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
-                material2->originalImage().scaledToWidth(IMGWIDTH)
+                material2->originalImage().scaledToWidth(imageWidth)
                 );
 
     ui->textBrowser_report->insertHtml(
@@ -508,7 +543,7 @@ void MainWindow::showAnalysisResults() {
                     );
 
         ui->textBrowser_report->textCursor().insertImage(
-                    probes[i]->originalImage().scaledToWidth(IMGWIDTH)
+                    probes[i]->originalImage().scaledToWidth(imageWidth)
                     );
 
         ui->textBrowser_report->insertHtml(
@@ -695,4 +730,18 @@ QVector<QImage> MainWindow::createGraphics() {
     //
 
     return graphics;
+}
+
+void MainWindow::saveSettings() {
+
+    QSpinBox *spinBox_polyPower = settingsDialog->
+            findChild<QSpinBox *>("spinBox_polyPower");
+    QSpinBox *spinBox_imgWidth = settingsDialog->
+            findChild<QSpinBox *>("spinBox_imgWidth");
+    QCheckBox *checkBox_reportReadOnly = settingsDialog->
+            findChild<QCheckBox *>("checkBox_reportRO");
+
+    polynomPower = spinBox_polyPower->value();
+    imageWidth = spinBox_imgWidth->value();
+    reportReadOnly = checkBox_reportReadOnly->isChecked();
 }

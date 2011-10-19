@@ -35,7 +35,7 @@ public:
 
     bool isEmpty() const;
 
-    bool analyze(QString);
+    bool analyze(QString, ptrdiff_t);
 
     QString imageFileName() const;
     QImage originalImage() const;
@@ -53,6 +53,8 @@ private:
 
     size_t histogram[256];
     size_t threshColor;
+
+    ptrdiff_t polynomPower;
 
     std::vector<double> polyCoeff;
     std::vector<double> polyVal;

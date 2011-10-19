@@ -29,9 +29,11 @@
 #include <QFutureWatcher>
 #include <QImage>
 #include <QSettings>
+#include <QPushButton>
 
 #include "granularmaterial.h"
 #include "granularmix.h"
+#include "settingsdialog.h"
 
 namespace Ui {
 
@@ -64,6 +66,13 @@ private:
     QProgressDialog *progressDialog;
     QFutureWatcher<void> *futureWatcher;
 
+    SettingsDialog *settingsDialog;
+    QPushButton *pushButton_settingsOK;
+
+    ptrdiff_t polynomPower;
+    size_t imageWidth;
+    bool reportReadOnly;
+
     void forgetSelectedImages();
     void runMaterialsAnalysis();
     void runMixAnalysis();
@@ -79,13 +88,16 @@ private slots:
     void on_action_printReport_activated();
     void on_action_cleanReportWindow_activated();
     void on_action_quit_activated();
-    void on_action_AnalyzeMaterials_activated();
+    void on_action_analyzeMaterials_activated();
     void on_action_analyzeMix_activated();
+    void on_action_settings_activated();
     void on_action_about_mixan_activated();
 
     void showAnalysisResults();
     void resetResults();
     QVector<QImage> createGraphics();
+
+    void saveSettings();
 
 };
 

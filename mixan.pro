@@ -6,14 +6,17 @@ SOURCES += main.cpp \
     numcompfuns.cpp \
     granularmaterial.cpp \
     granularmix.cpp \
-    mixfuns.cpp
+    mixfuns.cpp \
+    settingsdialog.cpp
 HEADERS += mainwindow.h \
     constants.h \
     numcompfuns.h \
     granularmaterial.h \
     granularmix.h \
-    mixfuns.h
-FORMS += mainwindow.ui
+    mixfuns.h \
+    settingsdialog.h
+FORMS += mainwindow.ui \
+    settingsdialog.ui
 #QMAKE_CXXFLAGS += -fopenmp
 #LIBS += -fopenmp
 unix: {
@@ -49,3 +52,6 @@ win32: {
     }
 }
 RESOURCES += mixan_icons.qrc
+
+
+

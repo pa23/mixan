@@ -48,10 +48,12 @@ bool GranularMaterial::isEmpty() const {
     else                      { return false; }
 }
 
-bool GranularMaterial::analyze(QString imgFileName) {
+bool GranularMaterial::analyze(QString imgFileName, ptrdiff_t polyPwr) {
 
     fileName = "";
     for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
+
+    polynomPower = polyPwr;
 
     //
 
@@ -122,7 +124,7 @@ bool GranularMaterial::defThreshColor() {
     vector<double> y(256, 0);
 
     polyCoeff.clear();
-    polyCoeff.resize(POLYPOWER+1, 0);
+    polyCoeff.resize(polynomPower+1, 0);
 
     for ( ptrdiff_t i=0; i<256; i++ ) {
 
@@ -143,7 +145,7 @@ bool GranularMaterial::defThreshColor() {
 
     for ( ptrdiff_t i=0; i<256; i++ ) {
 
-        for ( ptrdiff_t n=0; n<(POLYPOWER+1); n++ ) {
+        for ( ptrdiff_t n=0; n<(polynomPower+1); n++ ) {
 
             p += polyCoeff[n] * pow( x[i], n );
         }

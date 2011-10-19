@@ -2,7 +2,7 @@
     mixan
     Analysis of granular material mix.
 
-    File: constants.h
+    File: settingsdialog.h
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
@@ -18,13 +18,33 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef SETTINGSDIALOG_H
+#define SETTINGSDIALOG_H
 
-#include <QString>
+#include <QDialog>
 
-const QString VERSION = "v1.6.0";
-const double IDEALCONC = 0.5;
-const double INTERSECTACCUR = 0.5;
+namespace Ui {
 
-#endif // CONSTANTS_H
+    class SettingsDialog;
+}
+
+class SettingsDialog : public QDialog {
+
+    Q_OBJECT
+
+public:
+
+    explicit SettingsDialog(QWidget *parent = 0);
+    ~SettingsDialog();
+
+private slots:
+
+    void on_pushButton_OK_clicked();
+
+private:
+
+    Ui::SettingsDialog *ui;
+
+};
+
+#endif // SETTINGSDIALOG_H
