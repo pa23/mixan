@@ -129,6 +129,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     settingsDialog = new SettingsDialog();
 
+    checkBox_reportRO = settingsDialog->
+            findChild<QCheckBox *>("checkBox_reportRO");
+
     pushButton_settingsOK = settingsDialog->
             findChild<QPushButton *>("pushButton_OK");
 
@@ -432,7 +435,7 @@ void MainWindow::on_action_settings_activated() {
 void MainWindow::on_action_about_mixan_activated() {
 
     QString str = "<b>mixan " + VERSION + "</b>\n"
-            "<br><br>Analyze of granular material mix."
+            "<br><br>Analysis of granular material mix."
             "<br><br>Copyright (C) 2011 Artem Petrov "
             "<a href= \"mailto:pa2311@gmail.com\" >pa2311@gmail.com</a>"
             "<br><br>Web site: <a href= \"https://github.com/pa23/mixan\">"
@@ -744,4 +747,13 @@ void MainWindow::saveSettings() {
     polynomPower = spinBox_polyPower->value();
     imageWidth = spinBox_imgWidth->value();
     reportReadOnly = checkBox_reportReadOnly->isChecked();
+
+    if ( reportReadOnly ) {
+
+        ui->textBrowser_report->setReadOnly(true);
+    }
+    else {
+
+        ui->textBrowser_report->setReadOnly(false);
+    }
 }

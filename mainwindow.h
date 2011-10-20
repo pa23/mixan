@@ -30,6 +30,7 @@
 #include <QImage>
 #include <QSettings>
 #include <QPushButton>
+#include <QCheckBox>
 
 #include "granularmaterial.h"
 #include "granularmix.h"
@@ -68,6 +69,7 @@ private:
 
     SettingsDialog *settingsDialog;
     QPushButton *pushButton_settingsOK;
+    QCheckBox *checkBox_reportRO;
 
     ptrdiff_t polynomPower;
     size_t imageWidth;
@@ -95,6 +97,7 @@ private slots:
 
     void showAnalysisResults();
     void resetResults();
+
     QVector<QImage> createGraphics();
 
     void saveSettings();

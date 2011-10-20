@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>mixan settings</string>
   </property>
   <property name="windowIcon">
    <iconset resource="mixan_icons.qrc">

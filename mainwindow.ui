@@ -26,7 +26,13 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTextBrowser" name="textBrowser_report"/>
+     <widget class="QTextBrowser" name="textBrowser_report">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
