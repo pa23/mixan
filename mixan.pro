@@ -52,6 +52,4 @@ win32: {
     }
 }
 RESOURCES += mixan_icons.qrc
-
-
-
+RC_FILE += mixan_icon.rc
