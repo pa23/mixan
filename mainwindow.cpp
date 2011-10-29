@@ -118,6 +118,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //
 
+    ui->textBrowser_report->setUndoRedoEnabled(false);
+
     ui->textBrowser_report->setHtml(
                 "<br><b>mixan " +
                 VERSION +
@@ -362,6 +364,8 @@ void MainWindow::on_action_printReport_activated() {
 }
 
 void MainWindow::on_action_cleanReportWindow_activated() {
+
+    ui->textBrowser_report->clear();
 
     ui->textBrowser_report->setHtml(
                 "<br><b>mixan " +

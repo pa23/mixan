@@ -23,7 +23,7 @@
 
 #include <QString>
 
-const QString VERSION = "v1.7.0 DEV";
+const QString VERSION = "v1.6.1";
 const double IDEALCONC = 0.5;
 const double INTERSECTACCUR = 0.5;
 
