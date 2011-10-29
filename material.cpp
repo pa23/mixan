@@ -18,7 +18,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "granularmaterial.h"
+#include "material.h"
 #include "numcompfuns.h"
 #include "constants.h"
 
@@ -32,23 +32,23 @@ using std::vector;
 using std::size_t;
 using std::ptrdiff_t;
 
-GranularMaterial::GranularMaterial() {
+Material::Material() {
 
     for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
 
     threshColor = 0;
 }
 
-GranularMaterial::~GranularMaterial() {
+Material::~Material() {
 }
 
-bool GranularMaterial::isEmpty() const {
+bool Material::isEmpty() const {
 
     if ( origImage.isNull() ) { return true;  }
     else                      { return false; }
 }
 
-bool GranularMaterial::analyze(QString imgFileName, ptrdiff_t polyPwr) {
+bool Material::analyze(QString imgFileName, ptrdiff_t polyPwr) {
 
     fileName = "";
     for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
@@ -69,22 +69,22 @@ bool GranularMaterial::analyze(QString imgFileName, ptrdiff_t polyPwr) {
     return true;
 }
 
-QString GranularMaterial::imageFileName() const {
+QString Material::imageFileName() const {
 
     return fileName;
 }
 
-QImage GranularMaterial::originalImage() const {
+QImage Material::originalImage() const {
 
     return origImage;
 }
 
-size_t GranularMaterial::thresholdColor() const {
+size_t Material::thresholdColor() const {
 
     return threshColor;
 }
 
-vector<size_t> GranularMaterial::histogramValues() const {
+vector<size_t> Material::histogramValues() const {
 
     vector<size_t> hv(256, 0);
 
@@ -93,17 +93,17 @@ vector<size_t> GranularMaterial::histogramValues() const {
     return hv;
 }
 
-vector<double> GranularMaterial::polynomCoefficients() const {
+vector<double> Material::polynomCoefficients() const {
 
     return polyCoeff;
 }
 
-vector<double> GranularMaterial::polynomValues() const {
+vector<double> Material::polynomValues() const {
 
     return polyVal;
 }
 
-bool GranularMaterial::defHistogram() {
+bool Material::defHistogram() {
 
     if ( origImage.isNull() ) { return false; }
 
@@ -118,7 +118,7 @@ bool GranularMaterial::defHistogram() {
     return true;
 }
 
-bool GranularMaterial::defThreshColor() {
+bool Material::defThreshColor() {
 
     vector<double> x(256, 0);
     vector<double> y(256, 0);

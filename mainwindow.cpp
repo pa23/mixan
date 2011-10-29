@@ -21,8 +21,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "constants.h"
-#include "granularmaterial.h"
-#include "granularmix.h"
+#include "material.h"
+#include "mix.h"
 #include "mixfuns.h"
 #include "settingsdialog.h"
 
@@ -73,8 +73,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //
 
-    material1 = new GranularMaterial;
-    material2 = new GranularMaterial;
+    material1 = new Material;
+    material2 = new Material;
 
     //
 
@@ -192,10 +192,10 @@ void MainWindow::runMixAnalysis() {
 
     for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
 
-        GranularMix *probe = new GranularMix;
+        Mix *probe = new Mix;
 
         if ( !probe->analyze( mixImageFileNames[i],
-                             GranularMix::defThreshColor(lcol, dcol) ) ) {
+                             Mix::defThreshColor(lcol, dcol) ) ) {
 
             continue;
         }
@@ -437,7 +437,7 @@ void MainWindow::on_action_settings_activated() {
 void MainWindow::on_action_about_mixan_activated() {
 
     QString str = "<b>mixan " + VERSION + "</b>\n"
-            "<br><br>Analysis of granular material mix."
+            "<br><br>Analysis of granular material mix and emulsions."
             "<br><br>Copyright (C) 2011 Artem Petrov "
             "<a href= \"mailto:pa2311@gmail.com\" >pa2311@gmail.com</a>"
             "<br><br>Web site: <a href= \"https://github.com/pa23/mixan\">"
@@ -704,7 +704,7 @@ QVector<QImage> MainWindow::createGraphics() {
 
     size_t lcol = material1->thresholdColor();
     size_t dcol = material2->thresholdColor();
-    double tcol = GranularMix::defThreshColor(lcol, dcol);
+    double tcol = Mix::defThreshColor(lcol, dcol);
 
     size_t max1 = 0;
     size_t max2 = 0;

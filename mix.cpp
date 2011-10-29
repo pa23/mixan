@@ -18,7 +18,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "granularmix.h"
+#include "mix.h"
 #include "numcompfuns.h"
 #include "constants.h"
 
@@ -30,26 +30,26 @@
 
 using std::vector;
 
-GranularMix::GranularMix() :
+Mix::Mix() :
     threshColor(0),
     conc(0) {
 }
 
-GranularMix::~GranularMix() {
+Mix::~Mix() {
 }
 
-size_t GranularMix::defThreshColor(size_t lcol, size_t dcol) {
+size_t Mix::defThreshColor(size_t lcol, size_t dcol) {
 
     return (lcol + dcol) / 2;
 }
 
-bool GranularMix::isEmpty() const {
+bool Mix::isEmpty() const {
 
     if ( origImage.isNull() ) { return true;  }
     else                      { return false; }
 }
 
-bool GranularMix::analyze(QString imgFileName, size_t threshCol) {
+bool Mix::analyze(QString imgFileName, size_t threshCol) {
 
     fileName = "";
 
@@ -67,27 +67,27 @@ bool GranularMix::analyze(QString imgFileName, size_t threshCol) {
     return true;
 }
 
-QString GranularMix::imageFileName() const {
+QString Mix::imageFileName() const {
 
     return fileName;
 }
 
-QImage GranularMix::originalImage() const {
+QImage Mix::originalImage() const {
 
     return origImage;
 }
 
-size_t GranularMix::thresholdColor() const {
+size_t Mix::thresholdColor() const {
 
     return threshColor;
 }
 
-double GranularMix::concentration() const {
+double Mix::concentration() const {
 
     return conc;
 }
 
-bool GranularMix::defConc() {
+bool Mix::defConc() {
 
     if ( origImage.isNull() ) { return false; }
 

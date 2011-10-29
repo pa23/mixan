@@ -32,8 +32,8 @@
 #include <QPushButton>
 #include <QCheckBox>
 
-#include "granularmaterial.h"
-#include "granularmix.h"
+#include "material.h"
+#include "mix.h"
 #include "settingsdialog.h"
 
 namespace Ui {
@@ -60,9 +60,9 @@ private:
     QString mat2ImageFileName;
     QStringList mixImageFileNames;
 
-    GranularMaterial *material1;
-    GranularMaterial *material2;
-    QVector<GranularMix *> probes;
+    Material *material1;
+    Material *material2;
+    QVector<Mix *> probes;
 
     QProgressDialog *progressDialog;
     QFutureWatcher<void> *futureWatcher;

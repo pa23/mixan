@@ -2,7 +2,7 @@
     mixan
     Analysis of granular material mix and emulsions.
 
-    File: granularmix.h
+    File: granularmaterial.h
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
@@ -18,41 +18,50 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GRANULARMIX_H
-#define GRANULARMIX_H
+#ifndef MATERIAL_H
+#define MATERIAL_H
 
 #include <QString>
 #include <QImage>
 
-class GranularMix {
+#include <vector>
+
+class Material {
 
 public:
 
-    explicit GranularMix();
-    virtual ~GranularMix();
-
-    static size_t defThreshColor(size_t, size_t);
+    explicit Material();
+    virtual ~Material();
 
     bool isEmpty() const;
 
-    bool analyze(QString, size_t);
+    bool analyze(QString, ptrdiff_t);
 
     QString imageFileName() const;
     QImage originalImage() const;
 
-    size_t thresholdColor() const;
-    double concentration() const;
+    size_t thresholdColor() const; // gray color
+
+    std::vector<size_t> histogramValues() const;
+    std::vector<double> polynomCoefficients() const;
+    std::vector<double> polynomValues() const;
 
 private:
 
     QString fileName;
     QImage origImage;
 
+    size_t histogram[256];
     size_t threshColor;
-    double conc;
 
-    bool defConc();
+    ptrdiff_t polynomPower;
+
+    std::vector<double> polyCoeff;
+    std::vector<double> polyVal;
+
+    bool defHistogram();
+    bool defThreshColor();
 
 };
 
-#endif // GRANULARMIX_H
+#endif // MATERIAL_H

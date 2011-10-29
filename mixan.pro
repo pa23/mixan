@@ -4,17 +4,17 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     numcompfuns.cpp \
-    granularmaterial.cpp \
-    granularmix.cpp \
     mixfuns.cpp \
-    settingsdialog.cpp
+    settingsdialog.cpp \
+    material.cpp \
+    mix.cpp
 HEADERS += mainwindow.h \
     constants.h \
     numcompfuns.h \
-    granularmaterial.h \
-    granularmix.h \
     mixfuns.h \
-    settingsdialog.h
+    settingsdialog.h \
+    material.h \
+    mix.h
 FORMS += mainwindow.ui \
     settingsdialog.ui
 #QMAKE_CXXFLAGS += -fopenmp
@@ -53,3 +53,11 @@ win32: {
 }
 RESOURCES += mixan_icons.qrc
 RC_FILE += mixan_icon.rc
+
+
+
+
+
+
+
+
