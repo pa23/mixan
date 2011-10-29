@@ -1,6 +1,6 @@
 /*
     mixan
-    Analysis of granular material mix.
+    Analysis of granular material mix and emulsions.
 
     File: mainwindow.cpp
 
@@ -120,7 +120,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textBrowser_report->setHtml(
                 "<br><b>mixan " +
                 VERSION +
-                "</b><br>Analysis of granular material mix.<br><br><b>" +
+                "</b><br>Analysis of granular material mix and emulsions." +
+                "<br><br><b>" +
                 QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
                 "</b><br><hr><br>"
                 );
@@ -353,7 +354,8 @@ void MainWindow::on_action_cleanReportWindow_activated() {
     ui->textBrowser_report->setHtml(
                 "<br><b>mixan " +
                 VERSION +
-                "</b><br>Analysis of granular material mix.<br><br><b>" +
+                "</b><br>Analysis of granular material mix and emulsions." +
+                "<br><br><b>" +
                 QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
                 "</b><br><hr><br>"
                 );
@@ -626,6 +628,10 @@ QVector<QImage> MainWindow::createGraphics() {
 
     graphics.push_back(pixmap1.toImage());
 
+    delete curve11;
+    delete curve12;
+    delete plot1;
+
     //
 
     QwtPlot *plot2 = new QwtPlot();
@@ -665,6 +671,10 @@ QVector<QImage> MainWindow::createGraphics() {
     plot2->render(&pixmap2);
 
     graphics.push_back(pixmap2.toImage());
+
+    delete curve21;
+    delete curve22;
+    delete plot2;
 
     //
 
@@ -729,6 +739,24 @@ QVector<QImage> MainWindow::createGraphics() {
     plot3->render(&pixmap3);
 
     graphics.push_back(pixmap3.toImage());
+
+    delete curve31;
+    delete curve32;
+    delete curve33;
+    delete plot3;
+
+    //
+
+    delete [] x;
+
+    delete [] y11;
+    delete [] y12;
+
+    delete [] y21;
+    delete [] y22;
+
+    delete [] x33;
+    delete [] y33;
 
     //
 

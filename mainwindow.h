@@ -1,6 +1,6 @@
 /*
     mixan
-    Analysis of granular material mix.
+    Analysis of granular material mix and emulsions.
 
     File: mainwindow.h
 
@@ -82,6 +82,8 @@ private:
     void writeProgramSettings();
     void readProgramSettings();
 
+    QVector<QImage> createGraphics();
+
 private slots:
 
     void on_action_selectMaterialImages_activated();
@@ -97,8 +99,6 @@ private slots:
 
     void showAnalysisResults();
     void resetResults();
-
-    QVector<QImage> createGraphics();
 
     void saveSettings();
 

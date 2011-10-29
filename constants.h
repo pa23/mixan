@@ -1,6 +1,6 @@
 /*
     mixan
-    Analysis of granular material mix.
+    Analysis of granular material mix and emulsions.
 
     File: constants.h
 
@@ -23,7 +23,7 @@
 
 #include <QString>
 
-const QString VERSION = "v1.6.0";
+const QString VERSION = "v1.7.0 DEV";
 const double IDEALCONC = 0.5;
 const double INTERSECTACCUR = 0.5;
 

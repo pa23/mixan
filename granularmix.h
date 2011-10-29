@@ -1,6 +1,6 @@
 /*
     mixan
-    Analysis of granular material mix.
+    Analysis of granular material mix and emulsions.
 
     File: granularmix.h
 
