@@ -31,6 +31,7 @@
 #include <QSettings>
 #include <QPushButton>
 #include <QCheckBox>
+#include <QSharedPointer>
 
 #include "material.h"
 #include "mix.h"
@@ -60,8 +61,8 @@ private:
     QString mat2ImageFileName;
     QStringList mixImageFileNames;
 
-    Material *material1;
-    Material *material2;
+    QSharedPointer<Material> material1;
+    QSharedPointer<Material> material2;
     QVector<Mix *> probes;
 
     QProgressDialog *progressDialog;

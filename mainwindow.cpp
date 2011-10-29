@@ -47,6 +47,7 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QCheckBox>
+#include <QSharedPointer>
 
 //#include <omp.h>
 
@@ -73,8 +74,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //
 
-    material1 = new Material;
-    material2 = new Material;
+    material1 = QSharedPointer<Material>(new Material());
+    material2 = QSharedPointer<Material>(new Material());
 
     //
 
@@ -153,9 +154,6 @@ MainWindow::~MainWindow() {
 
     delete ui;
 
-    delete material1;
-    delete material2;
-
     delete progressDialog;
     delete futureWatcher;
 
@@ -171,19 +169,33 @@ void MainWindow::forgetSelectedImages() {
 
 void MainWindow::runMaterialsAnalysis() {
 
-    if ( !material1->analyze(mat1ImageFileName, polynomPower) ) { return; }
-    if ( !material2->analyze(mat2ImageFileName, polynomPower) ) { return; }
+    if ( !material1.data()->analyze(mat1ImageFileName, polynomPower) ) {
+
+        return;
+    }
+
+    if ( !material2.data()->analyze(mat2ImageFileName, polynomPower) ) {
+
+        return;
+    }
 }
 
 void MainWindow::runMixAnalysis() {
 
-    if ( !material1->analyze(mat1ImageFileName, polynomPower) ) { return; }
-    if ( !material2->analyze(mat2ImageFileName, polynomPower) ) { return; }
+    if ( !material1.data()->analyze(mat1ImageFileName, polynomPower) ) {
+
+        return;
+    }
+
+    if ( !material2.data()->analyze(mat2ImageFileName, polynomPower) ) {
+
+        return;
+    }
 
     //
 
-    size_t lcol = material1->thresholdColor();
-    size_t dcol = material2->thresholdColor();
+    size_t lcol = material1.data()->thresholdColor();
+    size_t dcol = material2.data()->thresholdColor();
 
     probes.clear();
 
@@ -475,7 +487,7 @@ void MainWindow::showAnalysisResults() {
                 "<br>Image of the first material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
-                material1->originalImage().scaledToWidth(imageWidth)
+                material1.data()->originalImage().scaledToWidth(imageWidth)
                 );
 
     ui->textBrowser_report->insertHtml(
@@ -487,7 +499,7 @@ void MainWindow::showAnalysisResults() {
                 "<br><br>Image of the second material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
-                material2->originalImage().scaledToWidth(imageWidth)
+                material2.data()->originalImage().scaledToWidth(imageWidth)
                 );
 
     ui->textBrowser_report->insertHtml(
@@ -601,7 +613,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve11->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                       QPen(Qt::black), QSize(1, 1)) );
 
-    vector<size_t> v11 = material1->histogramValues();
+    vector<size_t> v11 = material1.data()->histogramValues();
     double *y11 = new double[256];
     for ( ptrdiff_t i=0; i<256; i++ ) { y11[i] = v11[i]; }
 
@@ -613,7 +625,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve12->setStyle(QwtPlotCurve::Lines);
     curve12->setPen(QPen(Qt::red));
 
-    vector<double> v12 = material1->polynomValues();
+    vector<double> v12 = material1.data()->polynomValues();
     double *y12 = new double[256];
     for ( ptrdiff_t i=0; i<256; i++ ) { y12[i] = v12[i]; }
 
@@ -645,7 +657,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve21->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                       QPen(Qt::black), QSize(1, 1)) );
 
-    vector<size_t> v21 = material2->histogramValues();
+    vector<size_t> v21 = material2.data()->histogramValues();
     double *y21 = new double[256];
     for ( ptrdiff_t i=0; i<256; i++ ) { y21[i] = v21[i]; }
 
@@ -657,7 +669,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve22->setStyle(QwtPlotCurve::Lines);
     curve22->setPen(QPen(Qt::blue));
 
-    vector<double> v22 = material2->polynomValues();
+    vector<double> v22 = material2.data()->polynomValues();
     double *y22 = new double[256];
     for ( ptrdiff_t i=0; i<256; i++ ) { y22[i] = v22[i]; }
 
@@ -702,8 +714,8 @@ QVector<QImage> MainWindow::createGraphics() {
     curve33->setStyle(QwtPlotCurve::Lines);
     curve33->setPen(QPen(Qt::black));
 
-    size_t lcol = material1->thresholdColor();
-    size_t dcol = material2->thresholdColor();
+    size_t lcol = material1.data()->thresholdColor();
+    size_t dcol = material2.data()->thresholdColor();
     double tcol = Mix::defThreshColor(lcol, dcol);
 
     size_t max1 = 0;
