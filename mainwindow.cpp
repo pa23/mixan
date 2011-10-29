@@ -199,15 +199,15 @@ void MainWindow::runMixAnalysis() {
 
     probes.clear();
 
-//    ptrdiff_t i = 0;
-//#pragma omp parallel for shared(lcol, dcol) private(i)
+    //    ptrdiff_t i = 0;
+    //#pragma omp parallel for shared(lcol, dcol) private(i)
 
     for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
 
-        Mix *probe = new Mix;
+        QSharedPointer<Mix> probe = QSharedPointer<Mix>(new Mix());
 
         if ( !probe->analyze( mixImageFileNames[i],
-                             Mix::defThreshColor(lcol, dcol) ) ) {
+                              Mix::defThreshColor(lcol, dcol) ) ) {
 
             continue;
         }
@@ -390,6 +390,14 @@ void MainWindow::on_action_analyzeMaterials_activated() {
 
     //
 
+    material1.clear();
+    material1 = QSharedPointer<Material>(new Material());
+
+    material2.clear();
+    material2 = QSharedPointer<Material>(new Material());
+
+    //
+
     ui->textBrowser_report->moveCursor(QTextCursor::End);
 
     ui->textBrowser_report->insertHtml(
@@ -419,6 +427,10 @@ void MainWindow::on_action_analyzeMix_activated() {
                                  "Not enough images for analysis :(");
         return;
     }
+
+    //
+
+    //
 
     //
 
@@ -539,7 +551,7 @@ void MainWindow::showAnalysisResults() {
 
     for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
 
-        imgname = probes[i]->imageFileName();
+        imgname = probes[i].data()->imageFileName();
 
         if ( imgname.isEmpty() ) {
 
@@ -552,7 +564,7 @@ void MainWindow::showAnalysisResults() {
             continue;
         }
 
-        conc = probes[i]->concentration();
+        conc = probes[i].data()->concentration();
         concs.push_back(conc);
 
         ui->textBrowser_report->insertHtml(
@@ -560,7 +572,7 @@ void MainWindow::showAnalysisResults() {
                     );
 
         ui->textBrowser_report->textCursor().insertImage(
-                    probes[i]->originalImage().scaledToWidth(imageWidth)
+                    probes[i].data()->originalImage().scaledToWidth(imageWidth)
                     );
 
         ui->textBrowser_report->insertHtml(

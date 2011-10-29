@@ -39,7 +39,7 @@
 
 namespace Ui {
 
-    class MainWindow;
+class MainWindow;
 }
 
 class MainWindow : public QMainWindow {
@@ -63,7 +63,7 @@ private:
 
     QSharedPointer<Material> material1;
     QSharedPointer<Material> material2;
-    QVector<Mix *> probes;
+    QVector< QSharedPointer<Mix> > probes;
 
     QProgressDialog *progressDialog;
     QFutureWatcher<void> *futureWatcher;
