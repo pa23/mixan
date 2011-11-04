@@ -42,7 +42,7 @@ public:
 
     size_t thresholdColor() const; // gray color
 
-    std::vector<size_t> histogramValues() const;
+    std::vector<double> histogramValues() const;
     std::vector<double> polynomCoefficients() const;
     std::vector<double> polynomValues() const;
 
@@ -51,7 +51,7 @@ private:
     QString fileName;
     QImage origImage;
 
-    size_t histogram[256];
+    double histogram[256];
     size_t threshColor;
 
     ptrdiff_t polynomPower;

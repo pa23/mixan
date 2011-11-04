@@ -629,7 +629,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve11.data()->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                              QPen(Qt::black), QSize(1, 1)) );
 
-    vector<size_t> v11 = material1.data()->histogramValues();
+    vector<double> v11 = material1.data()->histogramValues();
     QSharedPointer<double> y11(new double[256]);
     for ( ptrdiff_t i=0; i<256; i++ ) { y11.data()[i] = v11[i]; }
 
@@ -669,7 +669,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve21.data()->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                              QPen(Qt::black), QSize(1, 1)) );
 
-    vector<size_t> v21 = material2.data()->histogramValues();
+    vector<double> v21 = material2.data()->histogramValues();
     QSharedPointer<double> y21(new double[256]);
     for ( ptrdiff_t i=0; i<256; i++ ) { y21.data()[i] = v21[i]; }
 
@@ -726,8 +726,8 @@ QVector<QImage> MainWindow::createGraphics() {
     size_t dcol = material2.data()->thresholdColor();
     double tcol = Mix::defThreshColor(lcol, dcol);
 
-    size_t max1 = 0;
-    size_t max2 = 0;
+    double max1 = 0;
+    double max2 = 0;
 
     for ( size_t i=0; i<v12.size(); i++ ) {
 

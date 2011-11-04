@@ -84,9 +84,9 @@ size_t Material::thresholdColor() const {
     return threshColor;
 }
 
-vector<size_t> Material::histogramValues() const {
+vector<double> Material::histogramValues() const {
 
-    vector<size_t> hv(256, 0);
+    vector<double> hv(256, 0);
 
     for ( ptrdiff_t i=0; i<256; i++ ) { hv[i] = histogram[i]; }
 
@@ -109,12 +109,19 @@ bool Material::defHistogram() {
 
     //
 
+    double N = origImage.width() * origImage.height();
+
     for ( ptrdiff_t i=0; i<origImage.width(); i++ ) {
 
         for ( ptrdiff_t j=0; j<origImage.height(); j++ ) {
 
             histogram[(size_t)qGray(origImage.pixel(i, j))]++;
         }
+    }
+
+    for ( ptrdiff_t i=0; i<256; i++ ) {
+
+        histogram[i] /= N;
     }
 
     return true;
@@ -158,7 +165,7 @@ bool Material::defThreshColor() {
 
     //
 
-    ptrdiff_t maxpoly = 0;
+    double maxpoly = 0;
 
     for ( ptrdiff_t i=0; i<256; i++ ) {
 
