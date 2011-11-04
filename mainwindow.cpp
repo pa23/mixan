@@ -1,6 +1,6 @@
 /*
     mixan
-    Analysis of granular material mix and emulsions.
+    Analysis of granular material mixes and emulsions.
 
     File: mainwindow.cpp
 
@@ -123,7 +123,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textBrowser_report->setHtml(
                 "<br><b>mixan " +
                 VERSION +
-                "</b><br>Analysis of granular material mix and emulsions." +
+                "</b><br>Analysis of granular material mixes and emulsions." +
                 "<br><br><b>" +
                 QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
                 "</b><br><hr><br>"
@@ -370,7 +370,7 @@ void MainWindow::on_action_cleanReportWindow_activated() {
     ui->textBrowser_report->setHtml(
                 "<br><b>mixan " +
                 VERSION +
-                "</b><br>Analysis of granular material mix and emulsions." +
+                "</b><br>Analysis of granular material mixes and emulsions." +
                 "<br><br><b>" +
                 QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") +
                 "</b><br><hr><br>"
@@ -465,7 +465,7 @@ void MainWindow::on_action_settings_activated() {
 void MainWindow::on_action_about_mixan_activated() {
 
     QString str = "<b>mixan " + VERSION + "</b>\n"
-            "<br><br>Analysis of granular material mix and emulsions."
+            "<br><br>Analysis of granular material mixes and emulsions."
             "<br><br>Copyright (C) 2011 Artem Petrov "
             "<a href= \"mailto:pa2311@gmail.com\" >pa2311@gmail.com</a>"
             "<br><br>Web site: <a href= \"https://github.com/pa23/mixan\">"
