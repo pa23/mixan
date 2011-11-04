@@ -749,13 +749,13 @@ QVector<QImage> MainWindow::createGraphics() {
     if ( max1 > max2 ) { y33.data()[1] = max1; }
     else               { y33.data()[1] = max2; }
 
-    curve33->setRawSamples(x33.data(), y33.data(), 2);
-    curve33->attach(plot3.data());
+    curve33.data()->setRawSamples(x33.data(), y33.data(), 2);
+    curve33.data()->attach(plot3.data());
 
     plot3.data()->resize(600, 300);
     plot3.data()->replot();
 
-    QPixmap pixmap3(plot3->size());
+    QPixmap pixmap3(plot3.data()->size());
     plot3.data()->render(&pixmap3);
 
     graphics.push_back(pixmap3.toImage());

@@ -107,6 +107,8 @@ bool Material::defHistogram() {
 
     if ( origImage.isNull() ) { return false; }
 
+    //
+
     for ( ptrdiff_t i=0; i<origImage.width(); i++ ) {
 
         for ( ptrdiff_t j=0; j<origImage.height(); j++ ) {
