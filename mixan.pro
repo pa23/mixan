@@ -19,6 +19,7 @@ FORMS += mainwindow.ui \
     settingsdialog.ui
 #QMAKE_CXXFLAGS += -fopenmp
 #LIBS += -fopenmp
+#QMAKE_CXXFLAGS += -std=c++0x
 unix: {
     INCLUDEPATH += . \
         /usr/include/qwt
