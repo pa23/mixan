@@ -61,6 +61,7 @@ private:
 
     bool defHistogram();
     bool defThreshColor();
+    bool corrPolyVals();
 
 };
 

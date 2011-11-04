@@ -23,6 +23,7 @@ FORMS += mainwindow.ui \
 unix: {
     INCLUDEPATH += . \
         /usr/include/qwt
+        #/usr/include/c++/4.6
     LIBS += -L/usr/lib \
         -lqwt \
         -Wl,-rpath,.
@@ -39,6 +40,7 @@ unix: {
 win32: {
     INCLUDEPATH += . \
         c:\\qwt\\src
+        #C:\\MinGW32\\lib\\gcc\\mingw32\\4.5.2\\include\\c++
     LIBS += -Lc:\\qwt\\lib \
         -lqwt \
         -Wl,-rpath,.

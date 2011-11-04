@@ -129,11 +129,16 @@ bool Material::defHistogram() {
 
 bool Material::defThreshColor() {
 
-    vector<double> x(256, 0);
-    vector<double> y(256, 0);
-
     polyCoeff.clear();
     polyCoeff.resize(polynomPower+1, 0);
+
+    polyVal.clear();
+    polyVal.resize(256, 0);
+
+    //
+
+    vector<double> x(256, 0);
+    vector<double> y(256, 0);
 
     for ( ptrdiff_t i=0; i<256; i++ ) {
 
@@ -146,9 +151,6 @@ bool Material::defThreshColor() {
     if ( !polyapprox(&x, &y, &polyCoeff) ) { return false; }
 
     //
-
-    polyVal.clear();
-    polyVal.resize(256, 0);
 
     double p = 0;
 
@@ -175,6 +177,46 @@ bool Material::defThreshColor() {
             threshColor = i;
         }
     }
+
+    //
+
+    corrPolyVals();
+
+    //
+
+    return true;
+}
+
+bool Material::corrPolyVals() {
+
+    ptrdiff_t leftlim = 0;
+
+    for ( ptrdiff_t i=threshColor; i>=0; i-- ) {
+
+        if ( polyVal[i] < 0 ) {
+
+            leftlim = i;
+            break;
+        }
+    }
+
+    ptrdiff_t rightlim = 0;
+
+    for ( ptrdiff_t i=threshColor; i<=255; i++ ) {
+
+        if ( polyVal[i] < 0 ) {
+
+            rightlim = i;
+            break;
+        }
+    }
+
+    //
+
+    for ( ptrdiff_t i=0; i<=leftlim; i++    ) { polyVal[i] = 0; }
+    for ( ptrdiff_t i=rightlim; i<=255; i++ ) { polyVal[i] = 0; }
+
+    //
 
     return true;
 }

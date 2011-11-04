@@ -29,7 +29,7 @@
 #include <QFutureWatcher>
 #include <QImage>
 #include <QSettings>
-#include <QPushButton>
+#include <QSpinBox>
 #include <QCheckBox>
 #include <QSharedPointer>
 
@@ -69,12 +69,9 @@ private:
     QFutureWatcher<void> *futureWatcher;
 
     SettingsDialog *settingsDialog;
-    QPushButton *pushButton_settingsOK;
-    QCheckBox *checkBox_reportRO;
-
-    ptrdiff_t polynomPower;
-    size_t imageWidth;
-    bool reportReadOnly;
+    QSpinBox *spinBox_polyPower;
+    QSpinBox *spinBox_imgWidth;
+    QCheckBox *checkBox_reportReadOnly;
 
     void forgetSelectedImages();
     void runMaterialsAnalysis();
@@ -101,7 +98,7 @@ private slots:
     void showAnalysisResults();
     void resetResults();
 
-    void saveSettings();
+    void reportReadOnlyChanged();
 
 };
 

@@ -44,7 +44,6 @@
 #include <QProgressDialog>
 #include <QSettings>
 #include <QRect>
-#include <QPushButton>
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QSharedPointer>
@@ -63,10 +62,7 @@ using std::vector;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    mixanSettings("pa23software", "mixan"),
-    polynomPower(10),
-    imageWidth(400),
-    reportReadOnly(1) {
+    mixanSettings("pa23software", "mixan") {
 
     ui->setupUi(this);
 
@@ -133,16 +129,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     settingsDialog = new SettingsDialog();
 
-    checkBox_reportRO = settingsDialog->
+    spinBox_polyPower = settingsDialog->
+            findChild<QSpinBox *>("spinBox_polyPower");
+    spinBox_imgWidth = settingsDialog->
+            findChild<QSpinBox *>("spinBox_imgWidth");
+    checkBox_reportReadOnly = settingsDialog->
             findChild<QCheckBox *>("checkBox_reportRO");
 
-    pushButton_settingsOK = settingsDialog->
-            findChild<QPushButton *>("pushButton_OK");
-
-    connect(pushButton_settingsOK,
+    connect(checkBox_reportReadOnly,
             SIGNAL(clicked()),
             this,
-            SLOT(saveSettings())
+            SLOT(reportReadOnlyChanged())
             );
 
     //
@@ -154,12 +151,15 @@ MainWindow::~MainWindow() {
 
     writeProgramSettings();
 
-    delete ui;
+    delete spinBox_polyPower;
+    delete spinBox_imgWidth;
+    delete checkBox_reportReadOnly;
+    delete settingsDialog;
 
     delete progressDialog;
     delete futureWatcher;
 
-    delete settingsDialog;
+    delete ui;
 }
 
 void MainWindow::forgetSelectedImages() {
@@ -171,12 +171,14 @@ void MainWindow::forgetSelectedImages() {
 
 void MainWindow::runMaterialsAnalysis() {
 
-    if ( !material1.data()->analyze(mat1ImageFileName, polynomPower) ) {
+    if ( !material1.data()->
+         analyze(mat1ImageFileName, spinBox_polyPower->value()) ) {
 
         return;
     }
 
-    if ( !material2.data()->analyze(mat2ImageFileName, polynomPower) ) {
+    if ( !material2.data()->
+         analyze(mat2ImageFileName, spinBox_polyPower->value()) ) {
 
         return;
     }
@@ -184,12 +186,14 @@ void MainWindow::runMaterialsAnalysis() {
 
 void MainWindow::runMixAnalysis() {
 
-    if ( !material1.data()->analyze(mat1ImageFileName, polynomPower) ) {
+    if ( !material1.data()->
+         analyze(mat1ImageFileName, spinBox_polyPower->value()) ) {
 
         return;
     }
 
-    if ( !material2.data()->analyze(mat2ImageFileName, polynomPower) ) {
+    if ( !material2.data()->
+         analyze(mat2ImageFileName, spinBox_polyPower->value()) ) {
 
         return;
     }
@@ -223,9 +227,10 @@ void MainWindow::writeProgramSettings() {
     mixanSettings.beginGroup("/Settings");
     mixanSettings.setValue("/window_geometry", geometry());
     mixanSettings.setValue("/panels_state", QMainWindow::saveState());
-    mixanSettings.setValue("/polynom_power", (int)polynomPower);
-    mixanSettings.setValue("/image_width", (uint)imageWidth);
-    mixanSettings.setValue("/report_is_read_only", reportReadOnly);
+    mixanSettings.setValue("/polynom_power", spinBox_polyPower->value());
+    mixanSettings.setValue("/image_width", spinBox_imgWidth->value());
+    mixanSettings.setValue("/report_is_read_only",
+                           checkBox_reportReadOnly->isChecked());
     mixanSettings.endGroup();
 }
 
@@ -235,10 +240,20 @@ void MainWindow::readProgramSettings() {
     setGeometry(mixanSettings.value("/window_geometry",
                                     QRect(20, 40, 0, 0)).toRect());
     restoreState(mixanSettings.value("/panels_state").toByteArray());
-    polynomPower = mixanSettings.value("/polynom_power", 10).toInt();
-    imageWidth = mixanSettings.value("/image_width", 400).toUInt();
-    reportReadOnly = mixanSettings.value("/report_is_read_only", true).toBool();
+    spinBox_polyPower->setValue(
+                mixanSettings.value("/polynom_power", 6).toInt()
+                );
+    spinBox_imgWidth->setValue(
+                mixanSettings.value("/image_width", 400).toInt()
+                );
+    checkBox_reportReadOnly->setChecked(
+                mixanSettings.value("/report_is_read_only", true).toBool()
+                );
     mixanSettings.endGroup();
+
+    //
+
+    reportReadOnlyChanged();
 }
 
 void MainWindow::on_action_selectMaterialImages_activated() {
@@ -503,7 +518,8 @@ void MainWindow::showAnalysisResults() {
                 "<br>Image of the first material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
-                material1.data()->originalImage().scaledToWidth(imageWidth)
+                material1.data()->
+                originalImage().scaledToWidth(spinBox_imgWidth->value())
                 );
 
     ui->textBrowser_report->insertHtml(
@@ -515,7 +531,8 @@ void MainWindow::showAnalysisResults() {
                 "<br><br>Image of the second material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
-                material2.data()->originalImage().scaledToWidth(imageWidth)
+                material2.data()->
+                originalImage().scaledToWidth(spinBox_imgWidth->value())
                 );
 
     ui->textBrowser_report->insertHtml(
@@ -576,7 +593,8 @@ void MainWindow::showAnalysisResults() {
                     );
 
         ui->textBrowser_report->textCursor().insertImage(
-                    probes[i].data()->originalImage().scaledToWidth(imageWidth)
+                    probes[i].data()->
+                    originalImage().scaledToWidth(spinBox_imgWidth->value())
                     );
 
         ui->textBrowser_report->insertHtml(
@@ -765,20 +783,9 @@ QVector<QImage> MainWindow::createGraphics() {
     return graphics;
 }
 
-void MainWindow::saveSettings() {
+void MainWindow::reportReadOnlyChanged() {
 
-    QSpinBox *spinBox_polyPower = settingsDialog->
-            findChild<QSpinBox *>("spinBox_polyPower");
-    QSpinBox *spinBox_imgWidth = settingsDialog->
-            findChild<QSpinBox *>("spinBox_imgWidth");
-    QCheckBox *checkBox_reportReadOnly = settingsDialog->
-            findChild<QCheckBox *>("checkBox_reportRO");
-
-    polynomPower = spinBox_polyPower->value();
-    imageWidth = spinBox_imgWidth->value();
-    reportReadOnly = checkBox_reportReadOnly->isChecked();
-
-    if ( reportReadOnly ) {
+    if ( checkBox_reportReadOnly->isChecked() ) {
 
         ui->textBrowser_report->setReadOnly(true);
     }

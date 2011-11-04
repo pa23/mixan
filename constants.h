@@ -25,6 +25,7 @@
 
 const QString VERSION = "v1.7.0 DEV";
 const double IDEALCONC = 0.5;
+const double ACCUR = 0.0005;
 const double INTERSECTACCUR = 0.5;
 
 #endif // CONSTANTS_H
