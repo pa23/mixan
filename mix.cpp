@@ -21,6 +21,7 @@
 #include "mix.h"
 #include "numcompfuns.h"
 #include "constants.h"
+#include "material.h"
 
 #include <vector>
 #include <cmath>
@@ -38,9 +39,59 @@ Mix::Mix() :
 Mix::~Mix() {
 }
 
-size_t Mix::defThreshColor(size_t lcol, size_t dcol) {
+size_t Mix::defThreshColor(Material *m1, Material *m2, double intersectaccur) {
 
-    return (lcol + dcol) / 2;
+    size_t tcol = 0;
+
+    //
+
+    Material *mat1;
+    Material *mat2;
+
+    if ( m1->thresholdColor() < m2->thresholdColor() ) {
+
+        mat1 = m1;
+        mat2 = m2;
+    }
+    else {
+
+        mat1 = m2;
+        mat2 = m1;
+    }
+
+    //
+
+    vector<ptrdiff_t> lims1 = mat1->polynomLimits();
+    vector<ptrdiff_t> lims2 = mat2->polynomLimits();
+
+    if ( lims1[1] < lims2[0] ) {
+
+        return ( mat1->thresholdColor() + mat2->thresholdColor() ) / 2;
+    }
+
+    //
+
+    vector<double> poly1 = mat1->polynomValues();
+    vector<double> poly2 = mat2->polynomValues();
+
+    for ( size_t i=mat1->thresholdColor(); i<mat2->thresholdColor(); i++ ) {
+
+        if ( fabs(poly1[i]-poly2[i]) < intersectaccur ) {
+
+            return i;
+        }
+    }
+
+    //
+
+    if ( tcol == 0 ) {
+
+        return ( mat1->thresholdColor() + mat2->thresholdColor() ) / 2;
+    }
+
+    //
+
+    return 0;
 }
 
 bool Mix::isEmpty() const {

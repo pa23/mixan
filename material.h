@@ -45,6 +45,7 @@ public:
     std::vector<double> histogramValues() const;
     std::vector<double> polynomCoefficients() const;
     std::vector<double> polynomValues() const;
+    std::vector<ptrdiff_t> polynomLimits() const;
 
 private:
 
@@ -58,6 +59,8 @@ private:
 
     std::vector<double> polyCoeff;
     std::vector<double> polyVal;
+
+    std::vector<ptrdiff_t> polylimits;
 
     bool defHistogram();
     bool defThreshColor();

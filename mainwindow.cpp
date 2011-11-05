@@ -131,6 +131,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     spinBox_polyPower = settingsDialog->
             findChild<QSpinBox *>("spinBox_polyPower");
+    doubleSpinBox_intersectAccur = settingsDialog->
+            findChild<QDoubleSpinBox *>("doubleSpinBox_intersectAccur");
+    doubleSpinBox_idealConc = settingsDialog->
+            findChild<QDoubleSpinBox *>("doubleSpinBox_idealConc");
     spinBox_imgWidth = settingsDialog->
             findChild<QSpinBox *>("spinBox_imgWidth");
     checkBox_reportReadOnly = settingsDialog->
@@ -152,6 +156,8 @@ MainWindow::~MainWindow() {
     writeProgramSettings();
 
     delete spinBox_polyPower;
+    delete doubleSpinBox_intersectAccur;
+    delete doubleSpinBox_idealConc;
     delete spinBox_imgWidth;
     delete checkBox_reportReadOnly;
     delete settingsDialog;
@@ -200,20 +206,23 @@ void MainWindow::runMixAnalysis() {
 
     //
 
-    size_t lcol = material1.data()->thresholdColor();
-    size_t dcol = material2.data()->thresholdColor();
-
     probes.clear();
 
     //    ptrdiff_t i = 0;
-    //#pragma omp parallel for shared(lcol, dcol) private(i)
+    //#pragma omp parallel for shared(tcol1, tcol2) private(i)
 
     for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
 
         QSharedPointer<Mix> probe(new Mix());
 
         if ( !probe->analyze( mixImageFileNames[i],
-                              Mix::defThreshColor(lcol, dcol) ) ) {
+                              Mix::defThreshColor(
+                                  material1.data(),
+                                  material2.data(),
+                                  doubleSpinBox_intersectAccur->value()
+                                  )
+                              )
+             ) {
 
             continue;
         }
@@ -228,6 +237,10 @@ void MainWindow::writeProgramSettings() {
     mixanSettings.setValue("/window_geometry", geometry());
     mixanSettings.setValue("/panels_state", QMainWindow::saveState());
     mixanSettings.setValue("/polynom_power", spinBox_polyPower->value());
+    mixanSettings.setValue("/intersection_accuracy",
+                           doubleSpinBox_intersectAccur->value());
+    mixanSettings.setValue("/ideal_concentration",
+                           doubleSpinBox_idealConc->value());
     mixanSettings.setValue("/image_width", spinBox_imgWidth->value());
     mixanSettings.setValue("/report_is_read_only",
                            checkBox_reportReadOnly->isChecked());
@@ -242,6 +255,12 @@ void MainWindow::readProgramSettings() {
     restoreState(mixanSettings.value("/panels_state").toByteArray());
     spinBox_polyPower->setValue(
                 mixanSettings.value("/polynom_power", 6).toInt()
+                );
+    doubleSpinBox_intersectAccur->setValue(
+                mixanSettings.value("/intersection_accuracy", 0.0005).toDouble()
+                );
+    doubleSpinBox_idealConc->setValue(
+                mixanSettings.value("/ideal_concentration", 0.5).toDouble()
                 );
     spinBox_imgWidth->setValue(
                 mixanSettings.value("/image_width", 400).toInt()
@@ -449,10 +468,6 @@ void MainWindow::on_action_analyzeMix_activated() {
 
     //
 
-    //
-
-    //
-
     ui->textBrowser_report->moveCursor(QTextCursor::End);
 
     ui->textBrowser_report->insertHtml(
@@ -515,6 +530,8 @@ void MainWindow::showAnalysisResults() {
     //
 
     ui->textBrowser_report->insertHtml(
+                "<br>File of the first material: " +
+                mat1ImageFileName +
                 "<br>Image of the first material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
@@ -528,7 +545,9 @@ void MainWindow::showAnalysisResults() {
     ui->textBrowser_report->textCursor().insertImage(graphics[0]);
 
     ui->textBrowser_report->insertHtml(
-                "<br><br>Image of the second material:<br>"
+                "<br><br>File of the second material: " +
+                mat2ImageFileName +
+                "<br>Image of the second material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
                 material2.data()->
@@ -608,7 +627,7 @@ void MainWindow::showAnalysisResults() {
 
     ui->textBrowser_report->insertHtml(
                 "<br><b>Vc = " +
-                QString::number(Vc(&concs)) +
+                QString::number(Vc(&concs, doubleSpinBox_idealConc->value())) +
                 "</b><br><hr><br>"
                 );
 
@@ -740,26 +759,16 @@ QVector<QImage> MainWindow::createGraphics() {
     curve33.data()->setStyle(QwtPlotCurve::Lines);
     curve33.data()->setPen(QPen(Qt::black));
 
-    size_t lcol = material1.data()->thresholdColor();
-    size_t dcol = material2.data()->thresholdColor();
-    double tcol = Mix::defThreshColor(lcol, dcol);
+    double tcolm = Mix::defThreshColor(material1.data(),
+                                       material2.data(),
+                                       doubleSpinBox_intersectAccur->value());
 
-    double max1 = 0;
-    double max2 = 0;
-
-    for ( size_t i=0; i<v12.size(); i++ ) {
-
-        if ( v12[i] > max1 ) { max1 = v12[i]; }
-    }
-
-    for ( size_t i=0; i<v22.size(); i++ ) {
-
-        if ( v22[i] > max2 ) { max2 = v22[i]; }
-    }
+    double max1 = v12[material1.data()->thresholdColor()];
+    double max2 = v22[material2.data()->thresholdColor()];
 
     QSharedPointer<double> x33(new double[2]);
-    x33.data()[0] = tcol;
-    x33.data()[1] = tcol;
+    x33.data()[0] = tcolm;
+    x33.data()[1] = tcolm;
 
     QSharedPointer<double> y33(new double[2]);
     y33.data()[0] = 0;

@@ -30,6 +30,7 @@
 #include <QImage>
 #include <QSettings>
 #include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <QCheckBox>
 #include <QSharedPointer>
 
@@ -70,6 +71,8 @@ private:
 
     SettingsDialog *settingsDialog;
     QSpinBox *spinBox_polyPower;
+    QDoubleSpinBox *doubleSpinBox_intersectAccur;
+    QDoubleSpinBox *doubleSpinBox_idealConc;
     QSpinBox *spinBox_imgWidth;
     QCheckBox *checkBox_reportReadOnly;
 

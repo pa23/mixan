@@ -27,16 +27,16 @@
 using std::size_t;
 using std::vector;
 
-double Vc(vector<double> *concentrations) {
+double Vc(vector<double> *concentrations, double idealconc) {
 
     double summ_concdiff = 0;
     size_t probesnum = concentrations->size();
 
     for ( size_t i=0; i<probesnum; i++ ) {
 
-        summ_concdiff += pow( (concentrations->at(i) - IDEALCONC), 2 );
+        summ_concdiff += pow( (concentrations->at(i) - idealconc), 2 );
     }
 
-    return 100.0 / IDEALCONC *
+    return 100.0 / idealconc *
             pow( 1.0 / ( probesnum - 1.0 ) * summ_concdiff, 0.5 );
 }

@@ -23,6 +23,6 @@
 
 #include <vector>
 
-double Vc(std::vector<double> *);
+double Vc(std::vector<double> *, double);
 
 #endif // MIXFUNS_H

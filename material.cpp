@@ -103,6 +103,11 @@ vector<double> Material::polynomValues() const {
     return polyVal;
 }
 
+vector<ptrdiff_t> Material::polynomLimits() const {
+
+    return polylimits;
+}
+
 bool Material::defHistogram() {
 
     if ( origImage.isNull() ) { return false; }
@@ -189,32 +194,31 @@ bool Material::defThreshColor() {
 
 bool Material::corrPolyVals() {
 
-    ptrdiff_t leftlim = 0;
+    polylimits.clear();
+    polylimits.resize(2, 0);
 
     for ( ptrdiff_t i=threshColor; i>=0; i-- ) {
 
         if ( polyVal[i] < 0 ) {
 
-            leftlim = i;
+            polylimits[0] = i;
             break;
         }
     }
-
-    ptrdiff_t rightlim = 0;
 
     for ( ptrdiff_t i=threshColor; i<=255; i++ ) {
 
         if ( polyVal[i] < 0 ) {
 
-            rightlim = i;
+            polylimits[1] = i;
             break;
         }
     }
 
     //
 
-    for ( ptrdiff_t i=0; i<=leftlim; i++    ) { polyVal[i] = 0; }
-    for ( ptrdiff_t i=rightlim; i<=255; i++ ) { polyVal[i] = 0; }
+    for ( ptrdiff_t i=0; i<=polylimits[0]; i++   ) { polyVal[i] = 0; }
+    for ( ptrdiff_t i=polylimits[1]; i<=255; i++ ) { polyVal[i] = 0; }
 
     //
 

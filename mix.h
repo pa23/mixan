@@ -24,6 +24,8 @@
 #include <QString>
 #include <QImage>
 
+#include "material.h"
+
 class Mix {
 
 public:
@@ -31,7 +33,7 @@ public:
     explicit Mix();
     virtual ~Mix();
 
-    static size_t defThreshColor(size_t, size_t);
+    static size_t defThreshColor(Material *, Material *, double);
 
     bool isEmpty() const;
 
