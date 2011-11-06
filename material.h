@@ -50,7 +50,7 @@ private:
     QString fileName;
     QImage origImage;
 
-    double histogram[256];
+    QVector<double> histogram;
     size_t threshColor;
 
     ptrdiff_t polynomPower;

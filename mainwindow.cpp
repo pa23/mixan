@@ -624,7 +624,7 @@ void MainWindow::showAnalysisResults() {
 
     ui->textBrowser_report->insertHtml(
                 "<br><b>Vc = " +
-                QString::number(Vc(concs, doubleSpinBox_idealConc->value())) +
+                QString::number(Vc(&concs, doubleSpinBox_idealConc->value())) +
                 "</b><br><hr><br>"
                 );
 

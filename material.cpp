@@ -23,13 +23,15 @@
 #include "constants.h"
 
 #include <cmath>
+#include <numeric>
 
 #include <QVector>
 #include <QImage>
 
 Material::Material() {
 
-    for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
+    histogram.clear();
+    histogram.resize(256);
 
     threshColor = 0;
 }
@@ -46,7 +48,9 @@ bool Material::isEmpty() const {
 bool Material::analyze(QString imgFileName, ptrdiff_t polyPwr) {
 
     fileName = "";
-    for ( ptrdiff_t i=0; i<256; i++ ) { histogram[i] = 0; }
+
+    histogram.clear();
+    histogram.resize(256);
 
     polynomPower = polyPwr;
 
@@ -81,11 +85,7 @@ size_t Material::thresholdColor() const {
 
 QVector<double> Material::histogramValues() const {
 
-    QVector<double> hv(256);
-
-    for ( ptrdiff_t i=0; i<256; i++ ) { hv[i] = histogram[i]; }
-
-    return hv;
+    return histogram;
 }
 
 QVector<double> Material::polynomValues() const {
@@ -140,7 +140,12 @@ bool Material::defThreshColor() {
 
     //
 
-    QVector<double> polyCoeff = polyapprox(x, y, polynomPower);
+    QVector<double> polyCoeff = polyapprox(&x, &y, polynomPower);
+
+    if ( std::accumulate(polyCoeff.begin(), polyCoeff.end(), 0) ) {
+
+        return false;
+    }
 
     //
 

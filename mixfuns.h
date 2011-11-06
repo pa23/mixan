@@ -23,6 +23,6 @@
 
 #include <QVector>
 
-double Vc(QVector<double>, double);
+double Vc(QVector<double> *, double);
 
 #endif // MIXFUNS_H

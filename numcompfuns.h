@@ -23,9 +23,9 @@
 
 #include <QVector>
 
-QVector<double> polyapprox(QVector<double>,  // x
-                           QVector<double>,  // y
-                           ptrdiff_t);       // polyPower
+QVector<double> polyapprox(QVector<double> *,  // x
+                           QVector<double> *,  // y
+                           ptrdiff_t);         // polyPower
 
 // size of x must be equal of size y
 

@@ -23,14 +23,14 @@
 
 #include <cmath>
 
-double Vc(QVector<double> concentrations, double idealconc) {
+double Vc(QVector<double> *concentrations, double idealconc) {
 
     double summ_concdiff = 0;
-    size_t probesnum = concentrations.size();
+    size_t probesnum = concentrations->size();
 
     for ( size_t i=0; i<probesnum; i++ ) {
 
-        summ_concdiff += pow( (concentrations[i] - idealconc), 2 );
+        summ_concdiff += pow( (concentrations->at(i) - idealconc), 2 );
     }
 
     return 100.0 / idealconc *
