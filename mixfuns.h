@@ -21,8 +21,8 @@
 #ifndef MIXFUNS_H
 #define MIXFUNS_H
 
-#include <vector>
+#include <QVector>
 
-double Vc(std::vector<double> *, double);
+double Vc(QVector<double>, double);
 
 #endif // MIXFUNS_H

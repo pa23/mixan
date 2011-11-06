@@ -23,13 +23,10 @@
 #include "constants.h"
 #include "material.h"
 
-#include <vector>
 #include <cmath>
 
 #include <QVector>
 #include <QImage>
-
-using std::vector;
 
 Mix::Mix() :
     threshColor(0),
@@ -61,8 +58,8 @@ size_t Mix::defThreshColor(Material *m1, Material *m2, double intersectaccur) {
 
     //
 
-    vector<ptrdiff_t> lims1 = mat1->polynomLimits();
-    vector<ptrdiff_t> lims2 = mat2->polynomLimits();
+    QVector<ptrdiff_t> lims1 = mat1->polynomLimits();
+    QVector<ptrdiff_t> lims2 = mat2->polynomLimits();
 
     if ( lims1[1] < lims2[0] ) {
 
@@ -71,8 +68,8 @@ size_t Mix::defThreshColor(Material *m1, Material *m2, double intersectaccur) {
 
     //
 
-    vector<double> poly1 = mat1->polynomValues();
-    vector<double> poly2 = mat2->polynomValues();
+    QVector<double> poly1 = mat1->polynomValues();
+    QVector<double> poly2 = mat2->polynomValues();
 
     for ( size_t i=mat1->thresholdColor(); i<mat2->thresholdColor(); i++ ) {
 

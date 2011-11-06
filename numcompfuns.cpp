@@ -20,29 +20,30 @@
 
 #include "numcompfuns.h"
 
-#include <vector>
 #include <cmath>
 
-using std::vector;
-using std::ptrdiff_t;
-using std::size_t;
+#include <QVector>
 
-bool polyapprox(vector<double> *x, vector<double> *y, vector<double> *coeff) {
+QVector<double> polyapprox(QVector<double> x,
+                           QVector<double> y,
+                           ptrdiff_t K) {
 
     // it was rewritten. original algorithm realization:
     // http://alexeypetrov.narod.ru/C/sqr_less_about.html
 
-    ptrdiff_t N = x->size();
-    ptrdiff_t K = coeff->size() - 1;
+    QVector<double> coeff(K+1);
 
-    if ( (size_t)N != y->size() ) { return false; }
+    ptrdiff_t N = x.size();
+
+    if ( N != y.size() ) { return coeff; }
+    if ( K >= N        ) { return coeff; }
 
     //
 
-    vector<double> b(K+1, 0);
+    QVector<double> b(K+1);
 
-    vector< vector<double> > sums;
-    vector<double> sum(K+1, 0);
+    QVector< QVector<double> > sums;
+    QVector<double> sum(K+1);
     for ( ptrdiff_t i=0; i<(K+1); i++ ) { sums.push_back(sum); }
 
     //
@@ -55,7 +56,7 @@ bool polyapprox(vector<double> *x, vector<double> *y, vector<double> *coeff) {
 
             for ( ptrdiff_t k=0; k<N; k++ ) {
 
-                sums[i][j] += pow( x->at(k), i+j );
+                sums[i][j] += pow( x[k], i+j );
             }
         }
     }
@@ -66,7 +67,7 @@ bool polyapprox(vector<double> *x, vector<double> *y, vector<double> *coeff) {
 
         for ( ptrdiff_t k=0; k<N; k++ ) {
 
-            b[i] += pow( x->at(k), i ) * y->at(k);
+            b[i] += pow( x[k], i ) * y[k];
         }
     }
 
@@ -109,7 +110,7 @@ bool polyapprox(vector<double> *x, vector<double> *y, vector<double> *coeff) {
 
         for ( ptrdiff_t i=(k+1); i<(K+1); i++ ) {
 
-            if ( sums[k][k] == 0 ) { return false; } // solution is not exist
+            if ( sums[k][k] == 0 ) { return coeff; } // solution is not exist
 
             M = sums[i][k] / sums[k][k];
 
@@ -132,11 +133,11 @@ bool polyapprox(vector<double> *x, vector<double> *y, vector<double> *coeff) {
 
         for ( ptrdiff_t j=i; j<(K+1); j++ ) {
 
-            s += sums[i][j] * coeff->at(j);
+            s += sums[i][j] * coeff[j];
         }
 
-        coeff->at(i) = (b[i] - s) / sums[i][i];
+        coeff[i] = (b[i] - s) / sums[i][i];
     }
 
-    return true;
+    return coeff;
 }

@@ -27,6 +27,7 @@
 #include "settingsdialog.h"
 
 #include <QString>
+#include <QVector>
 #include <QStringList>
 #include <QFileDialog>
 #include <QDir>
@@ -54,10 +55,6 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_item.h>
 #include <qwt_symbol.h>
-
-#include <vector>
-
-using std::vector;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -525,7 +522,7 @@ void MainWindow::on_action_about_mixan_activated() {
 
 void MainWindow::showAnalysisResults() {
 
-    QVector<QImage> graphics = createGraphics();
+    createGraphics();
 
     //
 
@@ -587,7 +584,7 @@ void MainWindow::showAnalysisResults() {
     QString imgname;
 
     double conc = 0;
-    vector<double> concs;
+    QVector<double> concs;
 
     for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
 
@@ -627,7 +624,7 @@ void MainWindow::showAnalysisResults() {
 
     ui->textBrowser_report->insertHtml(
                 "<br><b>Vc = " +
-                QString::number(Vc(&concs, doubleSpinBox_idealConc->value())) +
+                QString::number(Vc(concs, doubleSpinBox_idealConc->value())) +
                 "</b><br><hr><br>"
                 );
 
@@ -635,6 +632,7 @@ void MainWindow::showAnalysisResults() {
 
     //
 
+    graphics.clear();
     resetResults();
 }
 
@@ -644,14 +642,14 @@ void MainWindow::resetResults() {
     probes.clear();
 }
 
-QVector<QImage> MainWindow::createGraphics() {
+void MainWindow::createGraphics() {
 
-    QVector<QImage> graphics;
+    graphics.clear();
 
     //
 
-    QSharedPointer<double> x(new double[256]);
-    for ( ptrdiff_t i=0; i<256; i++ ) { x.data()[i] = i; }
+    QVector<double> x(256);
+    for ( ptrdiff_t i=0; i<x.size(); i++ ) { x[i] = i; }
 
     //
 
@@ -666,9 +664,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve11.data()->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                              QPen(Qt::black), QSize(1, 1)) );
 
-    vector<double> v11 = material1.data()->histogramValues();
-    QSharedPointer<double> y11(new double[256]);
-    for ( ptrdiff_t i=0; i<256; i++ ) { y11.data()[i] = v11[i]; }
+    QVector<double> y11 = material1.data()->histogramValues();
 
     curve11.data()->setRawSamples(x.data(), y11.data(), 256);
     curve11.data()->attach(plot1.data());
@@ -678,9 +674,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve12.data()->setStyle(QwtPlotCurve::Lines);
     curve12.data()->setPen(QPen(Qt::red));
 
-    vector<double> v12 = material1.data()->polynomValues();
-    QSharedPointer<double> y12(new double[256]);
-    for ( ptrdiff_t i=0; i<256; i++ ) { y12.data()[i] = v12[i]; }
+    QVector<double> y12 = material1.data()->polynomValues();
 
     curve12.data()->setRawSamples(x.data(), y12.data(), 256);
     curve12.data()->attach(plot1.data());
@@ -706,9 +700,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve21.data()->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                              QPen(Qt::black), QSize(1, 1)) );
 
-    vector<double> v21 = material2.data()->histogramValues();
-    QSharedPointer<double> y21(new double[256]);
-    for ( ptrdiff_t i=0; i<256; i++ ) { y21.data()[i] = v21[i]; }
+    QVector<double> y21 = material2.data()->histogramValues();
 
     curve21.data()->setRawSamples(x.data(), y21.data(), 256);
     curve21.data()->attach(plot2.data());
@@ -718,9 +710,7 @@ QVector<QImage> MainWindow::createGraphics() {
     curve22.data()->setStyle(QwtPlotCurve::Lines);
     curve22.data()->setPen(QPen(Qt::blue));
 
-    vector<double> v22 = material2.data()->polynomValues();
-    QSharedPointer<double> y22(new double[256]);
-    for ( ptrdiff_t i=0; i<256; i++ ) { y22.data()[i] = v22[i]; }
+    QVector<double> y22 = material2.data()->polynomValues();
 
     curve22.data()->setRawSamples(x.data(), y22.data(), 256);
     curve22.data()->attach(plot2.data());
@@ -763,18 +753,14 @@ QVector<QImage> MainWindow::createGraphics() {
                                        material2.data(),
                                        doubleSpinBox_intersectAccur->value());
 
-    double max1 = v12[material1.data()->thresholdColor()];
-    double max2 = v22[material2.data()->thresholdColor()];
+    double max1 = y12[material1.data()->thresholdColor()];
+    double max2 = y22[material2.data()->thresholdColor()];
 
-    QSharedPointer<double> x33(new double[2]);
-    x33.data()[0] = tcolm;
-    x33.data()[1] = tcolm;
+    QVector<double> x33(2, tcolm);
+    QVector<double> y33(2);
 
-    QSharedPointer<double> y33(new double[2]);
-    y33.data()[0] = 0;
-
-    if ( max1 > max2 ) { y33.data()[1] = max1; }
-    else               { y33.data()[1] = max2; }
+    if ( max1 > max2 ) { y33[1] = max1; }
+    else               { y33[1] = max2; }
 
     curve33.data()->setRawSamples(x33.data(), y33.data(), 2);
     curve33.data()->attach(plot3.data());
@@ -786,10 +772,6 @@ QVector<QImage> MainWindow::createGraphics() {
     plot3.data()->render(&pixmap3);
 
     graphics.push_back(pixmap3.toImage());
-
-    //
-
-    return graphics;
 }
 
 void MainWindow::reportReadOnlyChanged() {

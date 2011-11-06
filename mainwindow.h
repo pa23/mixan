@@ -65,6 +65,7 @@ private:
     QSharedPointer<Material> material1;
     QSharedPointer<Material> material2;
     QVector< QSharedPointer<Mix> > probes;
+    QVector<QImage> graphics;
 
     QProgressDialog *progressDialog;
     QFutureWatcher<void> *futureWatcher;
@@ -83,7 +84,7 @@ private:
     void writeProgramSettings();
     void readProgramSettings();
 
-    QVector<QImage> createGraphics();
+    void createGraphics();
 
 private slots:
 

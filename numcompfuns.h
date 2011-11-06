@@ -21,11 +21,12 @@
 #ifndef NUMCOMPFUNS_H
 #define NUMCOMPFUNS_H
 
-#include <vector>
+#include <QVector>
 
-bool polyapprox(std::vector<double> *,  // x
-                std::vector<double> *,  // y
-                std::vector<double> *); // coeff ( numCoeff = polyPower + 1 )
-                                        // size of x must be equal of size y
+QVector<double> polyapprox(QVector<double>,  // x
+                           QVector<double>,  // y
+                           ptrdiff_t);       // polyPower
+
+// size of x must be equal of size y
 
 #endif // NUMCOMPFUNS_H

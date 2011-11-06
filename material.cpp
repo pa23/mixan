@@ -22,15 +22,10 @@
 #include "numcompfuns.h"
 #include "constants.h"
 
-#include <vector>
 #include <cmath>
 
 #include <QVector>
 #include <QImage>
-
-using std::vector;
-using std::size_t;
-using std::ptrdiff_t;
 
 Material::Material() {
 
@@ -84,26 +79,21 @@ size_t Material::thresholdColor() const {
     return threshColor;
 }
 
-vector<double> Material::histogramValues() const {
+QVector<double> Material::histogramValues() const {
 
-    vector<double> hv(256, 0);
+    QVector<double> hv(256);
 
     for ( ptrdiff_t i=0; i<256; i++ ) { hv[i] = histogram[i]; }
 
     return hv;
 }
 
-vector<double> Material::polynomCoefficients() const {
-
-    return polyCoeff;
-}
-
-vector<double> Material::polynomValues() const {
+QVector<double> Material::polynomValues() const {
 
     return polyVal;
 }
 
-vector<ptrdiff_t> Material::polynomLimits() const {
+QVector<ptrdiff_t> Material::polynomLimits() const {
 
     return polylimits;
 }
@@ -134,16 +124,13 @@ bool Material::defHistogram() {
 
 bool Material::defThreshColor() {
 
-    polyCoeff.clear();
-    polyCoeff.resize(polynomPower+1, 0);
-
     polyVal.clear();
-    polyVal.resize(256, 0);
+    polyVal.resize(256);
 
     //
 
-    vector<double> x(256, 0);
-    vector<double> y(256, 0);
+    QVector<double> x(256);
+    QVector<double> y(256);
 
     for ( ptrdiff_t i=0; i<256; i++ ) {
 
@@ -153,7 +140,7 @@ bool Material::defThreshColor() {
 
     //
 
-    if ( !polyapprox(&x, &y, &polyCoeff) ) { return false; }
+    QVector<double> polyCoeff = polyapprox(x, y, polynomPower);
 
     //
 
@@ -195,7 +182,7 @@ bool Material::defThreshColor() {
 bool Material::corrPolyVals() {
 
     polylimits.clear();
-    polylimits.resize(2, 0);
+    polylimits.resize(2);
 
     for ( ptrdiff_t i=threshColor; i>=0; i-- ) {
 

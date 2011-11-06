@@ -23,8 +23,7 @@
 
 #include <QString>
 #include <QImage>
-
-#include <vector>
+#include <QVector>
 
 class Material {
 
@@ -42,10 +41,9 @@ public:
 
     size_t thresholdColor() const; // gray color
 
-    std::vector<double> histogramValues() const;
-    std::vector<double> polynomCoefficients() const;
-    std::vector<double> polynomValues() const;
-    std::vector<ptrdiff_t> polynomLimits() const;
+    QVector<double> histogramValues() const;
+    QVector<double> polynomValues() const;
+    QVector<ptrdiff_t> polynomLimits() const;
 
 private:
 
@@ -56,11 +54,8 @@ private:
     size_t threshColor;
 
     ptrdiff_t polynomPower;
-
-    std::vector<double> polyCoeff;
-    std::vector<double> polyVal;
-
-    std::vector<ptrdiff_t> polylimits;
+    QVector<double> polyVal;
+    QVector<ptrdiff_t> polylimits;
 
     bool defHistogram();
     bool defThreshColor();
