@@ -142,7 +142,7 @@ bool Material::defThreshColor() {
 
     QVector<double> polyCoeff = polyapprox(&x, &y, polynomPower);
 
-    if ( std::accumulate(polyCoeff.begin(), polyCoeff.end(), 0) ) {
+    if ( std::accumulate(polyCoeff.begin(), polyCoeff.end(), 0.0) == 0.0 ) {
 
         return false;
     }
