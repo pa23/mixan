@@ -33,11 +33,13 @@ public:
     explicit Mix();
     virtual ~Mix();
 
-    static size_t defThreshColor(Material *, Material *, double);
+    static size_t defThreshColor(const Material *,
+                                 const Material *,
+                                 const double &);
 
     bool isEmpty() const;
 
-    bool analyze(QString, size_t);
+    bool analyze(const QString &, const size_t &);
 
     QString imageFileName() const;
     QImage originalImage() const;

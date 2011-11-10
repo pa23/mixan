@@ -45,7 +45,7 @@ bool Material::isEmpty() const {
     else                      { return false; }
 }
 
-bool Material::analyze(QString imgFileName, ptrdiff_t polyPwr) {
+bool Material::analyze(const QString &imgFileName, const ptrdiff_t &polyPwr) {
 
     fileName = "";
 
@@ -140,7 +140,7 @@ bool Material::defThreshColor() {
 
     //
 
-    QVector<double> polyCoeff = polyapprox(&x, &y, polynomPower);
+    QVector<double> polyCoeff = polyapprox(x, y, polynomPower);
 
     if ( std::accumulate(polyCoeff.begin(), polyCoeff.end(), 0.0) == 0.0 ) {
 

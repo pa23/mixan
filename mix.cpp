@@ -36,14 +36,16 @@ Mix::Mix() :
 Mix::~Mix() {
 }
 
-size_t Mix::defThreshColor(Material *m1, Material *m2, double intersectaccur) {
+size_t Mix::defThreshColor(const Material *m1,
+                           const Material *m2,
+                           const double &intersectaccur) {
 
     size_t tcol = 0;
 
     //
 
-    Material *mat1;
-    Material *mat2;
+    const Material *mat1;
+    const Material *mat2;
 
     if ( m1->thresholdColor() < m2->thresholdColor() ) {
 
@@ -97,7 +99,7 @@ bool Mix::isEmpty() const {
     else                      { return false; }
 }
 
-bool Mix::analyze(QString imgFileName, size_t threshCol) {
+bool Mix::analyze(const QString &imgFileName, const size_t &threshCol) {
 
     fileName = "";
 

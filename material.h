@@ -34,7 +34,7 @@ public:
 
     bool isEmpty() const;
 
-    bool analyze(QString, ptrdiff_t);
+    bool analyze(const QString &, const ptrdiff_t &);
 
     QString imageFileName() const;
     QImage originalImage() const;

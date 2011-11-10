@@ -24,19 +24,19 @@
 
 #include <QVector>
 
-QVector<double> polyapprox(QVector<double> *x,
-                           QVector<double> *y,
-                           ptrdiff_t K) {          // polynom power
+QVector<double> polyapprox(const QVector<double> &x,
+                           const QVector<double> &y,
+                           const ptrdiff_t &K) {      // polynom power
 
     // rewritten realization by Alexey Petrov:
     // http://alexeypetrov.narod.ru/C/sqr_less_about.html
 
     QVector<double> coeff(K+1);
 
-    ptrdiff_t N = x->size();
+    ptrdiff_t N = x.size();
 
-    if ( N != y->size() ) { return coeff; }
-    if ( K >= N         ) { return coeff; }
+    if ( N != y.size() ) { return coeff; }
+    if ( K >= N        ) { return coeff; }
 
     //
 
@@ -56,7 +56,7 @@ QVector<double> polyapprox(QVector<double> *x,
 
             for ( ptrdiff_t k=0; k<N; k++ ) {
 
-                sums[i][j] += pow( x->at(k), i+j );
+                sums[i][j] += pow( x[k], i+j );
             }
         }
     }
@@ -67,7 +67,7 @@ QVector<double> polyapprox(QVector<double> *x,
 
         for ( ptrdiff_t k=0; k<N; k++ ) {
 
-            b[i] += pow( x->at(k), i ) * y->at(k);
+            b[i] += pow( x[k], i ) * y[k];
         }
     }
 
