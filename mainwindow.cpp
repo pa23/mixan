@@ -53,7 +53,6 @@
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
-#include <qwt_plot_item.h>
 #include <qwt_symbol.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -205,6 +204,10 @@ void MainWindow::runMixAnalysis() {
 
     probes.clear();
 
+    size_t tcol = Mix::defThreshColor(material1.data(),
+                                      material2.data(),
+                                      doubleSpinBox_intersectAccur->value());
+
     //    ptrdiff_t i = 0;
     //#pragma omp parallel for shared(tcol1, tcol2) private(i)
 
@@ -212,17 +215,7 @@ void MainWindow::runMixAnalysis() {
 
         QSharedPointer<Mix> probe(new Mix());
 
-        if ( !probe->analyze( mixImageFileNames[i],
-                              Mix::defThreshColor(
-                                  material1.data(),
-                                  material2.data(),
-                                  doubleSpinBox_intersectAccur->value()
-                                  )
-                              )
-             ) {
-
-            continue;
-        }
+        if ( !probe->analyze(mixImageFileNames[i], tcol) ) { continue; }
 
         probes.push_back(probe);
     }
@@ -655,10 +648,12 @@ void MainWindow::createGraphics() {
 
     QSharedPointer<QwtPlot> plot1(new QwtPlot());
     plot1.data()->setAxisAutoScale(QwtPlot::xBottom, true);
+    plot1.data()->setAxisTitle(QwtPlot::xBottom, "gray color");
     plot1.data()->setAxisAutoScale(QwtPlot::yLeft, true);
-    plot1.data()->setAutoFillBackground(true);
+    plot1.data()->setAxisTitle(QwtPlot::yLeft, "n_i/N");
 
-    QSharedPointer<QwtPlotCurve> curve11(new QwtPlotCurve());
+    QSharedPointer<QwtPlotCurve>
+            curve11(new QwtPlotCurve(QString("Histogram")));
     curve11.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
     curve11.data()->setStyle(QwtPlotCurve::NoCurve);
     curve11.data()->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
@@ -666,17 +661,16 @@ void MainWindow::createGraphics() {
 
     QVector<double> y11 = material1.data()->histogramValues();
 
-    curve11.data()->setRawSamples(x.data(), y11.data(), 256);
+    curve11.data()->setRawSamples(x.data(), y11.data(), x.size());
     curve11.data()->attach(plot1.data());
 
-    QSharedPointer<QwtPlotCurve> curve12(new QwtPlotCurve());
+    QSharedPointer<QwtPlotCurve>
+            curve12(new QwtPlotCurve(QString("Approximate polynomial")));
     curve12.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve12.data()->setStyle(QwtPlotCurve::Lines);
-    curve12.data()->setPen(QPen(Qt::red));
 
     QVector<double> y12 = material1.data()->polynomValues();
 
-    curve12.data()->setRawSamples(x.data(), y12.data(), 256);
+    curve12.data()->setRawSamples(x.data(), y12.data(), x.size());
     curve12.data()->attach(plot1.data());
 
     plot1.data()->resize(600, 300);
@@ -691,10 +685,12 @@ void MainWindow::createGraphics() {
 
     QSharedPointer<QwtPlot> plot2(new QwtPlot());
     plot2.data()->setAxisAutoScale(QwtPlot::xBottom, true);
+    plot2.data()->setAxisTitle(QwtPlot::xBottom, "gray color");
     plot2.data()->setAxisAutoScale(QwtPlot::yLeft, true);
-    plot2.data()->setAutoFillBackground(true);
+    plot2.data()->setAxisTitle(QwtPlot::yLeft, "n_i/N");
 
-    QSharedPointer<QwtPlotCurve> curve21(new QwtPlotCurve());
+    QSharedPointer<QwtPlotCurve>
+            curve21(new QwtPlotCurve(QString("Histogram")));
     curve21.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
     curve21.data()->setStyle(QwtPlotCurve::NoCurve);
     curve21.data()->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
@@ -702,17 +698,16 @@ void MainWindow::createGraphics() {
 
     QVector<double> y21 = material2.data()->histogramValues();
 
-    curve21.data()->setRawSamples(x.data(), y21.data(), 256);
+    curve21.data()->setRawSamples(x.data(), y21.data(), x.size());
     curve21.data()->attach(plot2.data());
 
-    QSharedPointer<QwtPlotCurve> curve22(new QwtPlotCurve());
+    QSharedPointer<QwtPlotCurve>
+            curve22(new QwtPlotCurve(QString("Approximate polynomial")));
     curve22.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve22.data()->setStyle(QwtPlotCurve::Lines);
-    curve22.data()->setPen(QPen(Qt::blue));
 
     QVector<double> y22 = material2.data()->polynomValues();
 
-    curve22.data()->setRawSamples(x.data(), y22.data(), 256);
+    curve22.data()->setRawSamples(x.data(), y22.data(), x.size());
     curve22.data()->attach(plot2.data());
 
     plot2.data()->resize(600, 300);
@@ -727,27 +722,56 @@ void MainWindow::createGraphics() {
 
     QSharedPointer<QwtPlot> plot3(new QwtPlot());
     plot3.data()->setAxisAutoScale(QwtPlot::xBottom, true);
+    plot3.data()->setAxisTitle(QwtPlot::xBottom, "gray color");
     plot3.data()->setAxisAutoScale(QwtPlot::yLeft, true);
-    plot3.data()->setAutoFillBackground(true);
+    plot3.data()->setAxisTitle(QwtPlot::yLeft, "n_i/N");
 
     QSharedPointer<QwtPlotCurve> curve31(new QwtPlotCurve());
     curve31.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve31.data()->setStyle(QwtPlotCurve::Lines);
-    curve31.data()->setPen(QPen(Qt::red));
-    curve31.data()->setRawSamples(x.data(), y12.data(), 256);
+    curve31.data()->setRawSamples(x.data(), y12.data(), x.size());
     curve31.data()->attach(plot3.data());
+
+    QSharedPointer<QwtPlotCurve> curve31_s(new QwtPlotCurve());
+    curve31_s.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve31_s.data()->setStyle(QwtPlotCurve::NoCurve);
+    curve31_s.data()->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
+                                               QPen(Qt::black), QSize(7, 7)) );
+
+    QVector<double> x_s;
+    QVector<double> y12_s;
+
+    for ( ptrdiff_t i=0; i<x.size(); i+=10 ) {
+
+        x_s.push_back(x[i]);
+        y12_s.push_back(y12[i]);
+    }
+
+    curve31_s.data()->setRawSamples(x_s.data(), y12_s.data(), x_s.size());
+    curve31_s.data()->attach(plot3.data());
 
     QSharedPointer<QwtPlotCurve> curve32(new QwtPlotCurve());
     curve32.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve32.data()->setStyle(QwtPlotCurve::Lines);
-    curve32.data()->setPen(QPen(Qt::blue));
-    curve32.data()->setRawSamples(x.data(), y22.data(), 256);
+    curve32.data()->setRawSamples(x.data(), y22.data(), x.size());
     curve32.data()->attach(plot3.data());
+
+    QSharedPointer<QwtPlotCurve> curve32_s(new QwtPlotCurve());
+    curve32_s.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve32_s.data()->setStyle(QwtPlotCurve::NoCurve);
+    curve32_s.data()->setSymbol( new QwtSymbol(QwtSymbol::Triangle, Qt::NoBrush,
+                                               QPen(Qt::black), QSize(7, 7)) );
+
+    QVector<double> y22_s;
+
+    for ( ptrdiff_t i=0; i<x.size(); i+=10 ) {
+
+        y22_s.push_back(y22[i]);
+    }
+
+    curve32_s.data()->setRawSamples(x_s.data(), y22_s.data(), x_s.size());
+    curve32_s.data()->attach(plot3.data());
 
     QSharedPointer<QwtPlotCurve> curve33(new QwtPlotCurve());
     curve33.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve33.data()->setStyle(QwtPlotCurve::Lines);
-    curve33.data()->setPen(QPen(Qt::black));
 
     double tcolm = Mix::defThreshColor(material1.data(),
                                        material2.data(),
@@ -762,7 +786,7 @@ void MainWindow::createGraphics() {
     if ( max1 > max2 ) { y33[1] = max1; }
     else               { y33[1] = max2; }
 
-    curve33.data()->setRawSamples(x33.data(), y33.data(), 2);
+    curve33.data()->setRawSamples(x33.data(), y33.data(), x33.size());
     curve33.data()->attach(plot3.data());
 
     plot3.data()->resize(600, 300);
