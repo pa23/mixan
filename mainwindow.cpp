@@ -807,6 +807,23 @@ void MainWindow::createGraphics() {
     plot3.data()->render(&pixmap3);
 
     graphics.push_back(pixmap3.toImage());
+
+    //
+
+    if ( !pixmap1.save("temp/graphic1.png") ) {
+
+        QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
+    }
+
+    if ( !pixmap2.save("temp/graphic2.png") ) {
+
+        QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
+    }
+
+    if ( !pixmap3.save("temp/graphic3.png") ) {
+
+        QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
+    }
 }
 
 void MainWindow::reportReadOnlyChanged() {
