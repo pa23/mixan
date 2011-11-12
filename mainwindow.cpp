@@ -810,6 +810,10 @@ void MainWindow::createGraphics() {
 
     //
 
+    QDir tempDir;
+
+    if ( !tempDir.exists("temp") ) { tempDir.mkdir("temp"); }
+
     if ( !pixmap1.save("temp/graphic1.png") ) {
 
         QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
