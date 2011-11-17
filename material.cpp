@@ -28,12 +28,12 @@
 #include <QVector>
 #include <QImage>
 
-Material::Material() {
+Material::Material() :
+    threshColor(0),
+    polynomPower(0) {
 
     histogram.clear();
     histogram.resize(256);
-
-    threshColor = 0;
 }
 
 Material::~Material() {
