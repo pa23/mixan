@@ -174,14 +174,12 @@ void MainWindow::forgetSelectedImages() {
 
 void MainWindow::runMaterialsAnalysis() {
 
-    if ( !material1.data()->
-         analyze(mat1ImageFileName, spinBox_polyPower->value()) ) {
+    if ( !material1->analyze(mat1ImageFileName, spinBox_polyPower->value()) ) {
 
         return;
     }
 
-    if ( !material2.data()->
-         analyze(mat2ImageFileName, spinBox_polyPower->value()) ) {
+    if ( !material2->analyze(mat2ImageFileName, spinBox_polyPower->value()) ) {
 
         return;
     }
@@ -189,14 +187,12 @@ void MainWindow::runMaterialsAnalysis() {
 
 void MainWindow::runMixAnalysis() {
 
-    if ( !material1.data()->
-         analyze(mat1ImageFileName, spinBox_polyPower->value()) ) {
+    if ( !material1->analyze(mat1ImageFileName, spinBox_polyPower->value()) ) {
 
         return;
     }
 
-    if ( !material2.data()->
-         analyze(mat2ImageFileName, spinBox_polyPower->value()) ) {
+    if ( !material2->analyze(mat2ImageFileName, spinBox_polyPower->value()) ) {
 
         return;
     }
@@ -526,7 +522,7 @@ void MainWindow::showAnalysisResults() {
                 "<br>Image of the first material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
-                material1.data()->
+                material1->
                 originalImage().scaledToWidth(spinBox_imgWidth->value())
                 );
 
@@ -541,7 +537,7 @@ void MainWindow::showAnalysisResults() {
                 "<br>Image of the second material:<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(
-                material2.data()->
+                material2->
                 originalImage().scaledToWidth(spinBox_imgWidth->value())
                 );
 
@@ -582,7 +578,7 @@ void MainWindow::showAnalysisResults() {
 
     for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
 
-        imgname = probes[i].data()->imageFileName();
+        imgname = probes[i]->imageFileName();
 
         if ( imgname.isEmpty() ) {
 
@@ -595,7 +591,7 @@ void MainWindow::showAnalysisResults() {
             continue;
         }
 
-        conc = probes[i].data()->concentration();
+        conc = probes[i]->concentration();
         concs.push_back(conc);
 
         ui->textBrowser_report->insertHtml(
@@ -603,7 +599,7 @@ void MainWindow::showAnalysisResults() {
                     );
 
         ui->textBrowser_report->textCursor().insertImage(
-                    probes[i].data()->
+                    probes[i]->
                     originalImage().scaledToWidth(spinBox_imgWidth->value())
                     );
 
@@ -662,91 +658,91 @@ void MainWindow::createGraphics() {
     //
 
     QSharedPointer<QwtPlot> plot1(new QwtPlot(plot1Title));
-    plot1.data()->setAxisAutoScale(QwtPlot::xBottom, true);
-    plot1.data()->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
-    plot1.data()->setAxisAutoScale(QwtPlot::yLeft, true);
-    plot1.data()->setAxisTitle(QwtPlot::yLeft, yAxisTitle);
+    plot1->setAxisAutoScale(QwtPlot::xBottom, true);
+    plot1->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
+    plot1->setAxisAutoScale(QwtPlot::yLeft, true);
+    plot1->setAxisTitle(QwtPlot::yLeft, yAxisTitle);
 
     QSharedPointer<QwtPlotCurve> curve11(new QwtPlotCurve());
-    curve11.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve11.data()->setStyle(QwtPlotCurve::NoCurve);
-    curve11.data()->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
-                                             QPen(Qt::black), QSize(1, 1)) );
+    curve11->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve11->setStyle(QwtPlotCurve::NoCurve);
+    curve11->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
+                                      QPen(Qt::black), QSize(1, 1)) );
 
-    QVector<double> y11 = material1.data()->histogramValues();
+    QVector<double> y11 = material1->histogramValues();
 
-    curve11.data()->setRawSamples(x.data(), y11.data(), x.size());
-    curve11.data()->attach(plot1.data());
+    curve11->setRawSamples(x.data(), y11.data(), x.size());
+    curve11->attach(plot1.data());
 
     QSharedPointer<QwtPlotCurve> curve12(new QwtPlotCurve());
-    curve12.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve12->setRenderHint(QwtPlotItem::RenderAntialiased);
 
-    QVector<double> y12 = material1.data()->polynomValues();
+    QVector<double> y12 = material1->polynomValues();
 
-    curve12.data()->setRawSamples(x.data(), y12.data(), x.size());
-    curve12.data()->attach(plot1.data());
+    curve12->setRawSamples(x.data(), y12.data(), x.size());
+    curve12->attach(plot1.data());
 
-    plot1.data()->resize(600, 400);
-    plot1.data()->replot();
+    plot1->resize(600, 400);
+    plot1->replot();
 
-    QPixmap pixmap1(plot1.data()->size());
-    plot1.data()->render(&pixmap1);
+    QPixmap pixmap1(plot1->size());
+    plot1->render(&pixmap1);
 
     graphics.push_back(pixmap1.toImage());
 
     //
 
     QSharedPointer<QwtPlot> plot2(new QwtPlot(plot1Title));
-    plot2.data()->setAxisAutoScale(QwtPlot::xBottom, true);
-    plot2.data()->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
-    plot2.data()->setAxisAutoScale(QwtPlot::yLeft, true);
-    plot2.data()->setAxisTitle(QwtPlot::yLeft, yAxisTitle);
+    plot2->setAxisAutoScale(QwtPlot::xBottom, true);
+    plot2->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
+    plot2->setAxisAutoScale(QwtPlot::yLeft, true);
+    plot2->setAxisTitle(QwtPlot::yLeft, yAxisTitle);
 
     QSharedPointer<QwtPlotCurve> curve21(new QwtPlotCurve());
-    curve21.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve21.data()->setStyle(QwtPlotCurve::NoCurve);
-    curve21.data()->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
-                                             QPen(Qt::black), QSize(1, 1)) );
+    curve21->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve21->setStyle(QwtPlotCurve::NoCurve);
+    curve21->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
+                                      QPen(Qt::black), QSize(1, 1)) );
 
-    QVector<double> y21 = material2.data()->histogramValues();
+    QVector<double> y21 = material2->histogramValues();
 
-    curve21.data()->setRawSamples(x.data(), y21.data(), x.size());
-    curve21.data()->attach(plot2.data());
+    curve21->setRawSamples(x.data(), y21.data(), x.size());
+    curve21->attach(plot2.data());
 
     QSharedPointer<QwtPlotCurve> curve22(new QwtPlotCurve());
-    curve22.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve22->setRenderHint(QwtPlotItem::RenderAntialiased);
 
-    QVector<double> y22 = material2.data()->polynomValues();
+    QVector<double> y22 = material2->polynomValues();
 
-    curve22.data()->setRawSamples(x.data(), y22.data(), x.size());
-    curve22.data()->attach(plot2.data());
+    curve22->setRawSamples(x.data(), y22.data(), x.size());
+    curve22->attach(plot2.data());
 
-    plot2.data()->resize(600, 400);
-    plot2.data()->replot();
+    plot2->resize(600, 400);
+    plot2->replot();
 
-    QPixmap pixmap2(plot2.data()->size());
-    plot2.data()->render(&pixmap2);
+    QPixmap pixmap2(plot2->size());
+    plot2->render(&pixmap2);
 
     graphics.push_back(pixmap2.toImage());
 
     //
 
     QSharedPointer<QwtPlot> plot3(new QwtPlot(plot3Title));
-    plot3.data()->setAxisAutoScale(QwtPlot::xBottom, true);
-    plot3.data()->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
-    plot3.data()->setAxisAutoScale(QwtPlot::yLeft, true);
-    plot3.data()->setAxisTitle(QwtPlot::yLeft, yAxisTitle);
+    plot3->setAxisAutoScale(QwtPlot::xBottom, true);
+    plot3->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
+    plot3->setAxisAutoScale(QwtPlot::yLeft, true);
+    plot3->setAxisTitle(QwtPlot::yLeft, yAxisTitle);
 
     QSharedPointer<QwtPlotCurve> curve31(new QwtPlotCurve());
-    curve31.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve31.data()->setRawSamples(x.data(), y12.data(), x.size());
-    curve31.data()->attach(plot3.data());
+    curve31->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve31->setRawSamples(x.data(), y12.data(), x.size());
+    curve31->attach(plot3.data());
 
     QSharedPointer<QwtPlotCurve> curve31_s(new QwtPlotCurve());
-    curve31_s.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve31_s.data()->setStyle(QwtPlotCurve::NoCurve);
-    curve31_s.data()->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
-                                               QPen(Qt::black), QSize(7, 7)) );
+    curve31_s->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve31_s->setStyle(QwtPlotCurve::NoCurve);
+    curve31_s->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
+                                        QPen(Qt::black), QSize(7, 7)) );
 
     QVector<double> x_s;
     QVector<double> y12_s;
@@ -757,19 +753,19 @@ void MainWindow::createGraphics() {
         y12_s.push_back(y12[i]);
     }
 
-    curve31_s.data()->setRawSamples(x_s.data(), y12_s.data(), x_s.size());
-    curve31_s.data()->attach(plot3.data());
+    curve31_s->setRawSamples(x_s.data(), y12_s.data(), x_s.size());
+    curve31_s->attach(plot3.data());
 
     QSharedPointer<QwtPlotCurve> curve32(new QwtPlotCurve());
-    curve32.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve32.data()->setRawSamples(x.data(), y22.data(), x.size());
-    curve32.data()->attach(plot3.data());
+    curve32->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve32->setRawSamples(x.data(), y22.data(), x.size());
+    curve32->attach(plot3.data());
 
     QSharedPointer<QwtPlotCurve> curve32_s(new QwtPlotCurve());
-    curve32_s.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve32_s.data()->setStyle(QwtPlotCurve::NoCurve);
-    curve32_s.data()->setSymbol( new QwtSymbol(QwtSymbol::Triangle, Qt::NoBrush,
-                                               QPen(Qt::black), QSize(7, 7)) );
+    curve32_s->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve32_s->setStyle(QwtPlotCurve::NoCurve);
+    curve32_s->setSymbol( new QwtSymbol(QwtSymbol::Triangle, Qt::NoBrush,
+                                        QPen(Qt::black), QSize(7, 7)) );
 
     QVector<double> y22_s;
 
@@ -778,18 +774,18 @@ void MainWindow::createGraphics() {
         y22_s.push_back(y22[i]);
     }
 
-    curve32_s.data()->setRawSamples(x_s.data(), y22_s.data(), x_s.size());
-    curve32_s.data()->attach(plot3.data());
+    curve32_s->setRawSamples(x_s.data(), y22_s.data(), x_s.size());
+    curve32_s->attach(plot3.data());
 
     QSharedPointer<QwtPlotCurve> curve33(new QwtPlotCurve());
-    curve33.data()->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve33->setRenderHint(QwtPlotItem::RenderAntialiased);
 
     double tcolm = Mix::defThreshColor(material1.data(),
                                        material2.data(),
                                        doubleSpinBox_intersectAccur->value());
 
-    double max1 = y12[material1.data()->thresholdColor()];
-    double max2 = y22[material2.data()->thresholdColor()];
+    double max1 = y12[material1->thresholdColor()];
+    double max2 = y22[material2->thresholdColor()];
 
     QVector<double> x33(2, tcolm);
     QVector<double> y33(2);
@@ -797,14 +793,14 @@ void MainWindow::createGraphics() {
     if ( max1 > max2 ) { y33[1] = max1; }
     else               { y33[1] = max2; }
 
-    curve33.data()->setRawSamples(x33.data(), y33.data(), x33.size());
-    curve33.data()->attach(plot3.data());
+    curve33->setRawSamples(x33.data(), y33.data(), x33.size());
+    curve33->attach(plot3.data());
 
-    plot3.data()->resize(600, 400);
-    plot3.data()->replot();
+    plot3->resize(600, 400);
+    plot3->replot();
 
-    QPixmap pixmap3(plot3.data()->size());
-    plot3.data()->render(&pixmap3);
+    QPixmap pixmap3(plot3->size());
+    plot3->render(&pixmap3);
 
     graphics.push_back(pixmap3.toImage());
 

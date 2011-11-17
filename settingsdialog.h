@@ -26,6 +26,7 @@
 namespace Ui {
 
 class SettingsDialog;
+
 }
 
 class SettingsDialog : public QDialog {
