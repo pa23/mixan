@@ -527,7 +527,8 @@ void MainWindow::showAnalysisResults() {
                 );
 
     ui->textBrowser_report->insertHtml(
-                "<br><br>Characteristic of the first material:<br>"
+                "<br><br>Characteristic of the first material "
+                "(histogram and polynomial approximant):<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(graphics[0]);
 
@@ -542,13 +543,15 @@ void MainWindow::showAnalysisResults() {
                 );
 
     ui->textBrowser_report->insertHtml(
-                "<br><br>Characteristic of the second material:<br>"
+                "<br><br>Characteristic of the second material "
+                "(histogram and polynomial approximant):<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(graphics[1]);
 
     ui->textBrowser_report->insertHtml(
                 "<br><br>Visualization of the calculated "
-                "gray color threshold:<br>"
+                "gray color threshold "
+                "(polynoms and threshold color of mix):<br>"
                 );
     ui->textBrowser_report->textCursor().insertImage(graphics[2]);
 
@@ -643,12 +646,6 @@ void MainWindow::createGraphics() {
 
     //
 
-    QwtText plot1Title("Histogram and polynomial approximant");
-    plot1Title.setFont(QFont("Liberation Sans", 12, QFont::Bold));
-
-    QwtText plot3Title("Polynoms and threshold color of mix");
-    plot3Title.setFont(QFont("Liberation Sans", 12, QFont::Bold));
-
     QwtText xAxisTitle("gray color");
     xAxisTitle.setFont(QFont("Liberation Sans", 12));
 
@@ -657,7 +654,11 @@ void MainWindow::createGraphics() {
 
     //
 
-    QSharedPointer<QwtPlot> plot1(new QwtPlot(plot1Title));
+    QSharedPointer<QwtPlot> plot1(new QwtPlot());
+    plot1->setPalette(QPalette(QColor(Qt::white)));
+    plot1->setFrameShape(QFrame::NoFrame);
+    plot1->setFrameShadow(QFrame::Plain);
+    plot1->setCanvasLineWidth(0);
     plot1->setAxisAutoScale(QwtPlot::xBottom, true);
     plot1->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
     plot1->setAxisAutoScale(QwtPlot::yLeft, true);
@@ -692,7 +693,11 @@ void MainWindow::createGraphics() {
 
     //
 
-    QSharedPointer<QwtPlot> plot2(new QwtPlot(plot1Title));
+    QSharedPointer<QwtPlot> plot2(new QwtPlot());
+    plot2->setPalette(QPalette(QColor(Qt::white)));
+    plot2->setFrameShape(QFrame::NoFrame);
+    plot2->setFrameShadow(QFrame::Plain);
+    plot2->setCanvasLineWidth(0);
     plot2->setAxisAutoScale(QwtPlot::xBottom, true);
     plot2->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
     plot2->setAxisAutoScale(QwtPlot::yLeft, true);
@@ -727,7 +732,11 @@ void MainWindow::createGraphics() {
 
     //
 
-    QSharedPointer<QwtPlot> plot3(new QwtPlot(plot3Title));
+    QSharedPointer<QwtPlot> plot3(new QwtPlot());
+    plot3->setPalette(QPalette(QColor(Qt::white)));
+    plot3->setFrameShape(QFrame::NoFrame);
+    plot3->setFrameShadow(QFrame::Plain);
+    plot3->setCanvasLineWidth(0);
     plot3->setAxisAutoScale(QwtPlot::xBottom, true);
     plot3->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
     plot3->setAxisAutoScale(QwtPlot::yLeft, true);
