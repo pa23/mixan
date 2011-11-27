@@ -23,6 +23,6 @@
 
 #include <QString>
 
-const QString VERSION = "v1.8.0";
+const QString VERSION = "v1.8.1";
 
 #endif // CONSTANTS_H

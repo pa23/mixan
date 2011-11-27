@@ -2,7 +2,7 @@
     mixan
     Analysis of granular material mixes and emulsions.
 
-    File: granularmix.h
+    File: mix.h
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
