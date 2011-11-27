@@ -20,6 +20,7 @@
 
 #include "mixfuns.h"
 #include "constants.h"
+#include "material.h"
 
 #include <cmath>
 
@@ -36,4 +37,61 @@ double Vc(const QVector<double> &concentrations,
 
     return 100.0 / idealconc *
             pow( 1.0 / ( probesnum - 1.0 ) * summ_concdiff, 0.5 );
+}
+
+size_t defThreshColor(const Material *m1,
+                      const Material *m2,
+                      const double &intersectaccur) {
+
+    size_t tcol = 0;
+
+    //
+
+    const Material *mat1;
+    const Material *mat2;
+
+    if ( m1->thresholdColor() < m2->thresholdColor() ) {
+
+        mat1 = m1;
+        mat2 = m2;
+    }
+    else {
+
+        mat1 = m2;
+        mat2 = m1;
+    }
+
+    //
+
+    QVector<ptrdiff_t> lims1 = mat1->polynomLimits();
+    QVector<ptrdiff_t> lims2 = mat2->polynomLimits();
+
+    if ( lims1[1] < lims2[0] ) {
+
+        return ( mat1->thresholdColor() + mat2->thresholdColor() ) / 2;
+    }
+
+    //
+
+    QVector<double> poly1 = mat1->polynomValues();
+    QVector<double> poly2 = mat2->polynomValues();
+
+    for ( size_t i=mat1->thresholdColor(); i<mat2->thresholdColor(); i++ ) {
+
+        if ( fabs(poly1[i]-poly2[i]) < intersectaccur ) {
+
+            return i;
+        }
+    }
+
+    //
+
+    if ( tcol == 0 ) {
+
+        return ( mat1->thresholdColor() + mat2->thresholdColor() ) / 2;
+    }
+
+    //
+
+    return 0;
 }

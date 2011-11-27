@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>429</width>
-    <height>294</height>
+    <height>322</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -164,7 +164,14 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2">
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="checkBox_createTempGraph">
+        <property name="text">
+         <string>Create temporary files with graphics</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
        <widget class="QCheckBox" name="checkBox_reportRO">
         <property name="text">
          <string>Report is read only</string>

@@ -2,7 +2,7 @@
     mixan
     Analysis of granular material mixes and emulsions.
 
-    File: granularmaterial.h
+    File: mixanerror.h
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
@@ -18,49 +18,23 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MATERIAL_H
-#define MATERIAL_H
+#ifndef MIXANERROR_H
+#define MIXANERROR_H
 
 #include <QString>
-#include <QImage>
-#include <QVector>
 
-class Material {
+class MixanError
+{
 
 public:
 
-    Material();
-    virtual ~Material();
-
-    bool isEmpty() const;
-
-    void analyze(const QString &, const ptrdiff_t &);
-
-    QString imageFileName() const;
-    QImage originalImage() const;
-
-    size_t thresholdColor() const; // gray color
-
-    QVector<double> histogramValues() const;
-    QVector<double> polynomValues() const;
-    QVector<ptrdiff_t> polynomLimits() const;
+    explicit MixanError(QString);
+    QString mixanErrMsg() const;
 
 private:
 
-    QString fileName;
-    QImage origImage;
-
-    QVector<double> histogram;
-    size_t threshColor;
-
-    ptrdiff_t polynomPower;
-    QVector<double> polyVal;
-    QVector<ptrdiff_t> polylimits;
-
-    void defHistogram();
-    void defThreshColor();
-    void corrPolyVals();
+    QString errMsg;
 
 };
 
-#endif // MATERIAL_H
+#endif // MIXANERROR_H

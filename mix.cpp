@@ -19,9 +19,7 @@
 */
 
 #include "mix.h"
-#include "numcompfuns.h"
-#include "constants.h"
-#include "material.h"
+#include "mixanerror.h"
 
 #include <cmath>
 
@@ -36,70 +34,13 @@ Mix::Mix() :
 Mix::~Mix() {
 }
 
-size_t Mix::defThreshColor(const Material *m1,
-                           const Material *m2,
-                           const double &intersectaccur) {
-
-    size_t tcol = 0;
-
-    //
-
-    const Material *mat1;
-    const Material *mat2;
-
-    if ( m1->thresholdColor() < m2->thresholdColor() ) {
-
-        mat1 = m1;
-        mat2 = m2;
-    }
-    else {
-
-        mat1 = m2;
-        mat2 = m1;
-    }
-
-    //
-
-    QVector<ptrdiff_t> lims1 = mat1->polynomLimits();
-    QVector<ptrdiff_t> lims2 = mat2->polynomLimits();
-
-    if ( lims1[1] < lims2[0] ) {
-
-        return ( mat1->thresholdColor() + mat2->thresholdColor() ) / 2;
-    }
-
-    //
-
-    QVector<double> poly1 = mat1->polynomValues();
-    QVector<double> poly2 = mat2->polynomValues();
-
-    for ( size_t i=mat1->thresholdColor(); i<mat2->thresholdColor(); i++ ) {
-
-        if ( fabs(poly1[i]-poly2[i]) < intersectaccur ) {
-
-            return i;
-        }
-    }
-
-    //
-
-    if ( tcol == 0 ) {
-
-        return ( mat1->thresholdColor() + mat2->thresholdColor() ) / 2;
-    }
-
-    //
-
-    return 0;
-}
-
 bool Mix::isEmpty() const {
 
     if ( origImage.isNull() ) { return true;  }
     else                      { return false; }
 }
 
-bool Mix::analyze(const QString &imgFileName, const size_t &threshCol) {
+void Mix::analyze(const QString &imgFileName, const size_t &threshCol) {
 
     fileName = "";
 
@@ -107,14 +48,22 @@ bool Mix::analyze(const QString &imgFileName, const size_t &threshCol) {
 
     threshColor = threshCol;
 
-    if ( !origImage.load(imgFileName) ) { return false; }
-    if ( !defConc()                   ) { return false; }
+    if ( !origImage.load(imgFileName) ) {
+
+        throw MixanError("Errors during loading image file " +
+                         imgFileName + "!");
+    }
+
+    try {
+
+        defConc();
+    }
+    catch(MixanError &mixerr) {
+
+        throw;
+    }
 
     fileName = imgFileName;
-
-    //
-
-    return true;
 }
 
 QString Mix::imageFileName() const {
@@ -137,9 +86,12 @@ double Mix::concentration() const {
     return conc;
 }
 
-bool Mix::defConc() {
+void Mix::defConc() {
 
-    if ( origImage.isNull() ) { return false; }
+    if ( origImage.isNull() ) {
+
+        throw MixanError("No image!");
+    }
 
     size_t part1 = 0; // light
     size_t part2 = 0; // dark
@@ -160,6 +112,4 @@ bool Mix::defConc() {
     }
 
     conc = (double)part1 / ( (double)part1 + (double)part2 );
-
-    return true;
 }

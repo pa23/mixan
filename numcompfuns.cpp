@@ -19,6 +19,7 @@
 */
 
 #include "numcompfuns.h"
+#include "mixanerror.h"
 
 #include <cmath>
 
@@ -28,15 +29,22 @@ QVector<double> polyapprox(const QVector<double> &x,
                            const QVector<double> &y,
                            const ptrdiff_t &K) {      // polynom power
 
-    // rewritten realization by Alexey Petrov:
-    // http://alexeypetrov.narod.ru/C/sqr_less_about.html
-
-    QVector<double> coeff(K+1);
-
     ptrdiff_t N = x.size();
 
-    if ( N != y.size() ) { return coeff; }
-    if ( K >= N        ) { return coeff; }
+    if ( N != y.size() ) {
+
+        throw MixanError("When calculating the coefficients of the "
+                         "approximating polynomial arrays x and y "
+                         "must be the same size!");
+    }
+
+    if ( K >= N ) {
+
+        throw MixanError("The degree of approximating polynomial must be "
+                         "less than the size of arrays with data!");
+    }
+
+    QVector<double> coeff(K+1);
 
     //
 
@@ -110,7 +118,11 @@ QVector<double> polyapprox(const QVector<double> &x,
 
         for ( ptrdiff_t i=(k+1); i<(K+1); i++ ) {
 
-            if ( sums[k][k] == 0 ) { return coeff; } // solution is not exist
+            if ( sums[k][k] == 0 ) {
+
+                throw MixanError("Polynomial approximation: "
+                                 "solution does not exist!");
+            }
 
             M = sums[i][k] / sums[k][k];
 

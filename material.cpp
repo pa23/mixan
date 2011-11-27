@@ -21,6 +21,7 @@
 #include "material.h"
 #include "numcompfuns.h"
 #include "constants.h"
+#include "mixanerror.h"
 
 #include <cmath>
 #include <numeric>
@@ -45,7 +46,7 @@ bool Material::isEmpty() const {
     else                      { return false; }
 }
 
-bool Material::analyze(const QString &imgFileName, const ptrdiff_t &polyPwr) {
+void Material::analyze(const QString &imgFileName, const ptrdiff_t &polyPwr) {
 
     fileName = "";
 
@@ -56,16 +57,23 @@ bool Material::analyze(const QString &imgFileName, const ptrdiff_t &polyPwr) {
 
     //
 
-    if ( !origImage.load(imgFileName) ) { return false; }
+    if ( !origImage.load(imgFileName) ) {
 
-    if ( !defHistogram()   ) { return false; }
-    if ( !defThreshColor() ) { return false; }
+        throw MixanError("Errors during loading image file " +
+                         imgFileName + "!");
+    }
+
+    try {
+
+        defHistogram();
+        defThreshColor();
+    }
+    catch(MixanError &mixerr) {
+
+        throw;
+    }
 
     fileName = imgFileName;
-
-    //
-
-    return true;
 }
 
 QString Material::imageFileName() const {
@@ -98,9 +106,12 @@ QVector<ptrdiff_t> Material::polynomLimits() const {
     return polylimits;
 }
 
-bool Material::defHistogram() {
+void Material::defHistogram() {
 
-    if ( origImage.isNull() ) { return false; }
+    if ( origImage.isNull() ) {
+
+        throw MixanError("No image!");
+    }
 
     //
 
@@ -118,11 +129,9 @@ bool Material::defHistogram() {
 
         histogram[i] /= N;
     }
-
-    return true;
 }
 
-bool Material::defThreshColor() {
+void Material::defThreshColor() {
 
     polyVal.clear();
     polyVal.resize(256);
@@ -140,11 +149,15 @@ bool Material::defThreshColor() {
 
     //
 
-    QVector<double> polyCoeff = polyapprox(x, y, polynomPower);
+    QVector<double> polyCoeff;
 
-    if ( std::accumulate(polyCoeff.begin(), polyCoeff.end(), 0.0) == 0.0 ) {
+    try {
 
-        return false;
+        polyCoeff = polyapprox(x, y, polynomPower);
+    }
+    catch(MixanError &mixerr) {
+
+        throw;
     }
 
     //
@@ -178,13 +191,9 @@ bool Material::defThreshColor() {
     //
 
     corrPolyVals();
-
-    //
-
-    return true;
 }
 
-bool Material::corrPolyVals() {
+void Material::corrPolyVals() {
 
     polylimits.clear();
     polylimits.resize(2);
@@ -211,8 +220,4 @@ bool Material::corrPolyVals() {
 
     for ( ptrdiff_t i=0; i<=polylimits[0]; i++   ) { polyVal[i] = 0; }
     for ( ptrdiff_t i=polylimits[1]; i<=255; i++ ) { polyVal[i] = 0; }
-
-    //
-
-    return true;
 }

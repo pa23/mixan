@@ -7,23 +7,21 @@ SOURCES += main.cpp \
     mixfuns.cpp \
     settingsdialog.cpp \
     material.cpp \
-    mix.cpp
+    mix.cpp \
+    mixanerror.cpp
 HEADERS += mainwindow.h \
     constants.h \
     numcompfuns.h \
     mixfuns.h \
     settingsdialog.h \
     material.h \
-    mix.h
+    mix.h \
+    mixanerror.h
 FORMS += mainwindow.ui \
     settingsdialog.ui
-#QMAKE_CXXFLAGS += -fopenmp
-#LIBS += -fopenmp
-#QMAKE_CXXFLAGS += -std=c++0x
 unix: {
     INCLUDEPATH += . \
         /usr/include/qwt
-        #/usr/include/c++/4.6
     LIBS += -L/usr/lib \
         -lqwt \
         -Wl,-rpath,.
@@ -40,7 +38,6 @@ unix: {
 win32: {
     INCLUDEPATH += . \
         c:\\qwt\\src
-        #C:\\MinGW32\\lib\\gcc\\mingw32\\4.5.2\\include\\c++
     LIBS += -Lc:\\qwt\\lib \
         -lqwt \
         -Wl,-rpath,.
@@ -56,11 +53,3 @@ win32: {
 }
 RESOURCES += mixan_icons.qrc
 RC_FILE += mixan_icon.rc
-
-
-
-
-
-
-
-

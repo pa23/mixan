@@ -2,7 +2,7 @@
     mixan
     Analysis of granular material mixes and emulsions.
 
-    File: constants.h
+    File: mixanerror.cpp
 
     Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
 
@@ -18,11 +18,14 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#include "mixanerror.h"
 
-#include <QString>
+MixanError::MixanError(QString errStr) {
 
-const QString VERSION = "v1.8.0";
+    errMsg = errStr;
+}
 
-#endif // CONSTANTS_H
+QString MixanError::mixanErrMsg() const {
+
+    return errMsg;
+}

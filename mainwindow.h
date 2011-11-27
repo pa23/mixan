@@ -57,6 +57,8 @@ private:
 
     Ui::MainWindow *ui;
 
+    QString thrmsg;
+
     QSettings mixanSettings;
 
     QString mat1ImageFileName;
@@ -77,6 +79,7 @@ private:
     QDoubleSpinBox *doubleSpinBox_idealConc;
     QSpinBox *spinBox_imgWidth;
     QCheckBox *checkBox_reportReadOnly;
+    QCheckBox *checkBox_createTemporaryGraphics;
 
     void forgetSelectedImages();
     void runMaterialsAnalysis();

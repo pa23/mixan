@@ -25,6 +25,7 @@
 #include "mix.h"
 #include "mixfuns.h"
 #include "settingsdialog.h"
+#include "mixanerror.h"
 
 #include <QString>
 #include <QVector>
@@ -49,8 +50,6 @@
 #include <QCheckBox>
 #include <QSharedPointer>
 #include <QFont>
-
-//#include <omp.h>
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
@@ -136,6 +135,8 @@ MainWindow::MainWindow(QWidget *parent) :
             findChild<QSpinBox *>("spinBox_imgWidth");
     checkBox_reportReadOnly = settingsDialog->
             findChild<QCheckBox *>("checkBox_reportRO");
+    checkBox_createTemporaryGraphics = settingsDialog->
+            findChild<QCheckBox *>("checkBox_createTempGraph");
 
     connect(checkBox_reportReadOnly,
             SIGNAL(clicked()),
@@ -157,6 +158,7 @@ MainWindow::~MainWindow() {
     delete doubleSpinBox_idealConc;
     delete spinBox_imgWidth;
     delete checkBox_reportReadOnly;
+    delete checkBox_createTemporaryGraphics;
     delete settingsDialog;
 
     delete progressDialog;
@@ -174,26 +176,28 @@ void MainWindow::forgetSelectedImages() {
 
 void MainWindow::runMaterialsAnalysis() {
 
-    if ( !material1->analyze(mat1ImageFileName, spinBox_polyPower->value()) ) {
+    try {
 
-        return;
+        material1->analyze(mat1ImageFileName, spinBox_polyPower->value());
+        material2->analyze(mat2ImageFileName, spinBox_polyPower->value());
     }
+    catch(MixanError &mixerr) {
 
-    if ( !material2->analyze(mat2ImageFileName, spinBox_polyPower->value()) ) {
-
+        thrmsg += mixerr.mixanErrMsg() + "\n";
         return;
     }
 }
 
 void MainWindow::runMixAnalysis() {
 
-    if ( !material1->analyze(mat1ImageFileName, spinBox_polyPower->value()) ) {
+    try {
 
-        return;
+        material1->analyze(mat1ImageFileName, spinBox_polyPower->value());
+        material2->analyze(mat2ImageFileName, spinBox_polyPower->value());
     }
+    catch(MixanError &mixerr) {
 
-    if ( !material2->analyze(mat2ImageFileName, spinBox_polyPower->value()) ) {
-
+        thrmsg += mixerr.mixanErrMsg() + "\n";
         return;
     }
 
@@ -201,20 +205,23 @@ void MainWindow::runMixAnalysis() {
 
     probes.clear();
 
-    size_t tcol = Mix::defThreshColor(material1.data(),
-                                      material2.data(),
-                                      doubleSpinBox_intersectAccur->value());
-
-    //    ptrdiff_t i = 0;
-    //#pragma omp parallel for shared(tcol1, tcol2) private(i)
+    size_t tcol = defThreshColor(material1.data(),
+                                 material2.data(),
+                                 doubleSpinBox_intersectAccur->value());
 
     for ( ptrdiff_t i=0; i<mixImageFileNames.count(); i++ ) {
 
-        QSharedPointer<Mix> probe(new Mix());
+        try {
 
-        if ( !probe->analyze(mixImageFileNames[i], tcol) ) { continue; }
+            QSharedPointer<Mix> probe(new Mix());
+            probe->analyze(mixImageFileNames[i], tcol);
+            probes.push_back(probe);
+        }
+        catch(MixanError &mixerr) {
 
-        probes.push_back(probe);
+            thrmsg += mixerr.mixanErrMsg() + "\n";
+            continue;
+        }
     }
 }
 
@@ -231,6 +238,8 @@ void MainWindow::writeProgramSettings() {
     mixanSettings.setValue("/image_width", spinBox_imgWidth->value());
     mixanSettings.setValue("/report_is_read_only",
                            checkBox_reportReadOnly->isChecked());
+    mixanSettings.setValue("/create_temporary_graphics",
+                           checkBox_createTemporaryGraphics->isChecked());
     mixanSettings.endGroup();
 }
 
@@ -254,6 +263,9 @@ void MainWindow::readProgramSettings() {
                 );
     checkBox_reportReadOnly->setChecked(
                 mixanSettings.value("/report_is_read_only", true).toBool()
+                );
+    checkBox_createTemporaryGraphics->setChecked(
+                mixanSettings.value("/create_temporary_graphics").toBool()
                 );
     mixanSettings.endGroup();
 
@@ -439,7 +451,16 @@ void MainWindow::on_action_analyzeMaterials_activated() {
 
     //
 
-    QMessageBox::information(this, "mixan", "Analysis completed!");
+    if ( !thrmsg.isEmpty() ) {
+
+        QMessageBox::warning(this, "mixan", "Analysis completed, but\n\n" +
+                             thrmsg);
+        thrmsg.clear();
+    }
+    else {
+
+        QMessageBox::information(this, "mixan", "Analysis completed!");
+    }
 }
 
 void MainWindow::on_action_analyzeMix_activated() {
@@ -471,7 +492,16 @@ void MainWindow::on_action_analyzeMix_activated() {
 
     //
 
-    QMessageBox::information(this, "mixan", "Analysis completed!");
+    if ( !thrmsg.isEmpty() ) {
+
+        QMessageBox::warning(this, "mixan", "Analysis completed, but\n\n" +
+                             thrmsg);
+        thrmsg.clear();
+    }
+    else {
+
+        QMessageBox::information(this, "mixan", "Analysis completed!");
+    }
 }
 
 void MainWindow::on_action_settings_activated() {
@@ -789,9 +819,9 @@ void MainWindow::createGraphics() {
     QSharedPointer<QwtPlotCurve> curve33(new QwtPlotCurve());
     curve33->setRenderHint(QwtPlotItem::RenderAntialiased);
 
-    double tcolm = Mix::defThreshColor(material1.data(),
-                                       material2.data(),
-                                       doubleSpinBox_intersectAccur->value());
+    double tcolm = defThreshColor(material1.data(),
+                                  material2.data(),
+                                  doubleSpinBox_intersectAccur->value());
 
     double max1 = y12[material1->thresholdColor()];
     double max2 = y22[material2->thresholdColor()];
@@ -815,23 +845,33 @@ void MainWindow::createGraphics() {
 
     //
 
-    QDir tempDir;
+    if ( checkBox_createTemporaryGraphics->isChecked() ) {
 
-    if ( !tempDir.exists("temp") ) { tempDir.mkdir("temp"); }
+        QDir tempDir;
 
-    if ( !pixmap1.save("temp/graphic1.png") ) {
+        if ( !tempDir.exists("temp") ) {
 
-        QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
-    }
+            if ( !tempDir.mkdir("temp") ) {
 
-    if ( !pixmap2.save("temp/graphic2.png") ) {
+                QMessageBox::warning(this, "mixan",
+                                     "Can not create temporary directory!");
+            }
+        }
 
-        QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
-    }
+        if ( !pixmap1.save("temp/graphic1.png") ) {
 
-    if ( !pixmap3.save("temp/graphic3.png") ) {
+            QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
+        }
 
-        QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
+        if ( !pixmap2.save("temp/graphic2.png") ) {
+
+            QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
+        }
+
+        if ( !pixmap3.save("temp/graphic3.png") ) {
+
+            QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
+        }
     }
 }
 

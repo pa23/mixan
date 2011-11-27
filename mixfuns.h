@@ -23,6 +23,9 @@
 
 #include <QVector>
 
+#include "material.h"
+
 double Vc(const QVector<double> &, const double &);
+size_t defThreshColor(const Material *, const Material *, const double &);
 
 #endif // MIXFUNS_H

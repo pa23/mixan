@@ -30,16 +30,12 @@ class Mix {
 
 public:
 
-    explicit Mix();
+    Mix();
     virtual ~Mix();
-
-    static size_t defThreshColor(const Material *,
-                                 const Material *,
-                                 const double &);
 
     bool isEmpty() const;
 
-    bool analyze(const QString &, const size_t &);
+    void analyze(const QString &, const size_t &);
 
     QString imageFileName() const;
     QImage originalImage() const;
@@ -55,7 +51,7 @@ private:
     size_t threshColor;
     double conc;
 
-    bool defConc();
+    void defConc();
 
 };
 
