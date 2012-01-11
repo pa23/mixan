@@ -4,7 +4,7 @@
 
     File: constants.h
 
-    Copyright (C) 2011 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2011-2012 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,6 +23,6 @@
 
 #include <QString>
 
-const QString VERSION = "v1.8.1";
+const QString VERSION = "v1.8.2";
 
 #endif // CONSTANTS_H
