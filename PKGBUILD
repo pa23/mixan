@@ -1,7 +1,7 @@
 # Maintainer: Artem Petrov <pa2311@gmail.com>
 
 pkgname=mixan
-pkgver=1.8.2
+pkgver=1.8.3
 pkgrel=1
 epoch=
 pkgdesc="Analyze of granular material mix and emulsions."
@@ -22,7 +22,7 @@ install=
 changelog=
 source=($pkgname-$pkgver-src.tar.gz)
 noextract=()
-md5sums=('89107bc18698557e47bffb27578e98ce') #generate with 'makepkg -g'
+md5sums=('') #generate with 'makepkg -g'
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
