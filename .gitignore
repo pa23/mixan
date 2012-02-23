@@ -1,5 +1,3 @@
 Makefile
 mixan.pro.user
 build/
-ui_mainwindow.h
-ui_settingsdialog.h
