@@ -37,3 +37,13 @@ void SettingsDialog::on_pushButton_OK_clicked() {
 
     close();
 }
+
+void SettingsDialog::on_pushButton_defaults_clicked() {
+
+    ui->spinBox_polyPower->setValue(9);
+    ui->doubleSpinBox_intersectAccur->setValue(0.00025);
+    ui->doubleSpinBox_idealConc->setValue(0.5);
+    ui->spinBox_imgWidth->setValue(600);
+    ui->checkBox_reportRO->setChecked(true);
+    ui->checkBox_createTempGraph->setChecked(false);
+}
