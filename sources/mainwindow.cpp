@@ -547,6 +547,15 @@ void MainWindow::showAnalysisResults() {
     //
 
     ui->textBrowser_report->insertHtml(
+                "<br>Settings:"
+                "<br>Power of the approximate polynom: " +
+                QString::number(spinBox_polyPower->value()) +
+                "<br>Accuracy of color threshold determining: " +
+                QString::number(doubleSpinBox_intersectAccur->value()) +
+                "<br>"
+                );
+
+    ui->textBrowser_report->insertHtml(
                 "<br>File of the first material: " +
                 mat1ImageFileName +
                 "<br>Image of the first material:<br>"
