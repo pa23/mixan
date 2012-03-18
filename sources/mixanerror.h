@@ -23,8 +23,7 @@
 
 #include <QString>
 
-class MixanError
-{
+class MixanError {
 
 public:
 

@@ -139,13 +139,7 @@ void Material::defThreshColor() {
     //
 
     QVector<double> x(256);
-    QVector<double> y(256);
-
-    for ( ptrdiff_t i=0; i<256; i++ ) {
-
-        x[i] = i;
-        y[i] = histogram[i];
-    }
+    for ( ptrdiff_t i=0; i<256; i++ ) { x[i] = i; }
 
     //
 
@@ -153,7 +147,7 @@ void Material::defThreshColor() {
 
     try {
 
-        polyCoeff = polyapprox(x, y, polynomPower);
+        polyCoeff = polyapprox(x, histogram, polynomPower);
     }
     catch(MixanError &mixerr) {
 
@@ -168,7 +162,7 @@ void Material::defThreshColor() {
 
         for ( ptrdiff_t n=0; n<(polynomPower+1); n++ ) {
 
-            p += polyCoeff[n] * pow( x[i], n );
+            p += polyCoeff[n] * pow(x[i], n);
         }
 
         polyVal[i] = p;
