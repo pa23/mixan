@@ -43,10 +43,6 @@ size_t defThreshColor(const Material *m1,
                       const Material *m2,
                       const double &intersectaccur) {
 
-    size_t tcol = 0;
-
-    //
-
     const Material *mat1;
     const Material *mat2;
 
@@ -73,20 +69,26 @@ size_t defThreshColor(const Material *m1,
 
     //
 
+    size_t tcol = 0;
+
     QVector<double> poly1 = mat1->polynomValues();
     QVector<double> poly2 = mat2->polynomValues();
 
-    for ( size_t i=mat1->thresholdColor(); i<mat2->thresholdColor(); i++ ) {
+    for ( size_t i=mat1->thresholdColor(); i<256; i++ ) {
 
         if ( fabs(poly1[i]-poly2[i]) < intersectaccur ) {
 
-            return i;
+            tcol = i;
+            break;
         }
     }
 
-    //
+    if ( tcol >= mat1->thresholdColor() &&
+         tcol <= mat2->thresholdColor() ) {
 
-    if ( tcol == 0 ) {
+        return tcol;
+    }
+    else {
 
         return ( mat1->thresholdColor() + mat2->thresholdColor() ) / 2;
     }
