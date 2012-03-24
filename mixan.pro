@@ -1,5 +1,4 @@
 #
-#
 #    mixan
 #    Analysis of granular material mixes and emulsions.
 #
@@ -29,7 +28,9 @@ SOURCES += sources/main.cpp \
     sources/settingsdialog.cpp \
     sources/material.cpp \
     sources/mix.cpp \
-    sources/mixanerror.cpp
+    sources/mixanerror.cpp \
+    sources/analysisdialog.cpp \
+    sources/settings.cpp
 HEADERS += sources/mainwindow.h \
     sources/constants.h \
     sources/numcompfuns.h \
@@ -37,9 +38,12 @@ HEADERS += sources/mainwindow.h \
     sources/settingsdialog.h \
     sources/material.h \
     sources/mix.h \
-    sources/mixanerror.h
+    sources/mixanerror.h \
+    sources/analysisdialog.h \
+    sources/settings.h
 FORMS += sources/mainwindow.ui \
-    sources/settingsdialog.ui
+    sources/settingsdialog.ui \
+    sources/analysisdialog.ui
 unix: {
     INCLUDEPATH += . \
         /usr/include/qwt

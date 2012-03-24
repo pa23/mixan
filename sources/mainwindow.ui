@@ -49,9 +49,6 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="action_selectMaterialImages"/>
-    <addaction name="action_selectProbeImages"/>
-    <addaction name="separator"/>
     <addaction name="action_saveReport"/>
     <addaction name="action_printReport"/>
     <addaction name="separator"/>
@@ -61,10 +58,7 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="action_analyzeMaterials"/>
-    <addaction name="action_analyzeMix"/>
-    <addaction name="separator"/>
-    <addaction name="action_settings"/>
+    <addaction name="action_analysis"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -77,6 +71,8 @@
      <string>Edit</string>
     </property>
     <addaction name="action_cleanReportWindow"/>
+    <addaction name="separator"/>
+    <addaction name="action_settings"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -99,32 +95,16 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="action_selectMaterialImages"/>
-   <addaction name="action_selectProbeImages"/>
-   <addaction name="separator"/>
    <addaction name="action_saveReport"/>
    <addaction name="action_printReport"/>
    <addaction name="separator"/>
    <addaction name="action_cleanReportWindow"/>
-   <addaction name="separator"/>
-   <addaction name="action_analyzeMaterials"/>
-   <addaction name="action_analyzeMix"/>
    <addaction name="action_settings"/>
+   <addaction name="separator"/>
+   <addaction name="action_analysis"/>
    <addaction name="separator"/>
    <addaction name="action_quit"/>
   </widget>
-  <action name="action_selectProbeImages">
-   <property name="icon">
-    <iconset resource="mixan_icons.qrc">
-     <normaloff>:/icons/icons/file-open-p.png</normaloff>:/icons/icons/file-open-p.png</iconset>
-   </property>
-   <property name="text">
-    <string>Select Probe Images...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+O</string>
-   </property>
-  </action>
   <action name="action_saveReport">
    <property name="icon">
     <iconset resource="mixan_icons.qrc">
@@ -149,13 +129,13 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="action_analyzeMix">
+  <action name="action_analysis">
    <property name="icon">
     <iconset resource="mixan_icons.qrc">
      <normaloff>:/icons/icons/tools-analyze_mix.png</normaloff>:/icons/icons/tools-analyze_mix.png</iconset>
    </property>
    <property name="text">
-    <string>Analyze mix</string>
+    <string>Analysis...</string>
    </property>
    <property name="shortcut">
     <string>F9</string>
@@ -191,18 +171,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
-   </property>
-  </action>
-  <action name="action_selectMaterialImages">
-   <property name="icon">
-    <iconset resource="mixan_icons.qrc">
-     <normaloff>:/icons/icons/file-open-m.png</normaloff>:/icons/icons/file-open-m.png</iconset>
-   </property>
-   <property name="text">
-    <string>Select Material Images...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="action_analyzeMaterials">

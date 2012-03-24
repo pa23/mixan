@@ -22,26 +22,19 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QVector>
-#include <QString>
-#include <QStringList>
-#include <QProgressDialog>
-#include <QFutureWatcher>
-#include <QImage>
+#include <QSharedPointer>
 #include <QSettings>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QCheckBox>
-#include <QSharedPointer>
+#include <QCloseEvent>
 
-#include "material.h"
-#include "mix.h"
 #include "settingsdialog.h"
+#include "analysisdialog.h"
+#include "settings.h"
 
 namespace Ui {
-
 class MainWindow;
-
 }
 
 class MainWindow : public QMainWindow {
@@ -53,27 +46,31 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+
+     void closeEvent(QCloseEvent *event);
+
+private slots:
+
+    void on_action_saveReport_activated();
+    void on_action_printReport_activated();
+    void on_action_quit_activated();
+    void on_action_cleanReportWindow_activated();
+    void on_action_settings_activated();
+    void on_action_analysis_activated();
+    void on_action_about_mixan_activated();
+
+    void reportReadOnlyChanged();
+
 private:
 
     Ui::MainWindow *ui;
 
-    QString thrmsg;
-
     QSettings mixanSettings;
 
-    QString mat1ImageFileName;
-    QString mat2ImageFileName;
-    QStringList mixImageFileNames;
+    QSharedPointer<SettingsDialog> settingsDialog;
+    QSharedPointer<AnalysisDialog> analysisDialog;
 
-    QSharedPointer<Material> material1;
-    QSharedPointer<Material> material2;
-    QVector< QSharedPointer<Mix> > probes;
-    QVector<QImage> graphics;
-
-    QProgressDialog *progressDialog;
-    QFutureWatcher<void> *futureWatcher;
-
-    SettingsDialog *settingsDialog;
     QSpinBox *spinBox_polyPower;
     QDoubleSpinBox *doubleSpinBox_intersectAccur;
     QDoubleSpinBox *doubleSpinBox_idealConc;
@@ -81,32 +78,14 @@ private:
     QCheckBox *checkBox_reportReadOnly;
     QCheckBox *checkBox_createTemporaryGraphics;
 
-    void forgetSelectedImages();
-    void runMaterialsAnalysis();
-    void runMixAnalysis();
+    QString reportCaption;
+
+    QSharedPointer<Settings> calcSettings;
 
     void writeProgramSettings();
     void readProgramSettings();
-
-    void createGraphics();
-
-private slots:
-
-    void on_action_selectMaterialImages_activated();
-    void on_action_selectProbeImages_activated();
-    void on_action_saveReport_activated();
-    void on_action_printReport_activated();
-    void on_action_cleanReportWindow_activated();
-    void on_action_quit_activated();
-    void on_action_analyzeMaterials_activated();
-    void on_action_analyzeMix_activated();
-    void on_action_settings_activated();
-    void on_action_about_mixan_activated();
-
-    void showAnalysisResults();
-    void resetResults();
-
-    void reportReadOnlyChanged();
+    void initCalcSettings();
+    void saveIfNecessary();
 
 };
 
