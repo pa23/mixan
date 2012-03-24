@@ -66,26 +66,6 @@ void Mix::analyze(const QString &imgFileName, const size_t &threshCol) {
     fileName = imgFileName;
 }
 
-QString Mix::imageFileName() const {
-
-    return fileName;
-}
-
-QImage Mix::originalImage() const {
-
-    return origImage;
-}
-
-size_t Mix::thresholdColor() const {
-
-    return threshColor;
-}
-
-double Mix::concentration() const {
-
-    return conc;
-}
-
 void Mix::defConc() {
 
     if ( origImage.isNull() ) {

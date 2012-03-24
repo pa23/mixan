@@ -32,18 +32,16 @@ public:
     Material();
     virtual ~Material();
 
+    void analyze(const QString &, const ptrdiff_t &);
+    void clear();
     bool isEmpty() const;
 
-    void analyze(const QString &, const ptrdiff_t &);
-
-    QString imageFileName() const;
-    QImage originalImage() const;
-
-    size_t thresholdColor() const; // gray color
-
-    QVector<double> histogramValues() const;
-    QVector<double> polynomValues() const;
-    QVector<ptrdiff_t> polynomLimits() const;
+    QString imageFileName()            const { return fileName;    }
+    QImage originalImage()             const { return origImage;   }
+    size_t thresholdColor()            const { return threshColor; }
+    QVector<double> histogramValues()  const { return histogram;   }
+    QVector<double> polynomValues()    const { return polyVal;     }
+    QVector<ptrdiff_t> polynomLimits() const { return polylimits;  }
 
 private:
 

@@ -40,12 +40,6 @@ Material::Material() :
 Material::~Material() {
 }
 
-bool Material::isEmpty() const {
-
-    if ( origImage.isNull() ) { return true;  }
-    else                      { return false; }
-}
-
 void Material::analyze(const QString &imgFileName, const ptrdiff_t &polyPwr) {
 
     fileName = "";
@@ -76,34 +70,16 @@ void Material::analyze(const QString &imgFileName, const ptrdiff_t &polyPwr) {
     fileName = imgFileName;
 }
 
-QString Material::imageFileName() const {
+void Material::clear() {
 
-    return fileName;
+    QImage tmpImg;
+    origImage.swap(tmpImg);
 }
 
-QImage Material::originalImage() const {
+bool Material::isEmpty() const {
 
-    return origImage;
-}
-
-size_t Material::thresholdColor() const {
-
-    return threshColor;
-}
-
-QVector<double> Material::histogramValues() const {
-
-    return histogram;
-}
-
-QVector<double> Material::polynomValues() const {
-
-    return polyVal;
-}
-
-QVector<ptrdiff_t> Material::polynomLimits() const {
-
-    return polylimits;
+    if ( origImage.isNull() ) { return true;  }
+    else                      { return false; }
 }
 
 void Material::defHistogram() {

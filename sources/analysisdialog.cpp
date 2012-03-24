@@ -381,6 +381,8 @@ void AnalysisDialog::showAnalysisResults() {
     //
 
     graphics.clear();
+    material1->clear();
+    material2->clear();
     probes.clear();
 }
 

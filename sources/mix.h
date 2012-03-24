@@ -37,11 +37,11 @@ public:
 
     void analyze(const QString &, const size_t &);
 
-    QString imageFileName() const;
-    QImage originalImage() const;
+    QString imageFileName() const { return fileName;    }
+    QImage originalImage()  const { return origImage;   }
 
-    size_t thresholdColor() const;
-    double concentration() const;
+    size_t thresholdColor() const { return threshColor; }
+    double concentration()  const { return conc;        }
 
 private:
 
