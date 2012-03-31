@@ -139,7 +139,8 @@ void MainWindow::readProgramSettings() {
                 mixanSettings.value("/polynom_power", 9).toInt()
                 );
     doubleSpinBox_intersectAccur->setValue(
-                mixanSettings.value("/intersection_accuracy", 0.00025).toDouble()
+                mixanSettings.
+                value("/intersection_accuracy", 0.00025).toDouble()
                 );
     doubleSpinBox_idealConc->setValue(
                 mixanSettings.value("/ideal_concentration", 0.5).toDouble()
@@ -151,7 +152,8 @@ void MainWindow::readProgramSettings() {
                 mixanSettings.value("/report_is_read_only", true).toBool()
                 );
     checkBox_createTemporaryGraphics->setChecked(
-                mixanSettings.value("/create_temporary_graphics", false).toBool()
+                mixanSettings.
+                value("/create_temporary_graphics", false).toBool()
                 );
     mixanSettings.endGroup();
 
@@ -166,7 +168,8 @@ void MainWindow::initCalcSettings() {
     calcSettings->setThrAccur(doubleSpinBox_intersectAccur->value());
     calcSettings->setIdealConc(doubleSpinBox_idealConc->value());
     calcSettings->setImgWidth(spinBox_imgWidth->value());
-    calcSettings->setCreateTmpImg(checkBox_createTemporaryGraphics->isChecked());
+    calcSettings->
+            setCreateTmpImg(checkBox_createTemporaryGraphics->isChecked());
 }
 
 void MainWindow::on_action_saveReport_activated() {

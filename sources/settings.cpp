@@ -28,9 +28,6 @@ Settings::Settings() :
     createTmpImg(false) {
 }
 
-Settings::~Settings() {
-}
-
 void Settings::setPolyPwr(ptrdiff_t pp)  { polyPwr      = pp;  }
 void Settings::setThrAccur(double ta)    { thrAccur     = ta;  }
 void Settings::setIdealConc(double ic)   { idealConc    = ic;  }

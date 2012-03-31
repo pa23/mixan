@@ -30,7 +30,8 @@ SOURCES += sources/main.cpp \
     sources/mix.cpp \
     sources/mixanerror.cpp \
     sources/analysisdialog.cpp \
-    sources/settings.cpp
+    sources/settings.cpp \
+    sources/granules.cpp
 HEADERS += sources/mainwindow.h \
     sources/constants.h \
     sources/numcompfuns.h \
@@ -40,15 +41,20 @@ HEADERS += sources/mainwindow.h \
     sources/mix.h \
     sources/mixanerror.h \
     sources/analysisdialog.h \
-    sources/settings.h
+    sources/settings.h \
+    sources/granules.h
 FORMS += sources/mainwindow.ui \
     sources/settingsdialog.ui \
     sources/analysisdialog.ui
 unix: {
     INCLUDEPATH += . \
-        /usr/include/qwt
+        /usr/include/qwt \
+        /usr/include/opencv
     LIBS += -L/usr/lib \
         -lqwt \
+        -lopencv_core \
+        -lopencv_imgproc \
+        -lopencv_highgui \
         -Wl,-rpath,.
     DESTDIR = build/unix/bin
     MOC_DIR = build/unix/moc
@@ -66,8 +72,12 @@ unix: {
 win32: {
     INCLUDEPATH += . \
         c:\\qwt\\src
+        c:\\opencv\\include\\opencv
     LIBS += -Lc:\\qwt\\lib \
         -lqwt \
+        -lopencv_core231 \
+        -lopencv_imgproc231 \
+        -lopencv_highgui231 \
         -Wl,-rpath,.
     DESTDIR = build\\win\\bin
     MOC_DIR = build\\win\\moc

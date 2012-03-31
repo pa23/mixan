@@ -24,8 +24,10 @@
 #include "settings.h"
 #include "material.h"
 #include "mix.h"
+#include "granules.h"
 #include "mixfuns.h"
 #include "mixanerror.h"
+#include "constants.h"
 
 #include <QTextBrowser>
 #include <QFileDialog>
@@ -45,8 +47,8 @@
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 #include <qwt_symbol.h>
-
-#include <QDebug>
+#include <qwt_series_data.h>
+#include <qwt_plot_histogram.h>
 
 AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
                                QSharedPointer<Settings> sts,
@@ -109,7 +111,7 @@ AnalysisDialog::~AnalysisDialog() {
 
 void AnalysisDialog::on_comboBox_analysisType_currentIndexChanged(int index) {
 
-    if ( index == ANALTYPE_MIX ) {
+    if ( index == ANALTYPE_MIX || index == ANALTYPE_GRANULATION ) {
 
         ui->listWidget_probesFileNames->setEnabled(true);
         ui->pushButton_selectProbes->setEnabled(true);
@@ -173,10 +175,14 @@ void AnalysisDialog::on_pushButton_selectProbes_clicked() {
 
 void AnalysisDialog::on_pushButton_run_clicked() {
 
-    if ( ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MATERIALS &&
+    if ( ( ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MATERIALS )
+           &&
            ( ui->lineEdit_mat1FileName->text().isEmpty() ||
-             ui->lineEdit_mat2FileName->text().isEmpty() ) ) ||
-         ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX &&
+             ui->lineEdit_mat2FileName->text().isEmpty() ) )
+         ||
+         ( ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ||
+             ui->comboBox_analysisType->currentIndex() == ANALTYPE_GRANULATION )
+           &&
            ( ui->lineEdit_mat1FileName->text().isEmpty() ||
              ui->lineEdit_mat2FileName->text().isEmpty() ||
              ui->listWidget_probesFileNames->count() == 0 ) ) ) {
@@ -216,21 +222,17 @@ void AnalysisDialog::on_pushButton_clear_clicked() {
 
 void AnalysisDialog::runAnalysis() {
 
-    if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MATERIALS ||
-         ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ) {
+    try {
 
-        try {
+        material1->analyze( ui->lineEdit_mat1FileName->text(),
+                            settings->val_polyPwr() );
+        material2->analyze( ui->lineEdit_mat2FileName->text(),
+                            settings->val_polyPwr() );
+    }
+    catch(MixanError &mixerr) {
 
-            material1->analyze( ui->lineEdit_mat1FileName->text(),
-                                settings->val_polyPwr() );
-            material2->analyze( ui->lineEdit_mat2FileName->text(),
-                                settings->val_polyPwr() );
-        }
-        catch(MixanError &mixerr) {
-
-            thrmsg += mixerr.mixanErrMsg() + "\n";
-            return;
-        }
+        thrmsg += mixerr.mixanErrMsg() + "\n";
+        return;
     }
 
     if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ) {
@@ -257,6 +259,46 @@ void AnalysisDialog::runAnalysis() {
             }
         }
     }
+    else if ( ui->comboBox_analysisType->currentIndex() ==
+              ANALTYPE_GRANULATION ) {
+
+        size_t tcol = defThreshColor( material1.data(),
+                                      material2.data(),
+                                      settings->val_thrAccur() );
+
+        size_t limcol1 = 0;
+        size_t limcol2 = 0;
+
+        if ( material1->thresholdColor() < tcol ) {
+
+            limcol1 = 0;
+            limcol2 = tcol;
+        }
+        else {
+
+            limcol1 = tcol;
+            limcol2 = 255;
+        }
+
+        for ( ptrdiff_t i=0; i<ui->listWidget_probesFileNames->count(); i++ ) {
+
+            try {
+
+                QSharedPointer<Granules>
+                        grans(new Granules(ui->listWidget_probesFileNames->
+                                           item(i)->text(),
+                                           limcol1,
+                                           limcol2));
+                grans->analyze();
+                granules.push_back(grans);
+            }
+            catch(MixanError &mixerr) {
+
+                thrmsg += mixerr.mixanErrMsg() + "\n";
+                continue;
+            }
+        }
+    }
 }
 
 void AnalysisDialog::showAnalysisResults() {
@@ -268,13 +310,23 @@ void AnalysisDialog::showAnalysisResults() {
     report->moveCursor(QTextCursor::End);
 
     report->insertHtml(
-                "<br>Settings:"
+                "Settings:"
                 "<br>Power of the approximate polynom: " +
                 QString::number(settings->val_polyPwr()) +
                 "<br>Accuracy of color threshold determining: " +
-                QString::number(settings->val_thrAccur()) +
-                "<br>"
+                QString::number(settings->val_thrAccur())
                 );
+
+    if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ||
+         ui->comboBox_analysisType->currentIndex() == ANALTYPE_GRANULATION ) {
+
+        report->insertHtml(
+                    "<br>Ideal concentration: " +
+                    QString::number(settings->val_idealConc())
+                    );
+    }
+
+    report->insertHtml("<br>");
 
     report->insertHtml(
                 "<br>File of the first material: " +
@@ -321,62 +373,108 @@ void AnalysisDialog::showAnalysisResults() {
 
     //
 
-    if ( probes.size() == 0 ) {
+    if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX &&
+         probes.size() != 0 ) {
+
+        QString imgname;
+
+        double conc = 0;
+        QVector<double> concs;
+
+        for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
+
+            imgname = probes[i]->imageFileName();
+
+            if ( imgname.isEmpty() ) {
+
+                report->insertHtml(
+                            "<br><b>Analysis of image " +
+                            imgname +
+                            " failed or canceled.</b>"
+                            );
+
+                continue;
+            }
+
+            conc = probes[i]->concentration();
+            concs.push_back(conc);
+
+            report->insertHtml(
+                        "<br>Mix image:<br>"
+                        );
+
+            report->textCursor().insertImage(
+                        probes[i]->
+                        originalImage().scaledToWidth(settings->val_imgWidth())
+                        );
+
+            report->insertHtml(
+                        "<br>File path: " +
+                        imgname +
+                        "<br>Concentration of the first component = <b>" +
+                        QString::number(conc) +
+                        "</b><br>"
+                        );
+        }
+
+        report->insertHtml(
+                    "<br><b>Vc = " +
+                    QString::number(Vc(concs, settings->val_idealConc())) +
+                    "</b><br><hr><br>"
+                    );
+
+        report->moveCursor(QTextCursor::End);
+    }
+    else if ( ui->comboBox_analysisType->currentIndex() ==
+              ANALTYPE_GRANULATION &&
+              granules.size() != 0 ) {
+
+        createHistograms();
+
+        QString imgname;
+
+        for ( ptrdiff_t i=0; i<granules.size(); i++ ) {
+
+            imgname = granules[i]->imageFileName();
+
+            if ( imgname.isEmpty() ) {
+
+                report->insertHtml(
+                            "<br><b>Analysis of image " +
+                            imgname +
+                            " failed or canceled.</b>"
+                            );
+
+                continue;
+            }
+
+            report->insertHtml(
+                        "<br>Granules image:<br>"
+                        );
+
+            report->textCursor().insertImage(
+                        granules[i]->
+                        resImage().scaledToWidth(settings->val_imgWidth())
+                        );
+
+            report->insertHtml(
+                        "<br><br>Particle-size distribution:<br>"
+                        );
+
+            report->textCursor().insertImage(histograms[i]);
+
+            report->insertHtml(
+                        "<br><hr><br>"
+                        );
+        }
+
+        report->moveCursor(QTextCursor::End);
+    }
+    else {
 
         report->insertHtml("<br><hr><br>");
         report->moveCursor(QTextCursor::End);
-
-        return;
     }
-
-    QString imgname;
-
-    double conc = 0;
-    QVector<double> concs;
-
-    for ( ptrdiff_t i=0; i<probes.size(); i++ ) {
-
-        imgname = probes[i]->imageFileName();
-
-        if ( imgname.isEmpty() ) {
-
-            report->insertHtml(
-                        "<br><b>Analysis of image " +
-                        imgname +
-                        " failed or canceled.</b>"
-                        );
-
-            continue;
-        }
-
-        conc = probes[i]->concentration();
-        concs.push_back(conc);
-
-        report->insertHtml(
-                    "<br>Mix image:<br>"
-                    );
-
-        report->textCursor().insertImage(
-                    probes[i]->
-                    originalImage().scaledToWidth(settings->val_imgWidth())
-                    );
-
-        report->insertHtml(
-                    "<br>File path: " +
-                    imgname +
-                    "<br>Concentration of the first component = <b>" +
-                    QString::number(conc) +
-                    "</b><br>"
-                    );
-    }
-
-    report->insertHtml(
-                "<br><b>Vc = " +
-                QString::number(Vc(concs, settings->val_idealConc())) +
-                "</b><br><hr><br>"
-                );
-
-    report->moveCursor(QTextCursor::End);
 
     //
 
@@ -384,6 +482,7 @@ void AnalysisDialog::showAnalysisResults() {
     material1->clear();
     material2->clear();
     probes.clear();
+    granules.clear();
 }
 
 void AnalysisDialog::createGraphics() {
@@ -579,19 +678,100 @@ void AnalysisDialog::createGraphics() {
             }
         }
 
-        if ( !pixmap1.save("temp/graphic1.png") ) {
+        if ( !pixmap1.save("temp/graphic_0.png") ) {
 
             QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
         }
 
-        if ( !pixmap2.save("temp/graphic2.png") ) {
+        if ( !pixmap2.save("temp/graphic_1.png") ) {
 
             QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
         }
 
-        if ( !pixmap3.save("temp/graphic3.png") ) {
+        if ( !pixmap3.save("temp/graphic_2.png") ) {
 
             QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
+        }
+    }
+}
+
+void AnalysisDialog::createHistograms() {
+
+    histograms.clear();
+
+    for ( ptrdiff_t n=0; n<granules.size(); n++ ) {
+
+        double minval = granules[n]->histXSetup().minval;
+        double step = granules[n]->histXSetup().step;
+
+        QVector<double> histvls = granules[n]->histValues();
+
+        //
+
+        QVector<QwtIntervalSample> histdata;
+
+        double tmpmin = minval;
+        double tmpmax = tmpmin + step;
+
+        for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
+
+            histdata.push_back(QwtIntervalSample(histvls[i], tmpmin, tmpmax));
+
+            tmpmin += step;
+            tmpmax += step;
+        }
+
+        //
+
+        QwtText xAxisTitle("Granules areas");
+        xAxisTitle.setFont(QFont("Liberation Sans", 12));
+
+        QwtText yAxisTitle("n_i / N");
+        yAxisTitle.setFont(QFont("Liberation Sans", 12));
+
+        QSharedPointer<QwtPlot> histogram(new QwtPlot());
+        histogram->setPalette(QPalette(QColor(Qt::white)));
+        histogram->setFrameShape(QFrame::NoFrame);
+        histogram->setFrameShadow(QFrame::Plain);
+        histogram->setCanvasLineWidth(0);
+        histogram->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
+        histogram->setAxisTitle(QwtPlot::yLeft, yAxisTitle);
+
+        QSharedPointer<QwtPlotHistogram> hist(new QwtPlotHistogram());
+        hist->setStyle(QwtPlotHistogram::Columns);
+        hist->setRenderHint(QwtPlotItem::RenderAntialiased);
+
+        hist->setSamples(histdata);
+        hist->attach(histogram.data());
+
+        histogram->resize(600, 400);
+        histogram->replot();
+
+        QPixmap pixmap(histogram->size());
+        histogram->render(&pixmap);
+
+        histograms.push_back(pixmap.toImage());
+
+        if ( settings->val_createTmpImg() ) {
+
+            QDir tempDir;
+
+            if ( !tempDir.exists("temp") ) {
+
+                if ( !tempDir.mkdir("temp") ) {
+
+                    QMessageBox::warning(this, "mixan",
+                                         "Can not create temporary directory!");
+                }
+            }
+
+            if ( !pixmap.save("temp/histogram_"
+                              + QString::number(n)
+                              + ".png") ) {
+
+                QMessageBox::warning(this, "mixan",
+                                     "Can not save pixmap to file!");
+            }
         }
     }
 }

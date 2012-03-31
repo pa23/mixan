@@ -36,6 +36,7 @@
 #include "settings.h"
 #include "material.h"
 #include "mix.h"
+#include "granules.h"
 
 namespace Ui {
 class AnalysisDialog;
@@ -75,8 +76,10 @@ private:
     QSharedPointer<Material> material1;
     QSharedPointer<Material> material2;
     QVector< QSharedPointer<Mix> > probes;
+    QVector< QSharedPointer<Granules> > granules;
 
     QVector<QImage> graphics;
+    QVector<QImage> histograms;
 
     QSharedPointer<QProgressDialog> progressDialog;
     QSharedPointer< QFutureWatcher<void> > futureWatcher;
@@ -89,6 +92,7 @@ private:
 
     void runAnalysis();
     void createGraphics();
+    void createHistograms();
 
 };
 

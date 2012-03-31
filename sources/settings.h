@@ -30,7 +30,6 @@ class Settings {
 public:
 
     Settings();
-    virtual ~Settings();
 
     void setPolyPwr(ptrdiff_t);
     void setThrAccur(double);
