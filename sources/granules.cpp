@@ -76,7 +76,7 @@ void Granules::findAreas() {
                    storage,
                    &contours,
                    sizeof(CvContour),
-                   CV_RETR_LIST,
+                   CV_RETR_EXTERNAL,
                    CV_CHAIN_APPROX_SIMPLE,
                    cvPoint(0, 0) );
 

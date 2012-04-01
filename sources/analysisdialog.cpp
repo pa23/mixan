@@ -479,6 +479,7 @@ void AnalysisDialog::showAnalysisResults() {
     //
 
     graphics.clear();
+    histograms.clear();
     material1->clear();
     material2->clear();
     probes.clear();
@@ -723,7 +724,7 @@ void AnalysisDialog::createHistograms() {
 
         //
 
-        QwtText xAxisTitle("Granules areas");
+        QwtText xAxisTitle("Granule area");
         xAxisTitle.setFont(QFont("Liberation Sans", 12));
 
         QwtText yAxisTitle("n_i / N");

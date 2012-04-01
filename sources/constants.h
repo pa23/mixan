@@ -25,6 +25,6 @@
 
 const QString VERSION = "v2.0.0 DEV";
 
-const ptrdiff_t HISTDIMENSION = 10;
+const ptrdiff_t HISTDIMENSION = 20;
 
 #endif // CONSTANTS_H
