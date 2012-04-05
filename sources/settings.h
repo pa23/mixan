@@ -34,22 +34,25 @@ public:
     void setPolyPwr(ptrdiff_t);
     void setThrAccur(double);
     void setIdealConc(double);
-    void setImgWidth(ptrdiff_t);
+    void setShowImgInReport(bool);
     void setCreateTmpImg(bool);
+    void setImgWidth(ptrdiff_t);
 
-    ptrdiff_t val_polyPwr()      const { return polyPwr;      }
-    double    val_thrAccur()     const { return thrAccur;     }
-    double    val_idealConc()    const { return idealConc;    }
-    ptrdiff_t val_imgWidth()     const { return imgWidth;     }
-    bool      val_createTmpImg() const { return createTmpImg; }
+    ptrdiff_t val_polyPwr()           const { return polyPwr;           }
+    double    val_thrAccur()          const { return thrAccur;          }
+    double    val_idealConc()         const { return idealConc;         }
+    bool      val_showImgInReport()   const { return showImgInReport;   }
+    bool      val_createTmpImg()      const { return createTmpImg;      }
+    ptrdiff_t val_imgWidth()          const { return imgWidth;          }
 
 private:
 
     ptrdiff_t polyPwr;
     double    thrAccur;
     double    idealConc;
-    ptrdiff_t imgWidth;
+    bool      showImgInReport;
     bool      createTmpImg;
+    ptrdiff_t imgWidth;
 
 };
 

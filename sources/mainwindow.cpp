@@ -72,12 +72,14 @@ MainWindow::MainWindow(QWidget *parent) :
             findChild<QDoubleSpinBox *>("doubleSpinBox_intersectAccur");
     doubleSpinBox_idealConc = settingsDialog->
             findChild<QDoubleSpinBox *>("doubleSpinBox_idealConc");
-    spinBox_imgWidth = settingsDialog->
-            findChild<QSpinBox *>("spinBox_imgWidth");
     checkBox_reportReadOnly = settingsDialog->
             findChild<QCheckBox *>("checkBox_reportRO");
+    checkBox_imagesInReport = settingsDialog->
+            findChild<QCheckBox *>("checkBox_imagesInReport");
     checkBox_createTemporaryGraphics = settingsDialog->
             findChild<QCheckBox *>("checkBox_createTempGraph");
+    spinBox_imgWidth = settingsDialog->
+            findChild<QSpinBox *>("spinBox_imgWidth");
 
     connect(checkBox_reportReadOnly,
             SIGNAL(clicked()),
@@ -121,11 +123,13 @@ void MainWindow::writeProgramSettings() {
                            doubleSpinBox_intersectAccur->value());
     mixanSettings.setValue("/ideal_concentration",
                            doubleSpinBox_idealConc->value());
-    mixanSettings.setValue("/image_width", spinBox_imgWidth->value());
     mixanSettings.setValue("/report_is_read_only",
                            checkBox_reportReadOnly->isChecked());
+    mixanSettings.setValue("/show_images_in_report",
+                           checkBox_imagesInReport->isChecked());
     mixanSettings.setValue("/create_temporary_graphics",
                            checkBox_createTemporaryGraphics->isChecked());
+    mixanSettings.setValue("/image_width", spinBox_imgWidth->value());
     mixanSettings.endGroup();
 }
 
@@ -145,15 +149,18 @@ void MainWindow::readProgramSettings() {
     doubleSpinBox_idealConc->setValue(
                 mixanSettings.value("/ideal_concentration", 0.5).toDouble()
                 );
-    spinBox_imgWidth->setValue(
-                mixanSettings.value("/image_width", 600).toInt()
-                );
     checkBox_reportReadOnly->setChecked(
                 mixanSettings.value("/report_is_read_only", true).toBool()
+                );
+    checkBox_imagesInReport->setChecked(
+                mixanSettings.value("/show_images_in_report", true).toBool()
                 );
     checkBox_createTemporaryGraphics->setChecked(
                 mixanSettings.
                 value("/create_temporary_graphics", false).toBool()
+                );
+    spinBox_imgWidth->setValue(
+                mixanSettings.value("/image_width", 600).toInt()
                 );
     mixanSettings.endGroup();
 
@@ -167,9 +174,10 @@ void MainWindow::initCalcSettings() {
     calcSettings->setPolyPwr(spinBox_polyPower->value());
     calcSettings->setThrAccur(doubleSpinBox_intersectAccur->value());
     calcSettings->setIdealConc(doubleSpinBox_idealConc->value());
-    calcSettings->setImgWidth(spinBox_imgWidth->value());
+    calcSettings->setShowImgInReport(checkBox_imagesInReport->isChecked());
     calcSettings->
             setCreateTmpImg(checkBox_createTemporaryGraphics->isChecked());
+    calcSettings->setImgWidth(spinBox_imgWidth->value());
 }
 
 void MainWindow::on_action_saveReport_activated() {
@@ -213,8 +221,6 @@ void MainWindow::on_action_printReport_activated() {
 }
 
 void MainWindow::on_action_quit_activated() {
-
-    //
 
     close();
 }

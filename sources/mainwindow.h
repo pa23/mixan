@@ -74,9 +74,10 @@ private:
     QSpinBox *spinBox_polyPower;
     QDoubleSpinBox *doubleSpinBox_intersectAccur;
     QDoubleSpinBox *doubleSpinBox_idealConc;
-    QSpinBox *spinBox_imgWidth;
     QCheckBox *checkBox_reportReadOnly;
+    QCheckBox *checkBox_imagesInReport;
     QCheckBox *checkBox_createTemporaryGraphics;
+    QSpinBox *spinBox_imgWidth;
 
     QString reportCaption;
 

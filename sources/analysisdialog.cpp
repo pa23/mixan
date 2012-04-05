@@ -303,6 +303,8 @@ void AnalysisDialog::runAnalysis() {
 
 void AnalysisDialog::showAnalysisResults() {
 
+    bool showImg = settings->val_showImgInReport();
+
     createGraphics();
 
     //
@@ -310,33 +312,34 @@ void AnalysisDialog::showAnalysisResults() {
     report->moveCursor(QTextCursor::End);
 
     report->insertHtml(
-                "Settings:"
-                "<br>Power of the approximate polynom: " +
-                QString::number(settings->val_polyPwr()) +
-                "<br>Accuracy of color threshold determining: " +
-                QString::number(settings->val_thrAccur())
+                "<u>Settings</u>"
+                "<br>* Type of analysis: "
+                + ui->comboBox_analysisType->currentText()
+                + "<br>* Power of the approximate polynom: "
+                + QString::number(settings->val_polyPwr())
+                + "<br>* Accuracy of color threshold determining: "
+                + QString::number(settings->val_thrAccur())
                 );
 
-    if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ||
-         ui->comboBox_analysisType->currentIndex() == ANALTYPE_GRANULATION ) {
+    if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ) {
 
         report->insertHtml(
-                    "<br>Ideal concentration: " +
+                    "<br>* Ideal concentration: " +
                     QString::number(settings->val_idealConc())
                     );
     }
 
-    report->insertHtml("<br>");
+    report->insertHtml("<br><br>First material image file: "
+                       + ui->lineEdit_mat1FileName->text());
 
-    report->insertHtml(
-                "<br>File of the first material: " +
-                ui->lineEdit_mat1FileName->text() +
-                "<br>Image of the first material:<br>"
-                );
-    report->textCursor().insertImage(
-                material1->
-                originalImage().scaledToWidth(settings->val_imgWidth())
-                );
+    if ( showImg ) {
+
+        report->insertHtml("<br><br>Image of the first material:<br>");
+        report->textCursor().insertImage(
+                    material1->
+                    originalImage().scaledToWidth(settings->val_imgWidth())
+                    );
+    }
 
     report->insertHtml(
                 "<br><br>Characteristic of the first material "
@@ -344,15 +347,17 @@ void AnalysisDialog::showAnalysisResults() {
                 );
     report->textCursor().insertImage(graphics[0]);
 
-    report->insertHtml(
-                "<br><br>File of the second material: " +
-                ui->lineEdit_mat2FileName->text() +
-                "<br>Image of the second material:<br>"
-                );
-    report->textCursor().insertImage(
-                material2->
-                originalImage().scaledToWidth(settings->val_imgWidth())
-                );
+    report->insertHtml("<br><br>Second material image file: "
+                       + ui->lineEdit_mat2FileName->text());
+
+    if ( showImg ) {
+
+        report->insertHtml("<br><br>Image of the second material:<br>");
+        report->textCursor().insertImage(
+                    material2->
+                    originalImage().scaledToWidth(settings->val_imgWidth())
+                    );
+    }
 
     report->insertHtml(
                 "<br><br>Characteristic of the second material "
@@ -367,9 +372,7 @@ void AnalysisDialog::showAnalysisResults() {
                 );
     report->textCursor().insertImage(graphics[2]);
 
-    report->insertHtml(
-                "<br>"
-                );
+    report->insertHtml("<br>");
 
     //
 
@@ -399,17 +402,19 @@ void AnalysisDialog::showAnalysisResults() {
             conc = probes[i]->concentration();
             concs.push_back(conc);
 
-            report->insertHtml(
-                        "<br>Mix image:<br>"
-                        );
+            if ( showImg ) {
 
-            report->textCursor().insertImage(
-                        probes[i]->
-                        originalImage().scaledToWidth(settings->val_imgWidth())
-                        );
+                report->insertHtml("<br>Mix image:<br>");
+
+                report->textCursor().insertImage(
+                            probes[i]->
+                            originalImage().
+                            scaledToWidth(settings->val_imgWidth())
+                            );
+            }
 
             report->insertHtml(
-                        "<br>File path: " +
+                        "<br>Mix image file: " +
                         imgname +
                         "<br>Concentration of the first component = <b>" +
                         QString::number(conc) +
@@ -448,26 +453,27 @@ void AnalysisDialog::showAnalysisResults() {
                 continue;
             }
 
+            if ( showImg ) {
+
+                report->insertHtml("<br>Granules image:<br>");
+
+                report->textCursor().insertImage(
+                            granules[i]->
+                            resImage().scaledToWidth(settings->val_imgWidth())
+                            );
+            }
+
             report->insertHtml(
-                        "<br>Granules image:<br>"
+                        "<br><br>Image file: "
+                        + imgname
+                        + "<br>"
                         );
 
-            report->textCursor().insertImage(
-                        granules[i]->
-                        resImage().scaledToWidth(settings->val_imgWidth())
-                        );
-
-            report->insertHtml(
-                        "<br><br>Particle-size distribution:<br>"
-                        );
-
+            report->insertHtml("<br>Particle-size distribution:<br>");
             report->textCursor().insertImage(histograms[i]);
-
-            report->insertHtml(
-                        "<br><hr><br>"
-                        );
         }
 
+        report->insertHtml("<br><hr><br>");
         report->moveCursor(QTextCursor::End);
     }
     else {
@@ -699,6 +705,8 @@ void AnalysisDialog::createGraphics() {
 void AnalysisDialog::createHistograms() {
 
     histograms.clear();
+
+    //
 
     for ( ptrdiff_t n=0; n<granules.size(); n++ ) {
 
