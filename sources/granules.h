@@ -38,9 +38,8 @@ class Granules {
 
 public:
 
-    Granules(const QString &,
-             const size_t &,
-             const size_t &);
+    Granules(const QString &, const size_t &, const size_t &);
+    virtual ~Granules();
 
     void analyze();
 

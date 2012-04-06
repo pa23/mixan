@@ -26,9 +26,12 @@
 #include <QVector>
 #include <QImage>
 
-Mix::Mix() :
+Mix::Mix(const QString &imgFileName, const size_t &threshCol) :
     threshColor(0),
     conc(0) {
+
+    fileName = imgFileName;
+    threshColor = threshCol;
 }
 
 Mix::~Mix() {
@@ -40,18 +43,12 @@ bool Mix::isEmpty() const {
     else                      { return false; }
 }
 
-void Mix::analyze(const QString &imgFileName, const size_t &threshCol) {
+void Mix::analyze() {
 
-    fileName = "";
-
-    //
-
-    threshColor = threshCol;
-
-    if ( !origImage.load(imgFileName) ) {
+    if ( !origImage.load(fileName) ) {
 
         throw MixanError("Errors during loading image file " +
-                         imgFileName + "!");
+                         fileName + "!");
     }
 
     try {
@@ -62,8 +59,6 @@ void Mix::analyze(const QString &imgFileName, const size_t &threshCol) {
 
         throw;
     }
-
-    fileName = imgFileName;
 }
 
 void Mix::defConc() {

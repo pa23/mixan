@@ -30,12 +30,11 @@ class Mix {
 
 public:
 
-    Mix();
+    Mix(const QString &, const size_t &);
     virtual ~Mix();
 
     bool isEmpty() const;
-
-    void analyze(const QString &, const size_t &);
+    void analyze();
 
     QString imageFileName() const { return fileName;    }
     QImage originalImage()  const { return origImage;   }
@@ -46,9 +45,9 @@ public:
 private:
 
     QString fileName;
-    QImage origImage;
-
     size_t threshColor;
+
+    QImage origImage;
     double conc;
 
     void defConc();

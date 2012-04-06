@@ -42,6 +42,9 @@ Granules::Granules(const QString &fileName,
     histVls.resize(HISTDIMENSION);
 }
 
+Granules::~Granules() {
+}
+
 void Granules::analyze() {
 
     try {

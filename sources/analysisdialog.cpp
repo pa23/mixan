@@ -247,9 +247,11 @@ void AnalysisDialog::runAnalysis() {
 
             try {
 
-                QSharedPointer<Mix> probe(new Mix());
-                probe->analyze( ui->listWidget_probesFileNames->item(i)->text(),
-                                tcol );
+                QSharedPointer<Mix> probe(new Mix(ui->
+                                                  listWidget_probesFileNames->
+                                                  item(i)->text(),
+                                                  tcol));
+                probe->analyze();
                 probes.push_back(probe);
             }
             catch(MixanError &mixerr) {
@@ -261,6 +263,8 @@ void AnalysisDialog::runAnalysis() {
     }
     else if ( ui->comboBox_analysisType->currentIndex() ==
               ANALTYPE_GRANULATION ) {
+
+        granules.clear();
 
         size_t tcol = defThreshColor( material1.data(),
                                       material2.data(),
