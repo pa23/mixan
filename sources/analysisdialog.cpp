@@ -307,6 +307,7 @@ void AnalysisDialog::runAnalysis() {
 void AnalysisDialog::showAnalysisResults() {
 
     bool showImg = settings->val_showImgInReport();
+    bool createTmpImgFiles = settings->val_createTmpImg();
     ptrdiff_t imgWidth = settings->val_imgWidth();
 
     createGraphics();
@@ -471,6 +472,22 @@ void AnalysisDialog::showAnalysisResults() {
               ANALTYPE_GRANULATION &&
               granules.size() != 0 ) {
 
+        if ( settings->val_createTmpImg() ) {
+
+            QDir tempDir;
+
+            if ( !tempDir.exists("temp") ) {
+
+                if ( !tempDir.mkdir("temp") ) {
+
+                    QMessageBox::warning(this, "mixan",
+                                         "Can not create temporary directory!");
+                }
+            }
+        }
+
+        //
+
         createHistograms();
 
         QString imgname;
@@ -506,6 +523,20 @@ void AnalysisDialog::showAnalysisResults() {
                     report->textCursor().insertImage(
                                 granules[i]->resImage()
                                 );
+                }
+            }
+
+            if ( createTmpImgFiles ) {
+
+                QPixmap tmpPxp = QPixmap::fromImage(granules[i]->resImage());
+
+                if ( !tmpPxp.save("temp/granules_image_"
+                                  + QString::number(i)
+                                  + ".png") ) {
+
+                    QMessageBox::warning(this,
+                                         "mixan",
+                                         "Can not save pixmap to file!");
                 }
             }
 

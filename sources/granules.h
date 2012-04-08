@@ -61,7 +61,7 @@ private:
     QVector<double> histVls;
 
     void findAreas();
-    void createQImg(IplImage *);
+    void IplImage2QImage(const IplImage *);
     void defHistData();
 
 };

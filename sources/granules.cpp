@@ -60,28 +60,52 @@ void Granules::analyze() {
 
 void Granules::findAreas() {
 
-    IplImage *origImage = cvLoadImage(imgFileName.toAscii(), 1);
+    IplImage *origImage = 0;
+    IplImage *grayImage = 0;
+    IplImage *binImage = 0;
+    IplImage *dstImage = 0;
 
-    IplImage *grayImage = cvCreateImage(cvGetSize(origImage), IPL_DEPTH_8U, 1);
-    IplImage *binImage = cvCreateImage(cvGetSize(origImage), IPL_DEPTH_8U, 1);
-    IplImage *dstImage = cvCloneImage(origImage);
+    if ( !(origImage = cvLoadImage(imgFileName.toAscii(), 1)) ) {
+
+        throw MixanError("Can not load image " + imgFileName + "!");
+    }
+
+    if ( !(grayImage = cvCreateImage(cvGetSize(origImage), IPL_DEPTH_8U, 1)) ) {
+
+        throw MixanError("Can not allocate memory for grayImage!");
+    }
+
+    if ( !(binImage = cvCreateImage(cvGetSize(origImage), IPL_DEPTH_8U, 1)) ) {
+
+        throw MixanError("Can not allocate memory for binImage!");
+    }
+
+    if ( !(dstImage = cvCloneImage(origImage)) ) {
+
+        throw MixanError("Can not clone origImage!");
+    }
 
     cvCvtColor(origImage, grayImage, CV_RGB2GRAY); // creation of gray
     cvInRangeS(grayImage,
                cvScalar(limCol1),
                cvScalar(limCol2),
-               binImage); // .. binary
+               binImage); // creation of binary
 
     CvMemStorage *storage = cvCreateMemStorage(0);
     CvSeq *contours = 0;
 
-    cvFindContours(binImage,
-                   storage,
-                   &contours,
-                   sizeof(CvContour),
-                   CV_RETR_EXTERNAL,
-                   CV_CHAIN_APPROX_SIMPLE,
-                   cvPoint(0, 0) );
+    ptrdiff_t cc = 0;
+
+    if ( !( cc = cvFindContours(binImage,
+                                storage,
+                                &contours,
+                                sizeof(CvContour),
+                                CV_RETR_EXTERNAL,
+                                CV_CHAIN_APPROX_SIMPLE,
+                                cvPoint(0, 0)) ) ) {
+
+        throw MixanError("Can not find contours!");
+    }
 
     for ( CvSeq *seq0 = contours; seq0 != 0; seq0 = seq0->h_next ) {
 
@@ -100,9 +124,9 @@ void Granules::findAreas() {
 
     try {
 
-        createQImg(dstImage);
+        IplImage2QImage(dstImage);
     }
-    catch(MixanError &mixerr) {
+    catch (MixanError &mixerr) {
 
         cvReleaseImage(&dstImage);
         throw;
@@ -111,18 +135,32 @@ void Granules::findAreas() {
     cvReleaseImage(&dstImage);
 }
 
-void Granules::createQImg(IplImage *iplImg) {
+void Granules::IplImage2QImage(const IplImage *iplImg) {
+
+    /* http://www.developer.nokia.com/Community/Wiki/Using_OpenCV_with_Qt */
+
+    ptrdiff_t height = iplImg->height;
+    ptrdiff_t width = iplImg->width;
 
     if ( iplImg->depth == IPL_DEPTH_8U && iplImg->nChannels == 3 ) {
 
         const uchar *qImageBuffer = (const uchar *)iplImg->imageData;
-
-        QImage tmpImg(qImageBuffer,
-                      iplImg->width,
-                      iplImg->height,
-                      QImage::Format_RGB888);
+        QImage tmpImg(qImageBuffer, width, height, QImage::Format_RGB888);
 
         img = tmpImg.rgbSwapped();
+    }
+    else if ( iplImg->depth == IPL_DEPTH_8U && iplImg->nChannels == 1 ) {
+
+        const uchar *qImageBuffer = (const uchar *)iplImg->imageData;
+        QImage tmpImg(qImageBuffer, width, height, QImage::Format_Indexed8);
+
+        QVector<QRgb> colorTable;
+
+        for ( size_t i=0; i<256; i++ ) { colorTable.push_back(qRgb(i, i, i)); }
+
+        tmpImg.setColorTable(colorTable);
+
+        img = tmpImg;
     }
     else {
 

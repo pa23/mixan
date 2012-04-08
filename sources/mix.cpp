@@ -47,8 +47,7 @@ void Mix::analyze() {
 
     if ( !origImage.load(fileName) ) {
 
-        throw MixanError("Errors during loading image file " +
-                         fileName + "!");
+        throw MixanError("Can not load image " + fileName + "!");
     }
 
     try {
