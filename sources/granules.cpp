@@ -25,8 +25,8 @@
 #include <QString>
 #include <QImage>
 
-#include <cv.h>
-#include <highgui.h>
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
 
 Granules::Granules(const QString &fileName,
                    const size_t &lim1,

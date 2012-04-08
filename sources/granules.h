@@ -25,7 +25,7 @@
 #include <QVector>
 #include <QImage>
 
-#include <cv.h>
+#include <opencv/cv.h>
 
 struct HistXSetup {
 

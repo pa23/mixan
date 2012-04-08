@@ -205,7 +205,6 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
         QMessageBox::warning(this, "mixan", "Analysis completed, but\n\n" +
                              thrmsg);
-        thrmsg.clear();
     }
     else {
 
@@ -308,6 +307,7 @@ void AnalysisDialog::runAnalysis() {
 void AnalysisDialog::showAnalysisResults() {
 
     bool showImg = settings->val_showImgInReport();
+    ptrdiff_t imgWidth = settings->val_imgWidth();
 
     createGraphics();
 
@@ -333,16 +333,33 @@ void AnalysisDialog::showAnalysisResults() {
                     );
     }
 
+    if ( !thrmsg.isEmpty() ) {
+
+        report->insertHtml("<br><br><b>" + thrmsg + "</b><br><hr><br>");
+        report->moveCursor(QTextCursor::End);
+
+        thrmsg.clear();
+        return;
+    }
+
     report->insertHtml("<br><br>First material image file: "
                        + ui->lineEdit_mat1FileName->text());
 
     if ( showImg ) {
 
         report->insertHtml("<br><br>Image of the first material:<br>");
-        report->textCursor().insertImage(
-                    material1->
-                    originalImage().scaledToWidth(settings->val_imgWidth())
-                    );
+
+        if ( material1->originalImage().width() > imgWidth ) {
+
+            report->textCursor().insertImage(
+                        material1->
+                        originalImage().scaledToWidth(imgWidth)
+                        );
+        }
+        else {
+
+            report->textCursor().insertImage(material1->originalImage());
+        }
     }
 
     report->insertHtml(
@@ -357,10 +374,18 @@ void AnalysisDialog::showAnalysisResults() {
     if ( showImg ) {
 
         report->insertHtml("<br><br>Image of the second material:<br>");
-        report->textCursor().insertImage(
-                    material2->
-                    originalImage().scaledToWidth(settings->val_imgWidth())
-                    );
+
+        if ( material2->originalImage().width() > imgWidth ) {
+
+            report->textCursor().insertImage(
+                        material2->
+                        originalImage().scaledToWidth(imgWidth)
+                        );
+        }
+        else {
+
+            report->textCursor().insertImage(material2->originalImage());
+        }
     }
 
     report->insertHtml(
@@ -410,11 +435,19 @@ void AnalysisDialog::showAnalysisResults() {
 
                 report->insertHtml("<br>Mix image:<br>");
 
-                report->textCursor().insertImage(
-                            probes[i]->
-                            originalImage().
-                            scaledToWidth(settings->val_imgWidth())
-                            );
+                if ( probes[i]->originalImage().width() > imgWidth ) {
+
+                    report->textCursor().insertImage(
+                                probes[i]->originalImage().
+                                scaledToWidth(settings->val_imgWidth())
+                                );
+                }
+                else {
+
+                    report->textCursor().insertImage(
+                                probes[i]->originalImage()
+                                );
+                }
             }
 
             report->insertHtml(
@@ -461,10 +494,19 @@ void AnalysisDialog::showAnalysisResults() {
 
                 report->insertHtml("<br>Granules image:<br>");
 
-                report->textCursor().insertImage(
-                            granules[i]->
-                            resImage().scaledToWidth(settings->val_imgWidth())
-                            );
+                if ( granules[i]->resImage().width() > imgWidth ) {
+
+                    report->textCursor().insertImage(
+                                granules[i]->resImage().
+                                scaledToWidth(settings->val_imgWidth())
+                                );
+                }
+                else {
+
+                    report->textCursor().insertImage(
+                                granules[i]->resImage()
+                                );
+                }
             }
 
             report->insertHtml(
@@ -499,6 +541,10 @@ void AnalysisDialog::showAnalysisResults() {
 void AnalysisDialog::createGraphics() {
 
     graphics.clear();
+
+    //
+
+    if ( material1->isEmpty() || material2->isEmpty() ) { return; }
 
     //
 
@@ -709,6 +755,10 @@ void AnalysisDialog::createGraphics() {
 void AnalysisDialog::createHistograms() {
 
     histograms.clear();
+
+    //
+
+    if ( granules.size() == 0 ) { return; }
 
     //
 

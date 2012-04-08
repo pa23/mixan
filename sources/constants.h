@@ -23,7 +23,7 @@
 
 #include <QString>
 
-const QString VERSION = "v2.0.0 DEV";
+const QString VERSION = "v2.0.0";
 
 const ptrdiff_t HISTDIMENSION = 20;
 

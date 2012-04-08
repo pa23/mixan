@@ -48,8 +48,7 @@ FORMS += sources/mainwindow.ui \
     sources/analysisdialog.ui
 unix: {
     INCLUDEPATH += . \
-        /usr/include/qwt \
-        /usr/include/opencv
+        /usr/include/qwt
     LIBS += -L/usr/lib \
         -lqwt \
         -lopencv_core \
@@ -71,23 +70,24 @@ unix: {
 }
 win32: {
     INCLUDEPATH += . \
-        c:\\qwt\\src
-        c:\\opencv\\include\\opencv
-    LIBS += -Lc:\\qwt\\lib \
+        c:/qwt/src \
+        c:/opencv/build/include
+    LIBS += -Lc:/qwt/lib \
+        -Lc:/opencv/build/x86/mingw/bin \
         -lqwt \
         -lopencv_core231 \
         -lopencv_imgproc231 \
         -lopencv_highgui231 \
         -Wl,-rpath,.
-    DESTDIR = build\\win\\bin
-    MOC_DIR = build\\win\\moc
-    RCC_DIR = build\\win\\rc
-    UI_HEADERS_DIR = build\\win\\ui_h
+    DESTDIR = build/win/bin
+    MOC_DIR = build/win/moc
+    RCC_DIR = build/win/rc
+    UI_HEADERS_DIR = build/win/ui_h
     CONFIG (debug, debug|release) {
-        OBJECTS_DIR = build\\win\\debug
+        OBJECTS_DIR = build/win/debug
     }
     else {
-        OBJECTS_DIR = build\\win\\release
+        OBJECTS_DIR = build/win/release
     }
 }
 RESOURCES += sources/mixan_icons.qrc
