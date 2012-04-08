@@ -43,6 +43,7 @@
 #include <QPixmap>
 #include <QPen>
 #include <QPalette>
+#include <QDateTime>
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
@@ -317,7 +318,10 @@ void AnalysisDialog::showAnalysisResults() {
     report->moveCursor(QTextCursor::End);
 
     report->insertHtml(
-                "<u>Settings</u>"
+                "<b>"
+                + QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss")
+                + "</b><br><br>"
+                "Settings"
                 "<br>* Type of analysis: "
                 + ui->comboBox_analysisType->currentText()
                 + "<br>* Power of the approximate polynom: "
@@ -460,11 +464,18 @@ void AnalysisDialog::showAnalysisResults() {
                         );
         }
 
-        report->insertHtml(
-                    "<br><b>Vc = " +
-                    QString::number(Vc(concs, settings->val_idealConc())) +
-                    "</b><br><hr><br>"
-                    );
+        if ( probes.size() < 2 ) {
+
+            report->insertHtml("<hr><br>");
+        }
+        else {
+
+            report->insertHtml(
+                        "<br><b>Vc = " +
+                        QString::number(Vc(concs, settings->val_idealConc())) +
+                        "</b><br><hr><br>"
+                        );
+        }
 
         report->moveCursor(QTextCursor::End);
     }

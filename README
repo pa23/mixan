@@ -13,13 +13,12 @@ Analysis of granular material mixes and emulsions.
 --------------------------------------------------------------------------------
 Dependences
   GNU/Linux
-    Qt >=4.8.0 (libQtCore.so.4, libQtGui.so.4, libQtSvg.so.4)
+    Qt >=4.8.0 (libQtCore.so.4, libQtGui.so.4)
     Qwt >= 6.0.1 (libqwt.so.6)
     OpenCV >= 2.3.1 (libopencv_core.so, libopencv_imgproc.so,
                      libopencv_highgui.so)
-  MS Windows x86 (all the necessary components are included in the binary
-                  package)
-    Qt x86 >=4.8.0 (QtCore4.dll, QtGui4.dll, QtSvg4.dll)
+  MS Windows x86
+    Qt x86 >=4.8.0 (QtCore4.dll, QtGui4.dll)
     Qwt >= 6.0.1 (qwt.dll)
     OpenCV >= 2.3.1 (libopencv_core231.dll, libopencv_imgproc231.dll,
                      libopencv_highgui231.dll)

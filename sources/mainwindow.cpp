@@ -32,7 +32,6 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QTextCursor>
-#include <QDateTime>
 #include <QSettings>
 #include <QRect>
 #include <QSpinBox>
@@ -55,9 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     reportCaption = "<br><b>mixan "
             + VERSION
             + "</b><br>Analysis of granular material mixes and emulsions."
-            + "<br><br><b>"
-            + QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss")
-            + "</b><br><hr><br>";
+            "<br><hr><br>";
 
     ui->textBrowser_report->setUndoRedoEnabled(false);
     ui->textBrowser_report->setHtml(reportCaption);
