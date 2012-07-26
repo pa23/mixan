@@ -176,6 +176,9 @@
       </item>
       <item row="2" column="0">
        <widget class="QCheckBox" name="checkBox_createTempGraph">
+        <property name="toolTip">
+         <string>mixan temporary directory is ~/mixan_temp</string>
+        </property>
         <property name="text">
          <string>Create temporary image files</string>
         </property>

@@ -23,7 +23,8 @@
 
 #include <QString>
 
-const QString VERSION = "v2.0.0";
+const QString VERSION = "v2.1.0";
+const QString TMPDIR = "mixan_temp";
 
 const ptrdiff_t HISTDIMENSION = 20;
 

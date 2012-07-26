@@ -94,6 +94,8 @@ private:
     void createGraphics();
     void createHistograms();
 
+    QString tempPath;
+
 };
 
 #endif // ANALYSISDIALOG_H

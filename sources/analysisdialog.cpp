@@ -103,6 +103,11 @@ AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
             progressDialog.data(),
             SLOT(setValue(int))
             );
+
+    tempPath = QDir::homePath()
+            + QDir::separator()
+            + TMPDIR
+            + QDir::separator();
 }
 
 AnalysisDialog::~AnalysisDialog() {
@@ -487,9 +492,9 @@ void AnalysisDialog::showAnalysisResults() {
 
             QDir tempDir;
 
-            if ( !tempDir.exists("temp") ) {
+            if ( !tempDir.exists(tempPath) ) {
 
-                if ( !tempDir.mkdir("temp") ) {
+                if ( !tempDir.mkpath(tempPath) ) {
 
                     QMessageBox::warning(this, "mixan",
                                          "Can not create temporary directory!");
@@ -541,8 +546,12 @@ void AnalysisDialog::showAnalysisResults() {
 
                 QPixmap tmpPxp = QPixmap::fromImage(granules[i]->resImage());
 
-                if ( !tmpPxp.save("temp/granules_image_"
+                if ( !tmpPxp.save(tempPath
+                                  + "granules_image_"
                                   + QString::number(i)
+                                  + "__"
+                                  + QDateTime::currentDateTime().
+                                    toString("dd-MM-yyyy_hh-mm-ss")
                                   + ".png") ) {
 
                     QMessageBox::warning(this,
@@ -768,26 +777,41 @@ void AnalysisDialog::createGraphics() {
 
         QDir tempDir;
 
-        if ( !tempDir.exists("temp") ) {
+        if ( !tempDir.exists(tempPath) ) {
 
-            if ( !tempDir.mkdir("temp") ) {
+            if ( !tempDir.mkpath(tempPath) ) {
 
                 QMessageBox::warning(this, "mixan",
                                      "Can not create temporary directory!");
             }
         }
 
-        if ( !pixmap1.save("temp/graphic_0.png") ) {
+        if ( !pixmap1.save(tempPath
+                           + "graphic_0"
+                           + "__"
+                           + QDateTime::currentDateTime().
+                             toString("dd-MM-yyyy_hh-mm-ss")
+                           + ".png") ) {
 
             QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
         }
 
-        if ( !pixmap2.save("temp/graphic_1.png") ) {
+        if ( !pixmap2.save(tempPath
+                           + "graphic_1"
+                           + "__"
+                           + QDateTime::currentDateTime().
+                             toString("dd-MM-yyyy_hh-mm-ss")
+                           + ".png") ) {
 
             QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
         }
 
-        if ( !pixmap3.save("temp/graphic_2.png") ) {
+        if ( !pixmap3.save(tempPath
+                           + "graphic_2"
+                           + "__"
+                           + QDateTime::currentDateTime().
+                             toString("dd-MM-yyyy_hh-mm-ss")
+                           + ".png") ) {
 
             QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
         }
@@ -861,17 +885,21 @@ void AnalysisDialog::createHistograms() {
 
             QDir tempDir;
 
-            if ( !tempDir.exists("temp") ) {
+            if ( !tempDir.exists(tempPath) ) {
 
-                if ( !tempDir.mkdir("temp") ) {
+                if ( !tempDir.mkpath(tempPath) ) {
 
                     QMessageBox::warning(this, "mixan",
                                          "Can not create temporary directory!");
                 }
             }
 
-            if ( !pixmap.save("temp/histogram_"
+            if ( !pixmap.save(tempPath
+                              + "histogram_"
                               + QString::number(n)
+                              + "__"
+                              + QDateTime::currentDateTime().
+                                toString("dd-MM-yyyy_hh-mm-ss")
                               + ".png") ) {
 
                 QMessageBox::warning(this, "mixan",
