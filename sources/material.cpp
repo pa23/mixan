@@ -53,7 +53,7 @@ void Material::analyze(const QString &imgFileName, const ptrdiff_t &polyPwr) {
 
     if ( !origImage.load(imgFileName) ) {
 
-        throw MixanError("Can not load image " + imgFileName + "!");
+        throw MixanError("Can not load image " + imgFileName + "!\n");
     }
 
     try {

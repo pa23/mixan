@@ -43,8 +43,10 @@ public:
 
     void analyze();
 
-    HistXSetup      histXSetup()    const { return histXSet;    }
-    QVector<double> histValues()    const { return histVls;     }
+    HistXSetup      hist1XSetup()   const { return hist1XSet;    }
+    QVector<double> hist1Values()   const { return hist1Vls;     }
+    HistXSetup      hist2XSetup()   const { return hist2XSet;    }
+    QVector<double> hist2Values()   const { return hist2Vls;     }
     QString         imageFileName() const { return imgFileName; }
     QImage          resImage()      const { return img;         }
 
@@ -57,12 +59,15 @@ private:
     QImage img;
 
     QVector<double> areas;
-    HistXSetup histXSet;
-    QVector<double> histVls;
+    QVector<double> compacts;
+    HistXSetup hist1XSet;
+    QVector<double> hist1Vls;
+    HistXSetup hist2XSet;
+    QVector<double> hist2Vls;
 
     void findAreas();
     void IplImage2QImage(const IplImage *);
-    void defHistData();
+    void defHistsData();
 
 };
 

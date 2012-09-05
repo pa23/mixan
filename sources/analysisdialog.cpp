@@ -567,7 +567,12 @@ void AnalysisDialog::showAnalysisResults() {
                         );
 
             report->insertHtml("<br>Particle-size distribution:<br>");
-            report->textCursor().insertImage(histograms[i]);
+            report->textCursor().insertImage(histograms_area[i]);
+
+            report->insertHtml("<br>");
+
+            report->insertHtml("<br>Particle-circularity distribution:<br>");
+            report->textCursor().insertImage(histograms_circul[i]);
         }
 
         report->insertHtml("<br><hr><br>");
@@ -582,7 +587,8 @@ void AnalysisDialog::showAnalysisResults() {
     //
 
     graphics.clear();
-    histograms.clear();
+    histograms_area.clear();
+    histograms_circul.clear();
     material1->clear();
     material2->clear();
     probes.clear();
@@ -820,7 +826,8 @@ void AnalysisDialog::createGraphics() {
 
 void AnalysisDialog::createHistograms() {
 
-    histograms.clear();
+    histograms_area.clear();
+    histograms_circul.clear();
 
     //
 
@@ -830,56 +837,58 @@ void AnalysisDialog::createHistograms() {
 
     for ( ptrdiff_t n=0; n<granules.size(); n++ ) {
 
-        double minval = granules[n]->histXSetup().minval;
-        double step = granules[n]->histXSetup().step;
+        double minval1 = granules[n]->hist1XSetup().minval;
+        double step1 = granules[n]->hist1XSetup().step;
 
-        QVector<double> histvls = granules[n]->histValues();
+        QVector<double> hist1vls = granules[n]->hist1Values();
 
         //
 
-        QVector<QwtIntervalSample> histdata;
+        QVector<QwtIntervalSample> hist1data;
 
-        double tmpmin = minval;
-        double tmpmax = tmpmin + step;
+        double tmpmin1 = minval1;
+        double tmpmax1 = tmpmin1 + step1;
 
         for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
 
-            histdata.push_back(QwtIntervalSample(histvls[i], tmpmin, tmpmax));
+            hist1data.push_back(QwtIntervalSample(hist1vls[i],
+                                                  tmpmin1,
+                                                  tmpmax1));
 
-            tmpmin += step;
-            tmpmax += step;
+            tmpmin1 += step1;
+            tmpmax1 += step1;
         }
 
         //
 
-        QwtText xAxisTitle("Granule area");
-        xAxisTitle.setFont(QFont("Liberation Sans", 12));
+        QwtText xAxisTitle1("Granule area");
+        xAxisTitle1.setFont(QFont("Liberation Sans", 12));
 
-        QwtText yAxisTitle("n_i / N");
-        yAxisTitle.setFont(QFont("Liberation Sans", 12));
+        QwtText yAxisTitle1("n_i / N");
+        yAxisTitle1.setFont(QFont("Liberation Sans", 12));
 
-        QSharedPointer<QwtPlot> histogram(new QwtPlot());
-        histogram->setPalette(QPalette(QColor(Qt::white)));
-        histogram->setFrameShape(QFrame::NoFrame);
-        histogram->setFrameShadow(QFrame::Plain);
-        histogram->setCanvasLineWidth(0);
-        histogram->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
-        histogram->setAxisTitle(QwtPlot::yLeft, yAxisTitle);
+        QSharedPointer<QwtPlot> histogram1(new QwtPlot());
+        histogram1->setPalette(QPalette(QColor(Qt::white)));
+        histogram1->setFrameShape(QFrame::NoFrame);
+        histogram1->setFrameShadow(QFrame::Plain);
+        histogram1->setCanvasLineWidth(0);
+        histogram1->setAxisTitle(QwtPlot::xBottom, xAxisTitle1);
+        histogram1->setAxisTitle(QwtPlot::yLeft, yAxisTitle1);
 
-        QSharedPointer<QwtPlotHistogram> hist(new QwtPlotHistogram());
-        hist->setStyle(QwtPlotHistogram::Columns);
-        hist->setRenderHint(QwtPlotItem::RenderAntialiased);
+        QSharedPointer<QwtPlotHistogram> hist1(new QwtPlotHistogram());
+        hist1->setStyle(QwtPlotHistogram::Columns);
+        hist1->setRenderHint(QwtPlotItem::RenderAntialiased);
 
-        hist->setSamples(histdata);
-        hist->attach(histogram.data());
+        hist1->setSamples(hist1data);
+        hist1->attach(histogram1.data());
 
-        histogram->resize(600, 400);
-        histogram->replot();
+        histogram1->resize(600, 400);
+        histogram1->replot();
 
-        QPixmap pixmap(histogram->size());
-        histogram->render(&pixmap);
+        QPixmap pixmap1(histogram1->size());
+        histogram1->render(&pixmap1);
 
-        histograms.push_back(pixmap.toImage());
+        histograms_area.push_back(pixmap1.toImage());
 
         if ( settings->val_createTmpImg() ) {
 
@@ -894,13 +903,94 @@ void AnalysisDialog::createHistograms() {
                 }
             }
 
-            if ( !pixmap.save(tempPath
-                              + "histogram_"
-                              + QString::number(n)
-                              + "__"
-                              + QDateTime::currentDateTime().
-                                toString("dd-MM-yyyy_hh-mm-ss")
-                              + ".png") ) {
+            if ( !pixmap1.save(tempPath
+                               + "histogram_"
+                               + QString::number(n)
+                               + ".1__"
+                               + QDateTime::currentDateTime().
+                               toString("dd-MM-yyyy_hh-mm-ss")
+                               + ".png") ) {
+
+                QMessageBox::warning(this, "mixan",
+                                     "Can not save pixmap to file!");
+            }
+        }
+
+        //
+
+        double minval2 = granules[n]->hist2XSetup().minval;
+        double step2 = granules[n]->hist2XSetup().step;
+
+        QVector<double> hist2vls = granules[n]->hist2Values();
+
+        //
+
+        QVector<QwtIntervalSample> hist2data;
+
+        double tmpmin2 = minval2;
+        double tmpmax2 = tmpmin2 + step2;
+
+        for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
+
+            hist2data.push_back(QwtIntervalSample(hist2vls[i],
+                                                  tmpmin2,
+                                                  tmpmax2));
+
+            tmpmin2 += step2;
+            tmpmax2 += step2;
+        }
+
+        //
+
+        QwtText xAxisTitle2("Granule circularity");
+        xAxisTitle2.setFont(QFont("Liberation Sans", 12));
+
+        QwtText yAxisTitle2("n_i / N");
+        yAxisTitle2.setFont(QFont("Liberation Sans", 12));
+
+        QSharedPointer<QwtPlot> histogram2(new QwtPlot());
+        histogram2->setPalette(QPalette(QColor(Qt::white)));
+        histogram2->setFrameShape(QFrame::NoFrame);
+        histogram2->setFrameShadow(QFrame::Plain);
+        histogram2->setCanvasLineWidth(0);
+        histogram2->setAxisTitle(QwtPlot::xBottom, xAxisTitle2);
+        histogram2->setAxisTitle(QwtPlot::yLeft, yAxisTitle2);
+
+        QSharedPointer<QwtPlotHistogram> hist2(new QwtPlotHistogram());
+        hist2->setStyle(QwtPlotHistogram::Columns);
+        hist2->setRenderHint(QwtPlotItem::RenderAntialiased);
+
+        hist2->setSamples(hist2data);
+        hist2->attach(histogram2.data());
+
+        histogram2->resize(600, 400);
+        histogram2->replot();
+
+        QPixmap pixmap2(histogram2->size());
+        histogram2->render(&pixmap2);
+
+        histograms_circul.push_back(pixmap2.toImage());
+
+        if ( settings->val_createTmpImg() ) {
+
+            QDir tempDir;
+
+            if ( !tempDir.exists(tempPath) ) {
+
+                if ( !tempDir.mkpath(tempPath) ) {
+
+                    QMessageBox::warning(this, "mixan",
+                                         "Can not create temporary directory!");
+                }
+            }
+
+            if ( !pixmap1.save(tempPath
+                               + "histogram_"
+                               + QString::number(n)
+                               + ".2__"
+                               + QDateTime::currentDateTime().
+                               toString("dd-MM-yyyy_hh-mm-ss")
+                               + ".png") ) {
 
                 QMessageBox::warning(this, "mixan",
                                      "Can not save pixmap to file!");

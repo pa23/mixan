@@ -38,8 +38,19 @@ Granules::Granules(const QString &fileName,
     limCol1 = lim1;
     limCol2 = lim2;
 
-    histVls.clear();
-    histVls.resize(HISTDIMENSION);
+    hist1XSet.minval = 0;
+    hist1XSet.maxval = 0;
+    hist1XSet.step = 0;
+
+    hist1Vls.clear();
+    hist1Vls.resize(HISTDIMENSION);
+
+    hist2XSet.minval = 0;
+    hist2XSet.maxval = 0;
+    hist2XSet.step = 0;
+
+    hist2Vls.clear();
+    hist2Vls.resize(HISTDIMENSION);
 }
 
 Granules::~Granules() {
@@ -50,7 +61,7 @@ void Granules::analyze() {
     try {
 
         findAreas();
-        defHistData();
+        defHistsData();
     }
     catch(MixanError &mixerr) {
 
@@ -67,7 +78,7 @@ void Granules::findAreas() {
 
     if ( !(origImage = cvLoadImage(imgFileName.toAscii(), 1)) ) {
 
-        throw MixanError("Can not load image " + imgFileName + "!");
+        throw MixanError("Can not load image " + imgFileName + "!\n");
     }
 
     if ( !(grayImage = cvCreateImage(cvGetSize(origImage), IPL_DEPTH_8U, 1)) ) {
@@ -100,19 +111,23 @@ void Granules::findAreas() {
                                 storage,
                                 &contours,
                                 sizeof(CvContour),
-                                CV_RETR_EXTERNAL,
+                                CV_RETR_EXTERNAL,             // only ext areas!
                                 CV_CHAIN_APPROX_SIMPLE,
                                 cvPoint(0, 0)) ) ) {
 
         throw MixanError("Can not find contours!");
     }
 
-    for ( CvSeq *seq0 = contours; seq0 != 0; seq0 = seq0->h_next ) {
+    for ( CvSeq *seq = contours; seq != 0; seq = seq->h_next ) {
 
-        areas.push_back(cvContourArea(seq0));
+        double area = cvContourArea(seq);
+        double perim = cvContourPerimeter(seq);
+
+        areas.push_back(area);
+        compacts.push_back( area / (perim * perim) );
 
         cvDrawContours(dstImage,
-                       seq0,
+                       seq,
                        CV_RGB(255, 0, 0),
                        CV_RGB(0, 0, 255),
                        0, 1, 8);
@@ -168,44 +183,96 @@ void Granules::IplImage2QImage(const IplImage *iplImg) {
     }
 }
 
-void Granules::defHistData() {
+void Granules::defHistsData() {
 
-    histXSet.minval = areas[0];
-    histXSet.maxval = areas[0];
+    if ( areas.isEmpty()    ||
+         compacts.isEmpty() ||
+         (areas.size() != compacts.size()) ) { return; }
+
+    hist1XSet.minval = areas[0];
+    hist1XSet.maxval = areas[0];
 
     for ( ptrdiff_t i=1; i<areas.size(); i++ ) {
 
-        if ( areas[i] < histXSet.minval ) { histXSet.minval = areas[i]; }
-        if ( areas[i] > histXSet.maxval ) { histXSet.maxval = areas[i]; }
+        if ( areas[i] < hist1XSet.minval ) { hist1XSet.minval = areas[i]; }
+        if ( areas[i] > hist1XSet.maxval ) { hist1XSet.maxval = areas[i]; }
     }
 
-    histXSet.step = (histXSet.maxval - histXSet.minval) / HISTDIMENSION;
+    hist1XSet.step = (hist1XSet.maxval - hist1XSet.minval) / HISTDIMENSION;
 
     //
 
-    double tmpmin = histXSet.minval;
-    double tmpmax = tmpmin + histXSet.step;
+    double tmpmin1 = hist1XSet.minval;
+    double tmpmax1 = tmpmin1 + hist1XSet.step;
 
     for ( ptrdiff_t n=0; n<areas.size(); n++ ) {
 
         for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
 
-            if ( areas[n]>=tmpmin && areas[n]<=tmpmax ) {
+            if ( areas[n]>=tmpmin1 && areas[n]<=tmpmax1 ) {
 
-                histVls[i]++;
+                hist1Vls[i]++;
                 break;
             }
 
-            tmpmin += histXSet.step;
-            tmpmax += histXSet.step;
+            tmpmin1 += hist1XSet.step;
+            tmpmax1 += hist1XSet.step;
         }
 
-        tmpmin = histXSet.minval;
-        tmpmax = tmpmin + histXSet.step;
+        tmpmin1 = hist1XSet.minval;
+        tmpmax1 = tmpmin1 + hist1XSet.step;
     }
 
-    for ( ptrdiff_t i=0; i<histVls.size(); i++ ) {
+    for ( ptrdiff_t i=0; i<hist1Vls.size(); i++ ) {
 
-        histVls[i] /= areas.size();
+        hist1Vls[i] /= areas.size();
+    }
+
+    //
+
+    hist2XSet.minval = compacts[0];
+    hist2XSet.maxval = compacts[0];
+
+    for ( ptrdiff_t i=1; i<compacts.size(); i++ ) {
+
+        if ( compacts[i] < hist2XSet.minval ) {
+
+            hist2XSet.minval = compacts[i];
+        }
+
+        if ( compacts[i] > hist2XSet.maxval ) {
+
+            hist2XSet.maxval = compacts[i];
+        }
+    }
+
+    hist2XSet.step = (hist2XSet.maxval - hist2XSet.minval) / HISTDIMENSION;
+
+    //
+
+    double tmpmin2 = hist2XSet.minval;
+    double tmpmax2 = tmpmin2 + hist2XSet.step;
+
+    for ( ptrdiff_t n=0; n<compacts.size(); n++ ) {
+
+        for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
+
+            if ( compacts[n]>=tmpmin2 && compacts[n]<=tmpmax2 ) {
+
+                hist2Vls[i]++;
+                break;
+            }
+
+            tmpmin2 += hist2XSet.step;
+            tmpmax2 += hist2XSet.step;
+        }
+
+        tmpmin2 = hist2XSet.minval;
+        tmpmax2 = tmpmin2 + hist2XSet.step;
+    }
+
+    for ( ptrdiff_t i=0; i<hist2Vls.size(); i++ ) {
+
+        hist2Vls[i] /= compacts.size();
     }
 }

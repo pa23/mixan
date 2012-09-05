@@ -79,7 +79,8 @@ private:
     QVector< QSharedPointer<Granules> > granules;
 
     QVector<QImage> graphics;
-    QVector<QImage> histograms;
+    QVector<QImage> histograms_area;
+    QVector<QImage> histograms_circul;
 
     QSharedPointer<QProgressDialog> progressDialog;
     QSharedPointer< QFutureWatcher<void> > futureWatcher;
