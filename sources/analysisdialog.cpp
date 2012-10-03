@@ -573,6 +573,8 @@ void AnalysisDialog::showAnalysisResults() {
 
             report->insertHtml("<br>Particle-circularity distribution:<br>");
             report->textCursor().insertImage(histograms_circul[i]);
+
+            report->insertHtml("<br>");
         }
 
         report->insertHtml("<br><hr><br>");

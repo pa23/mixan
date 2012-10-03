@@ -193,6 +193,13 @@ void Material::corrPolyVals() {
 
     //
 
-    for ( ptrdiff_t i=0; i<=polylimits[0]; i++   ) { polyVal[i] = 0; }
-    for ( ptrdiff_t i=polylimits[1]; i<=255; i++ ) { polyVal[i] = 0; }
+    if ( polylimits[0] != 0 ) {
+
+        for ( ptrdiff_t i=0; i<=polylimits[0]; i++ ) { polyVal[i] = 0; }
+    }
+
+    if ( polylimits[1] != 255 ) {
+
+        for ( ptrdiff_t i=polylimits[1]; i<=255; i++ ) { polyVal[i] = 0; }
+    }
 }
