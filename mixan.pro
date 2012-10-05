@@ -34,7 +34,8 @@ SOURCES += sources/main.cpp \
     sources/mixanerror.cpp \
     sources/analysisdialog.cpp \
     sources/settings.cpp \
-    sources/granules.cpp
+    sources/granules.cpp \
+    sources/graphics.cpp
 
 HEADERS += sources/mainwindow.h \
     sources/constants.h \
@@ -46,7 +47,8 @@ HEADERS += sources/mainwindow.h \
     sources/mixanerror.h \
     sources/analysisdialog.h \
     sources/settings.h \
-    sources/granules.h
+    sources/granules.h \
+    sources/graphics.h
 
 FORMS += sources/mainwindow.ui \
     sources/settingsdialog.ui \

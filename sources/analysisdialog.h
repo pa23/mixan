@@ -92,8 +92,6 @@ private:
            ANALTYPE_GRANULATION };
 
     void runAnalysis();
-    void createGraphics();
-    void createHistograms();
 
     QString tempPath;
 
