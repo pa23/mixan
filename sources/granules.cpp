@@ -24,6 +24,7 @@
 
 #include <QString>
 #include <QImage>
+#include <QObject>
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
@@ -78,22 +79,27 @@ void Granules::findAreas() {
 
     if ( !(origImage = cvLoadImage(imgFileName.toAscii(), 1)) ) {
 
-        throw MixanError("Can not load image " + imgFileName + "!\n");
+        throw MixanError(
+                    QObject::tr("Can not load image")
+                    + " "
+                    + imgFileName
+                    + "!\n"
+                    );
     }
 
     if ( !(grayImage = cvCreateImage(cvGetSize(origImage), IPL_DEPTH_8U, 1)) ) {
 
-        throw MixanError("Can not allocate memory for grayImage!");
+        throw MixanError(QObject::tr("Can not allocate memory for grayImage!"));
     }
 
     if ( !(binImage = cvCreateImage(cvGetSize(origImage), IPL_DEPTH_8U, 1)) ) {
 
-        throw MixanError("Can not allocate memory for binImage!");
+        throw MixanError(QObject::tr("Can not allocate memory for binImage!"));
     }
 
     if ( !(dstImage = cvCloneImage(origImage)) ) {
 
-        throw MixanError("Can not clone origImage!");
+        throw MixanError(QObject::tr("Can not clone origImage!"));
     }
 
     cvCvtColor(origImage, grayImage, CV_RGB2GRAY); // creation of gray
@@ -115,7 +121,7 @@ void Granules::findAreas() {
                                 CV_CHAIN_APPROX_SIMPLE,
                                 cvPoint(0, 0)) ) ) {
 
-        throw MixanError("Can not find contours!");
+        throw MixanError(QObject::tr("Can not find contours!"));
     }
 
     for ( CvSeq *seq = contours; seq != 0; seq = seq->h_next ) {
@@ -179,7 +185,8 @@ void Granules::IplImage2QImage(const IplImage *iplImg) {
     }
     else {
 
-        throw MixanError("Can not convert image from IplImage to QImage!");
+        throw MixanError(QObject::tr("Can not convert image "
+                                     "from IplImage to QImage!"));
     }
 }
 

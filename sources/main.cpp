@@ -19,12 +19,31 @@
 */
 
 #include <QtGui/QApplication>
+#include <QTranslator>
+#include <QTextCodec>
 
 #include "mainwindow.h"
 
 int main(int argc, char *argv[]) {
 
     QApplication a(argc, argv);
+
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
+    QTranslator translator;
+
+    if ( !translator.load("mixan_" + QLocale::system().name()) ) {
+
+        translator.load(
+                    "/usr/share/mixan/translations/mixan_"
+                    + QLocale::system().name()
+                    );
+    }
+
+    a.installTranslator(&translator);
+
     MainWindow w;
     w.show();
 

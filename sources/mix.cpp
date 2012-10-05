@@ -25,6 +25,7 @@
 
 #include <QVector>
 #include <QImage>
+#include <QObject>
 
 Mix::Mix(const QString &imgFileName, const size_t &threshCol) :
     threshColor(0),
@@ -47,7 +48,12 @@ void Mix::analyze() {
 
     if ( !origImage.load(fileName) ) {
 
-        throw MixanError("Can not load image " + fileName + "!\n");
+        throw MixanError(
+                    QObject::tr("Can not load image")
+                    + " "
+                    + fileName
+                    + "!\n"
+                    );
     }
 
     try {
@@ -64,7 +70,7 @@ void Mix::defConc() {
 
     if ( origImage.isNull() ) {
 
-        throw MixanError("No image!");
+        throw MixanError(QObject::tr("No image!"));
     }
 
     size_t part1 = 0; // light

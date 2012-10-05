@@ -24,6 +24,7 @@
 #include <cmath>
 
 #include <QVector>
+#include <QObject>
 
 QVector<double> polyapprox(const QVector<double> &x,
                            const QVector<double> &y,
@@ -33,15 +34,16 @@ QVector<double> polyapprox(const QVector<double> &x,
 
     if ( N != y.size() ) {
 
-        throw MixanError("When calculating the coefficients of the "
-                         "approximating polynomial arrays x and y "
-                         "must be the same size!");
+        throw MixanError(QObject::tr("When calculating the coefficients of the "
+                                     "approximating polynomial arrays x and y "
+                                     "must be the same size!"));
     }
 
     if ( K >= N ) {
 
-        throw MixanError("The degree of approximating polynomial must be "
-                         "less than the size of arrays with data!");
+        throw MixanError(QObject::tr("The degree of approximating polynomial "
+                                     "must be less than the size of arrays "
+                                     "with data!"));
     }
 
     QVector<double> coeff(K+1);
@@ -120,8 +122,8 @@ QVector<double> polyapprox(const QVector<double> &x,
 
             if ( sums[k][k] == 0 ) {
 
-                throw MixanError("Polynomial approximation: "
-                                 "solution does not exist!");
+                throw MixanError(QObject::tr("Polynomial approximation: "
+                                             "solution does not exist!"));
             }
 
             M = sums[i][k] / sums[k][k];

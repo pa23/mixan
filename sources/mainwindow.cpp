@@ -53,8 +53,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     reportCaption = "<br><b>mixan "
             + VERSION
-            + "</b><br>Analysis of granular material mixes and emulsions."
-            "<br><hr><br>";
+            + "</b><br>"
+            + tr("Analysis of granular material mixes and emulsions.")
+            + "<br><hr><br>";
 
     ui->textBrowser_report->setUndoRedoEnabled(false);
     ui->textBrowser_report->setHtml(reportCaption);
@@ -183,7 +184,7 @@ void MainWindow::on_action_saveReport_activated() {
 
     QString reportFileName(QFileDialog::getSaveFileName(
                                this,
-                               "Save report to PDF...",
+                               tr("Save report to PDF..."),
                                "noname.pdf",
                                filters,
                                0,
@@ -268,7 +269,7 @@ void MainWindow::on_action_about_mixan_activated() {
             "\"http://www.gnu.org/licenses/\" >"
             "http://www.gnu.org/licenses/</a>.<br>";
 
-    QMessageBox::about(this, "About mixan", str);
+    QMessageBox::about(this, tr("About mixan"), str);
 }
 
 void MainWindow::reportReadOnlyChanged() {
@@ -290,7 +291,7 @@ void MainWindow::saveIfNecessary() {
         ptrdiff_t ret = QMessageBox::question(
                     0,
                     "mixan",
-                    "Report contains data. Save it?",
+                    tr("Report contains data. Save it?"),
                     QMessageBox::Yes,
                     QMessageBox::No);
 

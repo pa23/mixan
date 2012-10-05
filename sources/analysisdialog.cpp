@@ -133,7 +133,7 @@ void AnalysisDialog::on_pushButton_selectMat1_clicked() {
 
     QString mat1ImageFileName =
             QFileDialog::getOpenFileName( this,
-                                          "Select image file...",
+                                          tr("Select image file..."),
                                           QDir::currentPath(),
                                           filters,
                                           0,
@@ -149,7 +149,7 @@ void AnalysisDialog::on_pushButton_selectMat2_clicked() {
 
     QString mat2ImageFileName =
             QFileDialog::getOpenFileName( this,
-                                          "Select image file...",
+                                          tr("Select image file..."),
                                           QDir::currentPath(),
                                           filters,
                                           0,
@@ -195,11 +195,12 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
         QMessageBox::warning(this,
                              "mixan",
-                             "Not enough sources data to analysis.\n\n");
+                             tr("Not enough sources data to analysis.")
+                             + "\n\n");
         return;
     }
 
-    progressDialog->setLabelText("Images analysis. Please wait...");
+    progressDialog->setLabelText(tr("Images analysis. Please wait..."));
     futureWatcher->setFuture(QtConcurrent::
                              run(this, &AnalysisDialog::runAnalysis));
     progressDialog->exec();
@@ -209,12 +210,13 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
     if ( !thrmsg.isEmpty() ) {
 
-        QMessageBox::warning(this, "mixan", "Analysis completed, but\n\n" +
-                             thrmsg);
+        QMessageBox::warning(this, "mixan", tr("Analysis completed, but")
+                             + "\n\n"
+                             + thrmsg);
     }
     else {
 
-        QMessageBox::information(this, "mixan", "Analysis completed!");
+        QMessageBox::information(this, "mixan", tr("Analysis completed!"));
     }
 }
 
@@ -326,20 +328,28 @@ void AnalysisDialog::showAnalysisResults() {
                 "<b>"
                 + QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss")
                 + "</b><br><br>"
-                "Settings"
-                "<br>* Type of analysis: "
+                + tr("Settings")
+                + "<br>* "
+                + tr("Type of analysis")
+                + ": "
                 + ui->comboBox_analysisType->currentText()
-                + "<br>* Power of the approximate polynom: "
+                + "<br>* "
+                + tr("Power of the approximate polynom")
+                + ": "
                 + QString::number(settings->val_polyPwr())
-                + "<br>* Accuracy of color threshold determining: "
+                + "<br>* "
+                + tr("Accuracy of color threshold determining")
+                + ": "
                 + QString::number(settings->val_thrAccur())
                 );
 
     if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ) {
 
         report->insertHtml(
-                    "<br>* Ideal concentration: " +
-                    QString::number(settings->val_idealConc())
+                    "<br>* "
+                    + tr("Ideal concentration")
+                    + ": "
+                    + QString::number(settings->val_idealConc())
                     );
     }
 
@@ -352,12 +362,20 @@ void AnalysisDialog::showAnalysisResults() {
         return;
     }
 
-    report->insertHtml("<br><br>First material image file: "
-                       + ui->lineEdit_mat1FileName->text());
+    report->insertHtml(
+                "<br><br>"
+                + tr("First material image file")
+                + ": "
+                + ui->lineEdit_mat1FileName->text()
+                );
 
     if ( showImg ) {
 
-        report->insertHtml("<br><br>Image of the first material:<br>");
+        report->insertHtml(
+                    "<br><br>"
+                    + tr("Image of the first material")
+                    + ":<br>"
+                    );
 
         if ( material1->originalImage().width() > imgWidth ) {
 
@@ -373,17 +391,26 @@ void AnalysisDialog::showAnalysisResults() {
     }
 
     report->insertHtml(
-                "<br><br>Characteristic of the first material "
-                "(histogram and polynomial approximant):<br>"
+                "<br><br>"
+                + tr("Characteristic of the first material "
+                     "(histogram and polynomial approximant)")
+                +":<br>"
                 );
     report->textCursor().insertImage(graphics[0]);
 
-    report->insertHtml("<br><br>Second material image file: "
-                       + ui->lineEdit_mat2FileName->text());
+    report->insertHtml(
+                "<br><br>"
+                + tr("Second material image file")
+                + ": "
+                + ui->lineEdit_mat2FileName->text());
 
     if ( showImg ) {
 
-        report->insertHtml("<br><br>Image of the second material:<br>");
+        report->insertHtml(
+                    "<br><br>"
+                    + tr("Image of the second material")
+                    + ":<br>"
+                    );
 
         if ( material2->originalImage().width() > imgWidth ) {
 
@@ -399,15 +426,19 @@ void AnalysisDialog::showAnalysisResults() {
     }
 
     report->insertHtml(
-                "<br><br>Characteristic of the second material "
-                "(histogram and polynomial approximant):<br>"
+                "<br><br>"
+                + tr("Characteristic of the second material "
+                     "(histogram and polynomial approximant)")
+                + ":<br>"
                 );
     report->textCursor().insertImage(graphics[1]);
 
     report->insertHtml(
-                "<br><br>Visualization of the calculated "
-                "gray color threshold "
-                "(polynoms and threshold color of mix):<br>"
+                "<br><br>"
+                + tr("Visualization of the calculated "
+                     "gray color threshold "
+                     "(polynoms and threshold color of mix)")
+                + ":<br>"
                 );
     report->textCursor().insertImage(graphics[2]);
 
@@ -430,9 +461,13 @@ void AnalysisDialog::showAnalysisResults() {
             if ( imgname.isEmpty() ) {
 
                 report->insertHtml(
-                            "<br><b>Analysis of image " +
-                            imgname +
-                            " failed or canceled.</b>"
+                            "<br><b>"
+                            + tr("Analysis of image")
+                            + " "
+                            + imgname
+                            + " "
+                            + tr("failed or canceled")
+                            + ".</b>"
                             );
 
                 continue;
@@ -443,7 +478,11 @@ void AnalysisDialog::showAnalysisResults() {
 
             if ( showImg ) {
 
-                report->insertHtml("<br>Mix image:<br>");
+                report->insertHtml(
+                            "<br>"
+                            + tr("Mix image")
+                            + ":<br>"
+                            );
 
                 if ( probes[i]->originalImage().width() > imgWidth ) {
 
@@ -461,11 +500,15 @@ void AnalysisDialog::showAnalysisResults() {
             }
 
             report->insertHtml(
-                        "<br>Mix image file: " +
-                        imgname +
-                        "<br>Concentration of the first component = <b>" +
-                        QString::number(conc) +
-                        "</b><br>"
+                        "<br>"
+                        + tr("Mix image file")
+                        + ": "
+                        + imgname
+                        + "<br>"
+                        + tr("Concentration of the first component")
+                        + " = <b>"
+                        + QString::number(conc)
+                        + "</b><br>"
                         );
         }
 
@@ -496,8 +539,11 @@ void AnalysisDialog::showAnalysisResults() {
 
                 if ( !tempDir.mkpath(tempPath) ) {
 
-                    QMessageBox::warning(this, "mixan",
-                                         "Can not create temporary directory!");
+                    QMessageBox::warning(
+                                this,
+                                "mixan",
+                                tr("Can not create temporary directory!")
+                                );
                 }
             }
         }
@@ -515,9 +561,13 @@ void AnalysisDialog::showAnalysisResults() {
             if ( imgname.isEmpty() ) {
 
                 report->insertHtml(
-                            "<br><b>Analysis of image " +
-                            imgname +
-                            " failed or canceled.</b>"
+                            "<br><b>"
+                            + tr("Analysis of image")
+                            + " "
+                            + imgname
+                            + " "
+                            + tr("failed or canceled")
+                            + ".</b>"
                             );
 
                 continue;
@@ -525,7 +575,11 @@ void AnalysisDialog::showAnalysisResults() {
 
             if ( showImg ) {
 
-                report->insertHtml("<br>Granules image:<br>");
+                report->insertHtml(
+                            "<br>"
+                            + tr("Granules image")
+                            + ":<br>"
+                            );
 
                 if ( granules[i]->resImage().width() > imgWidth ) {
 
@@ -554,24 +608,34 @@ void AnalysisDialog::showAnalysisResults() {
                                     toString("dd-MM-yyyy_hh-mm-ss")
                                   + ".png") ) {
 
-                    QMessageBox::warning(this,
-                                         "mixan",
-                                         "Can not save pixmap to file!");
+                    QMessageBox::warning(
+                                this,
+                                "mixan",
+                                tr("Can not save pixmap to file!")
+                                );
                 }
             }
 
             report->insertHtml(
-                        "<br><br>Image file: "
+                        "<br><br>"
+                        + tr("Image file")
+                        + ": "
                         + imgname
                         + "<br>"
                         );
 
-            report->insertHtml("<br>Particle-size distribution:<br>");
+            report->insertHtml(
+                        "<br>"
+                        + tr("Particle-size distribution")
+                        + ":<br>"
+                        );
             report->textCursor().insertImage(histograms_area[i]);
 
-            report->insertHtml("<br>");
-
-            report->insertHtml("<br>Particle-circularity distribution:<br>");
+            report->insertHtml(
+                        "<br><br>"
+                        + tr("Particle-circularity distribution")
+                        + ":<br>"
+                        );
             report->textCursor().insertImage(histograms_circul[i]);
 
             report->insertHtml("<br>");
@@ -612,7 +676,7 @@ void AnalysisDialog::createGraphics() {
 
     //
 
-    QwtText xAxisTitle("gray color");
+    QwtText xAxisTitle(tr("gray color"));
     xAxisTitle.setFont(QFont("Liberation Sans", 12));
 
     QwtText yAxisTitle("n_i / N");
@@ -790,7 +854,7 @@ void AnalysisDialog::createGraphics() {
             if ( !tempDir.mkpath(tempPath) ) {
 
                 QMessageBox::warning(this, "mixan",
-                                     "Can not create temporary directory!");
+                                     tr("Can not create temporary directory!"));
             }
         }
 
@@ -801,7 +865,8 @@ void AnalysisDialog::createGraphics() {
                              toString("dd-MM-yyyy_hh-mm-ss")
                            + ".png") ) {
 
-            QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
+            QMessageBox::warning(this, "mixan",
+                                 tr("Can not save pixmap to file!"));
         }
 
         if ( !pixmap2.save(tempPath
@@ -811,7 +876,8 @@ void AnalysisDialog::createGraphics() {
                              toString("dd-MM-yyyy_hh-mm-ss")
                            + ".png") ) {
 
-            QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
+            QMessageBox::warning(this, "mixan",
+                                 tr("Can not save pixmap to file!"));
         }
 
         if ( !pixmap3.save(tempPath
@@ -821,7 +887,8 @@ void AnalysisDialog::createGraphics() {
                              toString("dd-MM-yyyy_hh-mm-ss")
                            + ".png") ) {
 
-            QMessageBox::warning(this, "mixan", "Can not save pixmap to file!");
+            QMessageBox::warning(this, "mixan",
+                                 tr("Can not save pixmap to file!"));
         }
     }
 }
@@ -863,7 +930,7 @@ void AnalysisDialog::createHistograms() {
 
         //
 
-        QwtText xAxisTitle1("Granule area");
+        QwtText xAxisTitle1(tr("Granule area"));
         xAxisTitle1.setFont(QFont("Liberation Sans", 12));
 
         QwtText yAxisTitle1("n_i / N");
@@ -900,8 +967,10 @@ void AnalysisDialog::createHistograms() {
 
                 if ( !tempDir.mkpath(tempPath) ) {
 
-                    QMessageBox::warning(this, "mixan",
-                                         "Can not create temporary directory!");
+                    QMessageBox::warning(
+                                this,
+                                "mixan",
+                                tr("Can not create temporary directory!"));
                 }
             }
 
@@ -913,8 +982,10 @@ void AnalysisDialog::createHistograms() {
                                toString("dd-MM-yyyy_hh-mm-ss")
                                + ".png") ) {
 
-                QMessageBox::warning(this, "mixan",
-                                     "Can not save pixmap to file!");
+                QMessageBox::warning(
+                            this,
+                            "mixan",
+                            tr("Can not save pixmap to file!"));
             }
         }
 
@@ -944,7 +1015,7 @@ void AnalysisDialog::createHistograms() {
 
         //
 
-        QwtText xAxisTitle2("Granule circularity");
+        QwtText xAxisTitle2(tr("Granule circularity"));
         xAxisTitle2.setFont(QFont("Liberation Sans", 12));
 
         QwtText yAxisTitle2("n_i / N");
@@ -981,8 +1052,10 @@ void AnalysisDialog::createHistograms() {
 
                 if ( !tempDir.mkpath(tempPath) ) {
 
-                    QMessageBox::warning(this, "mixan",
-                                         "Can not create temporary directory!");
+                    QMessageBox::warning(
+                                this,
+                                "mixan",
+                                tr("Can not create temporary directory!"));
                 }
             }
 
@@ -994,8 +1067,10 @@ void AnalysisDialog::createHistograms() {
                                toString("dd-MM-yyyy_hh-mm-ss")
                                + ".png") ) {
 
-                QMessageBox::warning(this, "mixan",
-                                     "Can not save pixmap to file!");
+                QMessageBox::warning(
+                            this,
+                            "mixan",
+                            tr("Can not save pixmap to file!"));
             }
         }
     }

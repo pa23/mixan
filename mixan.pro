@@ -19,8 +19,11 @@
 #
 
 QT += core gui
+
 TARGET = mixan
+
 TEMPLATE = app
+
 SOURCES += sources/main.cpp \
     sources/mainwindow.cpp \
     sources/numcompfuns.cpp \
@@ -32,6 +35,7 @@ SOURCES += sources/main.cpp \
     sources/analysisdialog.cpp \
     sources/settings.cpp \
     sources/granules.cpp
+
 HEADERS += sources/mainwindow.h \
     sources/constants.h \
     sources/numcompfuns.h \
@@ -43,9 +47,11 @@ HEADERS += sources/mainwindow.h \
     sources/analysisdialog.h \
     sources/settings.h \
     sources/granules.h
+
 FORMS += sources/mainwindow.ui \
     sources/settingsdialog.ui \
     sources/analysisdialog.ui
+
 unix: {
     INCLUDEPATH += . \
         /usr/include/qwt
@@ -68,6 +74,7 @@ unix: {
     target.path = $$PREFIX/bin
     INSTALLS += target
 }
+
 win32: {
     INCLUDEPATH += . \
         c:/qwt/src \
@@ -90,5 +97,20 @@ win32: {
         OBJECTS_DIR = build/win/release
     }
 }
+
 RESOURCES += sources/mixan_icons.qrc
+
 RC_FILE += sources/mixan_icon.rc
+
+TRANSLATIONS = translations/mixan_ru.ts
+
+updateqm.input = TRANSLATIONS
+updateqm.output = mixan_ru.qm
+unix: {
+    updateqm.commands = lrelease mixan.pro && $(COPY) translations/*.qm ${DESTDIR}
+}
+win32: {
+    updateqm.commands = lrelease mixan.pro && $(COPY) translations\\*.qm ${DESTDIR}
+}
+updateqm.CONFIG += no_link target_predeps
+QMAKE_EXTRA_COMPILERS += updateqm

@@ -28,6 +28,7 @@
 
 #include <QVector>
 #include <QImage>
+#include <QObject>
 
 Material::Material() :
     threshColor(0),
@@ -53,7 +54,11 @@ void Material::analyze(const QString &imgFileName, const ptrdiff_t &polyPwr) {
 
     if ( !origImage.load(imgFileName) ) {
 
-        throw MixanError("Can not load image " + imgFileName + "!\n");
+        throw MixanError(
+                    QObject::tr("Can not load image")
+                    + " "
+                    + imgFileName
+                    + "!\n");
     }
 
     try {
@@ -91,7 +96,7 @@ void Material::defHistogram() {
 
     if ( origImage.isNull() ) {
 
-        throw MixanError("No image!");
+        throw MixanError(QObject::tr("No image!"));
     }
 
     //
