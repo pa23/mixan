@@ -43,12 +43,15 @@ public:
 
     void analyze();
 
-    HistXSetup      hist1XSetup()   const { return hist1XSet;    }
-    QVector<double> hist1Values()   const { return hist1Vls;     }
-    HistXSetup      hist2XSetup()   const { return hist2XSet;    }
-    QVector<double> hist2Values()   const { return hist2Vls;     }
-    QString         imageFileName() const { return imgFileName; }
-    QImage          resImage()      const { return img;         }
+    HistXSetup      hist1XSetup()          const { return hist1XSet;    }
+    QVector<double> hist1Values()          const { return hist1Vls;     }
+    HistXSetup      hist2XSetup()          const { return hist2XSet;    }
+    QVector<double> hist2Values()          const { return hist2Vls;     }
+    QString         imageFileName()        const { return imgFileName;  }
+    QImage          resImage()             const { return img;          }
+    double          meanSizeParticles()    const { return meanSizePart; }
+    double          meanCompactParticles() const { return meanCompPart; }
+    ptrdiff_t       partNumber()           const;
 
 private:
 
@@ -64,6 +67,9 @@ private:
     QVector<double> hist1Vls;
     HistXSetup hist2XSet;
     QVector<double> hist2Vls;
+
+    double meanSizePart;
+    double meanCompPart;
 
     void findAreas();
     void IplImage2QImage(const IplImage *);

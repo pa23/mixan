@@ -33,7 +33,9 @@ Granules::Granules(const QString &fileName,
                    const size_t &lim1,
                    const size_t &lim2) :
     limCol1(0),
-    limCol2(0) {
+    limCol2(0),
+    meanSizePart(0),
+    meanCompPart(0) {
 
     imgFileName = fileName;
     limCol1 = lim1;
@@ -67,6 +69,18 @@ void Granules::analyze() {
     catch(MixanError &mixerr) {
 
         throw;
+    }
+}
+
+ptrdiff_t Granules::partNumber() const {
+
+    if (areas.size() == compacts.size()) {
+
+        return areas.size();
+    }
+    else {
+
+        return 0;
     }
 }
 
@@ -124,13 +138,23 @@ void Granules::findAreas() {
         throw MixanError(QObject::tr("Can not find contours!"));
     }
 
+    double area = 0;
+    double perim = 0;
+    double comp = 0;
+
     for ( CvSeq *seq = contours; seq != 0; seq = seq->h_next ) {
 
-        double area = cvContourArea(seq);
-        double perim = cvContourPerimeter(seq);
+        area = cvContourArea(seq);
+        perim = cvContourPerimeter(seq);
+        comp = area / (perim * perim);
+
+        if ( area == 0 ) { continue; }
 
         areas.push_back(area);
-        compacts.push_back( area / (perim * perim) );
+        compacts.push_back(comp);
+
+        meanSizePart += area;
+        meanCompPart += comp;
 
         cvDrawContours(dstImage,
                        seq,
@@ -138,6 +162,9 @@ void Granules::findAreas() {
                        CV_RGB(0, 0, 255),
                        0, 1, 8);
     }
+
+    meanSizePart /= areas.size();
+    meanCompPart /= compacts.size();
 
     cvReleaseImage(&origImage);
     cvReleaseImage(&grayImage);
@@ -216,10 +243,21 @@ void Granules::defHistsData() {
 
         for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
 
-            if ( areas[n]>=tmpmin1 && areas[n]<=tmpmax1 ) {
+            if ( i == (HISTDIMENSION-1) ) {
 
-                hist1Vls[i]++;
-                break;
+                if ( areas[n]>=tmpmin1 && areas[n]<(tmpmax1+hist1XSet.step) ) {
+
+                    hist1Vls[i]++;
+                    break;
+                }
+            }
+            else {
+
+                if ( areas[n]>=tmpmin1 && areas[n]<tmpmax1 ) {
+
+                    hist1Vls[i]++;
+                    break;
+                }
             }
 
             tmpmin1 += hist1XSet.step;
@@ -264,10 +302,22 @@ void Granules::defHistsData() {
 
         for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
 
-            if ( compacts[n]>=tmpmin2 && compacts[n]<=tmpmax2 ) {
+            if ( i == (HISTDIMENSION-1) ) {
 
-                hist2Vls[i]++;
-                break;
+                if ( compacts[n]>=tmpmin2 &&
+                     compacts[n]<(tmpmax2+hist2XSet.step) ) {
+
+                    hist2Vls[i]++;
+                    break;
+                }
+            }
+            else {
+
+                if ( compacts[n]>=tmpmin2 && compacts[n]<tmpmax2 ) {
+
+                    hist2Vls[i]++;
+                    break;
+                }
             }
 
             tmpmin2 += hist2XSet.step;

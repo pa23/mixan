@@ -430,7 +430,7 @@ void AnalysisDialog::showAnalysisResults() {
                 "<br><br>"
                 + tr("Visualization of the calculated "
                      "gray color threshold "
-                     "(polynoms and threshold color of mix)")
+                     "(polynoms and threshold color)")
                 + ":<br>"
                 );
     report->textCursor().insertImage(graphics[2]);
@@ -623,6 +623,14 @@ void AnalysisDialog::showAnalysisResults() {
 
             report->insertHtml(
                         "<br>"
+                        + tr("Particles found")
+                        + ": "
+                        + QString::number(granules[i]->partNumber())
+                        + "<br>"
+                        );
+
+            report->insertHtml(
+                        "<br>"
                         + tr("Particle-size distribution")
                         + ":<br>"
                         );
@@ -630,10 +638,24 @@ void AnalysisDialog::showAnalysisResults() {
 
             report->insertHtml(
                         "<br><br>"
+                        + tr("Mean size particles")
+                        + ": "
+                        + QString::number(granules[i]->meanSizeParticles())
+                        );
+
+            report->insertHtml(
+                        "<br><br>"
                         + tr("Particle-circularity distribution")
                         + ":<br>"
                         );
             report->textCursor().insertImage(histograms_circul[i]);
+
+            report->insertHtml(
+                        "<br><br>"
+                        + tr("Mean compact particles")
+                        + ": "
+                        + QString::number(granules[i]->meanCompactParticles())
+                        );
 
             report->insertHtml("<br>");
         }
