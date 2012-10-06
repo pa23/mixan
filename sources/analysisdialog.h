@@ -94,6 +94,7 @@ private:
     void runAnalysis();
 
     QString tempPath;
+    QString lastCalcDateTime;
 
 };
 

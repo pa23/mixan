@@ -41,7 +41,7 @@ void createGraphics(QVector<QImage> &graphics,
                     const QSharedPointer<Material> &material1,
                     const QSharedPointer<Material> &material2,
                     const QSharedPointer<Settings> &settings,
-                    const QString &tempPath) {
+                    const QString &path) {
 
     graphics.clear();
 
@@ -229,9 +229,9 @@ void createGraphics(QVector<QImage> &graphics,
 
         QDir tempDir;
 
-        if ( !tempDir.exists(tempPath) ) {
+        if ( !tempDir.exists(path) ) {
 
-            if ( !tempDir.mkpath(tempPath) ) {
+            if ( !tempDir.mkpath(path) ) {
 
                 QMessageBox::warning(0, "mixan",
                                      QObject::tr("Can not create temporary "
@@ -239,34 +239,19 @@ void createGraphics(QVector<QImage> &graphics,
             }
         }
 
-        if ( !pixmap1.save(tempPath
-                           + "graphic_0"
-                           + "__"
-                           + QDateTime::currentDateTime().
-                             toString("dd-MM-yyyy_hh-mm-ss")
-                           + ".png") ) {
+        if ( !pixmap1.save(path + QDir::separator() + "graphic_0.png") ) {
 
             QMessageBox::warning(0, "mixan",
                                  QObject::tr("Can not save pixmap to file!"));
         }
 
-        if ( !pixmap2.save(tempPath
-                           + "graphic_1"
-                           + "__"
-                           + QDateTime::currentDateTime().
-                             toString("dd-MM-yyyy_hh-mm-ss")
-                           + ".png") ) {
+        if ( !pixmap2.save(path + QDir::separator() + "graphic_1.png") ) {
 
             QMessageBox::warning(0, "mixan",
                                  QObject::tr("Can not save pixmap to file!"));
         }
 
-        if ( !pixmap3.save(tempPath
-                           + "graphic_2"
-                           + "__"
-                           + QDateTime::currentDateTime().
-                             toString("dd-MM-yyyy_hh-mm-ss")
-                           + ".png") ) {
+        if ( !pixmap3.save(path + QDir::separator() + "graphic_2.png") ) {
 
             QMessageBox::warning(0, "mixan",
                                  QObject::tr("Can not save pixmap to file!"));
@@ -278,7 +263,7 @@ void createHistograms(QVector<QImage> &histograms_area,
                       QVector<QImage> &histograms_circul,
                       const QVector< QSharedPointer<Granules> > &granules,
                       const QSharedPointer<Settings> &settings,
-                      const QString &tempPath) {
+                      const QString &path) {
 
     histograms_area.clear();
     histograms_circul.clear();
@@ -348,9 +333,9 @@ void createHistograms(QVector<QImage> &histograms_area,
 
             QDir tempDir;
 
-            if ( !tempDir.exists(tempPath) ) {
+            if ( !tempDir.exists(path) ) {
 
-                if ( !tempDir.mkpath(tempPath) ) {
+                if ( !tempDir.mkpath(path) ) {
 
                     QMessageBox::warning(
                                 0,
@@ -360,13 +345,11 @@ void createHistograms(QVector<QImage> &histograms_area,
                 }
             }
 
-            if ( !pixmap1.save(tempPath
+            if ( !pixmap1.save(path
+                               + QDir::separator()
                                + "histogram_"
                                + QString::number(n)
-                               + ".1__"
-                               + QDateTime::currentDateTime().
-                               toString("dd-MM-yyyy_hh-mm-ss")
-                               + ".png") ) {
+                               + ".1.png") ) {
 
                 QMessageBox::warning(
                             0,
@@ -434,9 +417,9 @@ void createHistograms(QVector<QImage> &histograms_area,
 
             QDir tempDir;
 
-            if ( !tempDir.exists(tempPath) ) {
+            if ( !tempDir.exists(path) ) {
 
-                if ( !tempDir.mkpath(tempPath) ) {
+                if ( !tempDir.mkpath(path) ) {
 
                     QMessageBox::warning(
                                 0,
@@ -446,13 +429,11 @@ void createHistograms(QVector<QImage> &histograms_area,
                 }
             }
 
-            if ( !pixmap1.save(tempPath
+            if ( !pixmap2.save(path
+                               + QDir::separator()
                                + "histogram_"
                                + QString::number(n)
-                               + ".2__"
-                               + QDateTime::currentDateTime().
-                               toString("dd-MM-yyyy_hh-mm-ss")
-                               + ".png") ) {
+                               + ".2.png") ) {
 
                 QMessageBox::warning(
                             0,

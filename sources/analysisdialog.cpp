@@ -101,6 +101,8 @@ AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
             + QDir::separator()
             + TMPDIR
             + QDir::separator();
+
+    lastCalcDateTime = "";
 }
 
 AnalysisDialog::~AnalysisDialog() {
@@ -307,11 +309,18 @@ void AnalysisDialog::runAnalysis() {
 
 void AnalysisDialog::showAnalysisResults() {
 
+    lastCalcDateTime =
+            QDateTime::currentDateTime().toString("dd-MM-yyyy_hh-mm-ss");
+
     bool showImg = settings->val_showImgInReport();
     bool createTmpImgFiles = settings->val_createTmpImg();
     ptrdiff_t imgWidth = settings->val_imgWidth();
 
-    createGraphics(graphics, material1, material2, settings, tempPath);
+    createGraphics(graphics,
+                   material1,
+                   material2,
+                   settings,
+                   tempPath + QDir::separator() + lastCalcDateTime);
 
     //
 
@@ -319,7 +328,7 @@ void AnalysisDialog::showAnalysisResults() {
 
     report->insertHtml(
                 "<b>"
-                + QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss")
+                + lastCalcDateTime
                 + "</b><br><br>"
                 + tr("Settings")
                 + "<br>* "
@@ -547,7 +556,7 @@ void AnalysisDialog::showAnalysisResults() {
                          histograms_circul,
                          granules,
                          settings,
-                         tempPath);
+                         tempPath + QDir::separator() + lastCalcDateTime);
 
         QString imgname;
 
@@ -598,11 +607,11 @@ void AnalysisDialog::showAnalysisResults() {
                 QPixmap tmpPxp = QPixmap::fromImage(granules[i]->resImage());
 
                 if ( !tmpPxp.save(tempPath
+                                  + QDir::separator()
+                                  + lastCalcDateTime
+                                  + QDir::separator()
                                   + "granules_image_"
                                   + QString::number(i)
-                                  + "__"
-                                  + QDateTime::currentDateTime().
-                                    toString("dd-MM-yyyy_hh-mm-ss")
                                   + ".png") ) {
 
                     QMessageBox::warning(
