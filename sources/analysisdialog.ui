@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>698</width>
-    <height>365</height>
+    <width>730</width>
+    <height>369</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -272,6 +272,7 @@
   <tabstop>pushButton_selectProbes</tabstop>
   <tabstop>pushButton_run</tabstop>
   <tabstop>pushButton_close</tabstop>
+  <tabstop>pushButton_clear</tabstop>
  </tabstops>
  <resources>
   <include location="mixan_icons.qrc"/>

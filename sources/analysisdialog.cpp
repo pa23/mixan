@@ -624,9 +624,9 @@ void AnalysisDialog::showAnalysisResults() {
             report->insertHtml(
                         "<br>"
                         + tr("Particles found")
-                        + ": "
+                        + ": <b>"
                         + QString::number(granules[i]->partNumber())
-                        + "<br>"
+                        + "</b><br>"
                         );
 
             report->insertHtml(
@@ -639,8 +639,9 @@ void AnalysisDialog::showAnalysisResults() {
             report->insertHtml(
                         "<br><br>"
                         + tr("Mean size particles")
-                        + ": "
+                        + ": <b>"
                         + QString::number(granules[i]->meanSizeParticles())
+                        + "</b>"
                         );
 
             report->insertHtml(
@@ -653,8 +654,9 @@ void AnalysisDialog::showAnalysisResults() {
             report->insertHtml(
                         "<br><br>"
                         + tr("Mean compact particles")
-                        + ": "
+                        + ": <b>"
                         + QString::number(granules[i]->meanCompactParticles())
+                        + "</b>"
                         );
 
             report->insertHtml("<br>");

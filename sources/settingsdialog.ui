@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>394</width>
-    <height>351</height>
+    <width>426</width>
+    <height>361</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -243,6 +243,17 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>spinBox_polyPower</tabstop>
+  <tabstop>doubleSpinBox_intersectAccur</tabstop>
+  <tabstop>doubleSpinBox_idealConc</tabstop>
+  <tabstop>checkBox_reportRO</tabstop>
+  <tabstop>checkBox_imagesInReport</tabstop>
+  <tabstop>checkBox_createTempGraph</tabstop>
+  <tabstop>spinBox_imgWidth</tabstop>
+  <tabstop>pushButton_OK</tabstop>
+  <tabstop>pushButton_defaults</tabstop>
+ </tabstops>
  <resources>
   <include location="mixan_icons.qrc"/>
  </resources>
