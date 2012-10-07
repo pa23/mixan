@@ -62,6 +62,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //
 
+    calcSettings = QSharedPointer<Settings>(new Settings());
+
     settingsDialog = QSharedPointer<SettingsDialog>(new SettingsDialog());
 
     analysisDialog = QSharedPointer<AnalysisDialog>
@@ -93,8 +95,6 @@ MainWindow::MainWindow(QWidget *parent) :
             );
 
     //
-
-    calcSettings = QSharedPointer<Settings>(new Settings());
 
     readProgramSettings();
 }
