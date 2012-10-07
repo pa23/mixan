@@ -27,6 +27,7 @@
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QCheckBox>
+#include <QComboBox>
 #include <QCloseEvent>
 
 #include "settingsdialog.h"
@@ -78,6 +79,7 @@ private:
     QCheckBox *checkBox_imagesInReport;
     QCheckBox *checkBox_createTemporaryGraphics;
     QSpinBox *spinBox_imgWidth;
+    QComboBox *comboBox_analysisType;
 
     QString reportCaption;
 

@@ -64,6 +64,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     settingsDialog = QSharedPointer<SettingsDialog>(new SettingsDialog());
 
+    analysisDialog = QSharedPointer<AnalysisDialog>
+            (new AnalysisDialog(ui->textBrowser_report, calcSettings));
+
+    //
+
     spinBox_polyPower = settingsDialog->
             findChild<QSpinBox *>("spinBox_polyPower");
     doubleSpinBox_intersectAccur = settingsDialog->
@@ -78,6 +83,8 @@ MainWindow::MainWindow(QWidget *parent) :
             findChild<QCheckBox *>("checkBox_createTempGraph");
     spinBox_imgWidth = settingsDialog->
             findChild<QSpinBox *>("spinBox_imgWidth");
+    comboBox_analysisType = analysisDialog->
+            findChild<QComboBox *>("comboBox_analysisType");
 
     connect(checkBox_reportReadOnly,
             SIGNAL(clicked()),
@@ -88,13 +95,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //
 
     calcSettings = QSharedPointer<Settings>(new Settings());
-
-    //
-
-    analysisDialog = QSharedPointer<AnalysisDialog>
-            (new AnalysisDialog(ui->textBrowser_report, calcSettings));
-
-    //
 
     readProgramSettings();
 }
@@ -128,6 +128,8 @@ void MainWindow::writeProgramSettings() {
     mixanSettings.setValue("/create_temporary_graphics",
                            checkBox_createTemporaryGraphics->isChecked());
     mixanSettings.setValue("/image_width", spinBox_imgWidth->value());
+    mixanSettings.setValue("/comboBox_analysisType",
+                           comboBox_analysisType->currentIndex());
     mixanSettings.endGroup();
 }
 
@@ -159,6 +161,9 @@ void MainWindow::readProgramSettings() {
                 );
     spinBox_imgWidth->setValue(
                 mixanSettings.value("/image_width", 600).toInt()
+                );
+    comboBox_analysisType->setCurrentIndex(
+                mixanSettings.value("/comboBox_analysisType", 1).toInt()
                 );
     mixanSettings.endGroup();
 
