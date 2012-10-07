@@ -35,6 +35,7 @@
 #include <QTextCursor>
 #include <QMessageBox>
 #include <QDir>
+#include <QFileInfo>
 #include <QString>
 #include <QStringList>
 #include <QThread>
@@ -103,6 +104,7 @@ AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
             + QDir::separator();
 
     lastCalcDateTime = "";
+    lastImgDir = "";
 }
 
 AnalysisDialog::~AnalysisDialog() {
@@ -126,51 +128,108 @@ void AnalysisDialog::on_comboBox_analysisType_currentIndexChanged(int index) {
 
 void AnalysisDialog::on_pushButton_selectMat1_clicked() {
 
-    QString mat1ImageFileName =
-            QFileDialog::getOpenFileName( this,
-                                          tr("Select image file..."),
-                                          QDir::currentPath(),
-                                          filters,
-                                          0,
-                                          0 );
+    QString mat1ImageFileName = "";
+
+    if ( !lastImgDir.isEmpty() ) {
+
+        mat1ImageFileName =
+                QFileDialog::getOpenFileName( this,
+                                              tr("Select image file..."),
+                                              lastImgDir,
+                                              filters,
+                                              0,
+                                              0 );
+    }
+    else {
+
+        mat1ImageFileName =
+                QFileDialog::getOpenFileName( this,
+                                              tr("Select image file..."),
+                                              QDir::currentPath(),
+                                              filters,
+                                              0,
+                                              0 );
+    }
 
     if ( !mat1ImageFileName.isEmpty() ) {
 
         ui->lineEdit_mat1FileName->setText(mat1ImageFileName);
+
+        QFileInfo fileinfo(mat1ImageFileName);
+        lastImgDir = fileinfo.absolutePath();
     }
 }
 
 void AnalysisDialog::on_pushButton_selectMat2_clicked() {
 
-    QString mat2ImageFileName =
-            QFileDialog::getOpenFileName( this,
-                                          tr("Select image file..."),
-                                          QDir::currentPath(),
-                                          filters,
-                                          0,
-                                          0 );
+    QString mat2ImageFileName = "";
+
+    if ( !lastImgDir.isEmpty() ) {
+
+        mat2ImageFileName =
+                QFileDialog::getOpenFileName( this,
+                                              tr("Select image file..."),
+                                              lastImgDir,
+                                              filters,
+                                              0,
+                                              0 );
+    }
+    else {
+
+        mat2ImageFileName =
+                QFileDialog::getOpenFileName( this,
+                                              tr("Select image file..."),
+                                              QDir::currentPath(),
+                                              filters,
+                                              0,
+                                              0 );
+    }
 
     if ( !mat2ImageFileName.isEmpty() ) {
 
         ui->lineEdit_mat2FileName->setText(mat2ImageFileName);
+
+        QFileInfo fileinfo(mat2ImageFileName);
+        lastImgDir = fileinfo.absolutePath();
     }
 }
 
 void AnalysisDialog::on_pushButton_selectProbes_clicked() {
 
-    QStringList mixImageFileNames =
-            QFileDialog::getOpenFileNames( this,
-                                           tr("Select image files..."),
-                                           QDir::currentPath(),
-                                           filters,
-                                           0,
-                                           0 );
+    QStringList mixImageFileNames;
+
+    if ( !lastImgDir.isEmpty() ) {
+
+        mixImageFileNames =
+                QFileDialog::getOpenFileNames( this,
+                                               tr("Select image files..."),
+                                               lastImgDir,
+                                               filters,
+                                               0,
+                                               0 );
+    }
+    else {
+
+        mixImageFileNames =
+                QFileDialog::getOpenFileNames( this,
+                                               tr("Select image files..."),
+                                               QDir::currentPath(),
+                                               filters,
+                                               0,
+                                               0 );
+    }
 
     ui->listWidget_probesFileNames->clear();
 
-    for ( ptrdiff_t i=0; i<mixImageFileNames.size(); i++ ) {
+    if ( mixImageFileNames.count() != 0 ) {
 
-        ui->listWidget_probesFileNames->addItem(mixImageFileNames[i]);
+        for ( ptrdiff_t i=0; i<mixImageFileNames.size(); i++ ) {
+
+            ui->listWidget_probesFileNames->addItem(mixImageFileNames[i]);
+        }
+
+        QFileInfo fileinfo(mixImageFileNames[0]);
+        lastImgDir = fileinfo.absolutePath();
     }
 }
 

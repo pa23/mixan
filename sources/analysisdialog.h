@@ -95,6 +95,7 @@ private:
 
     QString tempPath;
     QString lastCalcDateTime;
+    QString lastImgDir;
 
 };
 
