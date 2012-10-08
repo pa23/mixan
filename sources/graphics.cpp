@@ -27,15 +27,13 @@
 #include <QPen>
 #include <QPalette>
 #include <QObject>
-#include <QDir>
-#include <QMessageBox>
-#include <QDateTime>
 
 #include "material.h"
 #include "granules.h"
 #include "settings.h"
 #include "mixfuns.h"
 #include "constants.h"
+#include "tmpfiles.h"
 
 void createGraphics(QVector<QImage> &graphics,
                     const QSharedPointer<Material> &material1,
@@ -227,35 +225,7 @@ void createGraphics(QVector<QImage> &graphics,
 
     if ( settings->val_createTmpImg() ) {
 
-        QDir tempDir;
-
-        if ( !tempDir.exists(path) ) {
-
-            if ( !tempDir.mkpath(path) ) {
-
-                QMessageBox::warning(0, "mixan",
-                                     QObject::tr("Can not create temporary "
-                                                 "directory!"));
-            }
-        }
-
-        if ( !pixmap1.save(path + QDir::separator() + "graphic_0.png") ) {
-
-            QMessageBox::warning(0, "mixan",
-                                 QObject::tr("Can not save pixmap to file!"));
-        }
-
-        if ( !pixmap2.save(path + QDir::separator() + "graphic_1.png") ) {
-
-            QMessageBox::warning(0, "mixan",
-                                 QObject::tr("Can not save pixmap to file!"));
-        }
-
-        if ( !pixmap3.save(path + QDir::separator() + "graphic_2.png") ) {
-
-            QMessageBox::warning(0, "mixan",
-                                 QObject::tr("Can not save pixmap to file!"));
-        }
+        saveGraphics(pixmap1, pixmap2, pixmap3, path);
     }
 }
 
@@ -329,35 +299,6 @@ void createHistograms(QVector<QImage> &histograms_area,
 
         histograms_area.push_back(pixmap1.toImage());
 
-        if ( settings->val_createTmpImg() ) {
-
-            QDir tempDir;
-
-            if ( !tempDir.exists(path) ) {
-
-                if ( !tempDir.mkpath(path) ) {
-
-                    QMessageBox::warning(
-                                0,
-                                "mixan",
-                                QObject::tr("Can not create temporary "
-                                            "directory!"));
-                }
-            }
-
-            if ( !pixmap1.save(path
-                               + QDir::separator()
-                               + "histogram_"
-                               + QString::number(n)
-                               + ".1.png") ) {
-
-                QMessageBox::warning(
-                            0,
-                            "mixan",
-                            QObject::tr("Can not save pixmap to file!"));
-            }
-        }
-
         //
 
         double minval2 = granules[n]->hist2XSetup().minval;
@@ -412,34 +353,10 @@ void createHistograms(QVector<QImage> &histograms_area,
         histogram2->render(&pixmap2);
 
         histograms_circul.push_back(pixmap2.toImage());
+    }
 
-        if ( settings->val_createTmpImg() ) {
+    if ( settings->val_createTmpImg() ) {
 
-            QDir tempDir;
-
-            if ( !tempDir.exists(path) ) {
-
-                if ( !tempDir.mkpath(path) ) {
-
-                    QMessageBox::warning(
-                                0,
-                                "mixan",
-                                QObject::tr("Can not create temporary "
-                                            "directory!"));
-                }
-            }
-
-            if ( !pixmap2.save(path
-                               + QDir::separator()
-                               + "histogram_"
-                               + QString::number(n)
-                               + ".2.png") ) {
-
-                QMessageBox::warning(
-                            0,
-                            "mixan",
-                            QObject::tr("Can not save pixmap to file!"));
-            }
-        }
+        saveHistograms(histograms_area, histograms_circul, path);
     }
 }

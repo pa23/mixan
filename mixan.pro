@@ -35,7 +35,8 @@ SOURCES += sources/main.cpp \
     sources/analysisdialog.cpp \
     sources/settings.cpp \
     sources/granules.cpp \
-    sources/graphics.cpp
+    sources/graphics.cpp \
+    sources/tmpfiles.cpp
 
 HEADERS += sources/mainwindow.h \
     sources/constants.h \
@@ -48,7 +49,8 @@ HEADERS += sources/mainwindow.h \
     sources/analysisdialog.h \
     sources/settings.h \
     sources/granules.h \
-    sources/graphics.h
+    sources/graphics.h \
+    sources/tmpfiles.h
 
 FORMS += sources/mainwindow.ui \
     sources/settingsdialog.ui \

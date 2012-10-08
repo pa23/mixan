@@ -29,6 +29,7 @@
 #include "mixanerror.h"
 #include "constants.h"
 #include "graphics.h"
+#include "tmpfiles.h"
 
 #include <QTextBrowser>
 #include <QFileDialog>
@@ -592,25 +593,6 @@ void AnalysisDialog::showAnalysisResults() {
               ANALTYPE_GRANULATION &&
               granules.size() != 0 ) {
 
-        if ( settings->val_createTmpImg() ) {
-
-            QDir tempDir;
-
-            if ( !tempDir.exists(tempPath) ) {
-
-                if ( !tempDir.mkpath(tempPath) ) {
-
-                    QMessageBox::warning(
-                                this,
-                                "mixan",
-                                tr("Can not create temporary directory!")
-                                );
-                }
-            }
-        }
-
-        //
-
         createHistograms(histograms_area,
                          histograms_circul,
                          granules,
@@ -657,26 +639,6 @@ void AnalysisDialog::showAnalysisResults() {
 
                     report->textCursor().insertImage(
                                 granules[i]->resImage()
-                                );
-                }
-            }
-
-            if ( createTmpImgFiles ) {
-
-                QPixmap tmpPxp = QPixmap::fromImage(granules[i]->resImage());
-
-                if ( !tmpPxp.save(tempPath
-                                  + QDir::separator()
-                                  + lastCalcDateTime
-                                  + QDir::separator()
-                                  + "granules_image_"
-                                  + QString::number(i)
-                                  + ".png") ) {
-
-                    QMessageBox::warning(
-                                this,
-                                "mixan",
-                                tr("Can not save pixmap to file!")
                                 );
                 }
             }
@@ -732,6 +694,17 @@ void AnalysisDialog::showAnalysisResults() {
 
         report->insertHtml("<br><hr><br>");
         report->moveCursor(QTextCursor::End);
+
+        //
+
+        if ( createTmpImgFiles ) {
+
+            saveImages(granules,
+                       tempPath
+                       + QDir::separator()
+                       + lastCalcDateTime
+                       );
+        }
     }
     else {
 
