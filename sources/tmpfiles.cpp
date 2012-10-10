@@ -23,6 +23,10 @@
 #include <QSharedPointer>
 #include <QDir>
 #include <QMessageBox>
+#include <QThread>
+#include <QtConcurrentRun>
+#include <QFutureWatcher>
+#include <QProgressDialog>
 
 #include "granules.h"
 
@@ -110,22 +114,8 @@ void saveHistograms(const QVector<QImage> &histograms_area,
     }
 }
 
-void saveImages(const QVector< QSharedPointer<Granules> > &granules,
-                const QString &path) {
-
-    QDir tempDir;
-
-    if ( !tempDir.exists(path) ) {
-
-        if ( !tempDir.mkpath(path) ) {
-
-            QMessageBox::warning(
-                        0,
-                        "mixan",
-                        QObject::tr("Can not create temporary directory!")
-                        );
-        }
-    }
+void realSavingImages(const QVector< QSharedPointer<Granules> > &granules,
+                      const QString &path) {
 
     for ( ptrdiff_t n=0; n<granules.size(); n++ ) {
 
@@ -142,4 +132,61 @@ void saveImages(const QVector< QSharedPointer<Granules> > &granules,
                         );
         }
     }
+}
+
+void saveImages(const QVector< QSharedPointer<Granules> > &granules,
+                const QString &path) {
+
+    QDir tempDir;
+
+    if ( !tempDir.exists(path) ) {
+
+        if ( !tempDir.mkpath(path) ) {
+
+            QMessageBox::warning(
+                        0,
+                        "mixan",
+                        QObject::tr("Can not create temporary directory!")
+                        );
+        }
+
+        return;
+    }
+
+    //
+
+    QSharedPointer<QProgressDialog> progressDialog =
+            QSharedPointer<QProgressDialog>(new QProgressDialog());
+    progressDialog->setWindowTitle("mixan: progress");
+
+    QSharedPointer< QFutureWatcher<void> > futureWatcher =
+            QSharedPointer< QFutureWatcher<void> >(new QFutureWatcher<void>);
+
+    QObject::connect(futureWatcher.data(),
+                     SIGNAL(finished()),
+                     progressDialog.data(),
+                     SLOT(reset())
+                     );
+    QObject::connect(progressDialog.data(),
+                     SIGNAL(canceled()),
+                     futureWatcher.data(),
+                     SLOT(cancel())
+                     );
+    QObject::connect(futureWatcher.data(),
+                     SIGNAL(progressRangeChanged(int,int)),
+                     progressDialog.data(),
+                     SLOT(setRange(int,int))
+                     );
+    QObject::connect(futureWatcher.data(),
+                     SIGNAL(progressValueChanged(int)),
+                     progressDialog.data(),
+                     SLOT(setValue(int))
+                     );
+
+    progressDialog->setLabelText(QObject::tr("Saving temporary image files. "
+                                             "Please wait..."));
+    futureWatcher->setFuture(QtConcurrent::
+                             run(&realSavingImages, granules, path));
+    progressDialog->exec();
+    futureWatcher->waitForFinished();
 }

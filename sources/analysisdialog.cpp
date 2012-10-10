@@ -236,6 +236,10 @@ void AnalysisDialog::on_pushButton_selectProbes_clicked() {
 
 void AnalysisDialog::on_pushButton_run_clicked() {
 
+    hide();
+
+    //
+
     if ( ( ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MATERIALS )
            &&
            ( ui->lineEdit_mat1FileName->text().isEmpty() ||
@@ -254,6 +258,8 @@ void AnalysisDialog::on_pushButton_run_clicked() {
                              + "\n\n");
         return;
     }
+
+    //
 
     progressDialog->setLabelText(tr("Images analysis. Please wait..."));
     futureWatcher->setFuture(QtConcurrent::
