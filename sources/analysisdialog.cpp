@@ -356,13 +356,29 @@ void AnalysisDialog::runAnalysis() {
 
             try {
 
-                QSharedPointer<Granules>
-                        grans(new Granules(ui->listWidget_probesFileNames->
-                                           item(i)->text(),
-                                           limcol1,
-                                           limcol2));
-                grans->analyze();
-                granules.push_back(grans);
+                if ( settings->val_sizeinmm() ) {
+
+                    QSharedPointer<Granules>
+                            grans(new Granules(ui->listWidget_probesFileNames->
+                                               item(i)->text(),
+                                               limcol1,
+                                               limcol2,
+                                               settings->val_pxpermm()));
+
+                    grans->analyze();
+                    granules.push_back(grans);
+                }
+                else {
+
+                    QSharedPointer<Granules>
+                            grans(new Granules(ui->listWidget_probesFileNames->
+                                               item(i)->text(),
+                                               limcol1,
+                                               limcol2));
+
+                    grans->analyze();
+                    granules.push_back(grans);
+                }
             }
             catch(MixanError &mixerr) {
 
@@ -418,6 +434,16 @@ void AnalysisDialog::showAnalysisResults() {
                     + tr("Ideal concentration")
                     + ": "
                     + QString::number(settings->val_idealConc())
+                    );
+    }
+
+    if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_GRANULATION ) {
+
+        report->insertHtml(
+                    "<br>* "
+                    + tr("Pixels per square millimeter")
+                    + ": "
+                    + QString::number(settings->val_pxpermm())
                     );
     }
 
@@ -677,8 +703,17 @@ void AnalysisDialog::showAnalysisResults() {
                         + tr("Mean size particles")
                         + ": <b>"
                         + QString::number(granules[i]->meanSizeParticles())
-                        + "</b>"
+                        + "</b> "
                         );
+
+            if ( settings->val_sizeinmm() ) {
+
+                report->insertHtml(tr("mm2"));
+            }
+            else {
+
+                report->insertHtml(tr("px"));
+            }
 
             report->insertHtml(
                         "<br><br>"

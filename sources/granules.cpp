@@ -34,12 +34,40 @@ Granules::Granules(const QString &fileName,
                    const size_t &lim2) :
     limCol1(0),
     limCol2(0),
+    pxpermm(0),
     meanSizePart(0),
     meanCompPart(0) {
 
     imgFileName = fileName;
     limCol1 = lim1;
     limCol2 = lim2;
+
+    init();
+}
+
+Granules::Granules(const QString &fileName,
+                   const size_t &lim1,
+                   const size_t &lim2,
+                   const double &k) :
+    limCol1(0),
+    limCol2(0),
+    pxpermm(0),
+    meanSizePart(0),
+    meanCompPart(0) {
+
+    imgFileName = fileName;
+    limCol1 = lim1;
+    limCol2 = lim2;
+
+    if ( k != 0 ) { pxpermm = k; }
+
+    init();
+}
+
+Granules::~Granules() {
+}
+
+void Granules::init() {
 
     hist1XSet.minval = 0;
     hist1XSet.maxval = 0;
@@ -54,9 +82,6 @@ Granules::Granules(const QString &fileName,
 
     hist2Vls.clear();
     hist2Vls.resize(HISTDIMENSION);
-}
-
-Granules::~Granules() {
 }
 
 void Granules::analyze() {
@@ -139,6 +164,7 @@ void Granules::findAreas() {
     }
 
     double area = 0;
+    double areamm = 0;
     double perim = 0;
     double comp = 0;
 
@@ -150,11 +176,25 @@ void Granules::findAreas() {
 
         if ( area == 0 ) { continue; }
 
-        areas.push_back(area);
-        compacts.push_back(comp);
+        //
 
-        meanSizePart += area;
+        if ( pxpermm == 0 ) {
+
+            areas.push_back(area);
+            meanSizePart += area;
+        }
+        else {
+
+            areamm = area/pxpermm;
+
+            areas.push_back(areamm);
+            meanSizePart += areamm;
+        }
+
+        compacts.push_back(comp);
         meanCompPart += comp;
+
+        //
 
         cvDrawContours(dstImage,
                        seq,

@@ -77,6 +77,10 @@ MainWindow::MainWindow(QWidget *parent) :
             findChild<QDoubleSpinBox *>("doubleSpinBox_intersectAccur");
     doubleSpinBox_idealConc = settingsDialog->
             findChild<QDoubleSpinBox *>("doubleSpinBox_idealConc");
+    doubleSpinBox_pxpermm = settingsDialog->
+            findChild<QDoubleSpinBox *>("doubleSpinBox_pxpermm");
+    checkBox_sizeinmm = settingsDialog->
+            findChild<QCheckBox *>("checkBox_sizeinmm");
     checkBox_reportReadOnly = settingsDialog->
             findChild<QCheckBox *>("checkBox_reportRO");
     checkBox_imagesInReport = settingsDialog->
@@ -121,6 +125,10 @@ void MainWindow::writeProgramSettings() {
                            doubleSpinBox_intersectAccur->value());
     mixanSettings.setValue("/ideal_concentration",
                            doubleSpinBox_idealConc->value());
+    mixanSettings.setValue("/px_per_mm",
+                           doubleSpinBox_pxpermm->value());
+    mixanSettings.setValue("/size_in_millimeters",
+                           checkBox_sizeinmm->isChecked());
     mixanSettings.setValue("/report_is_read_only",
                            checkBox_reportReadOnly->isChecked());
     mixanSettings.setValue("/show_images_in_report",
@@ -148,6 +156,12 @@ void MainWindow::readProgramSettings() {
                 );
     doubleSpinBox_idealConc->setValue(
                 mixanSettings.value("/ideal_concentration", 0.5).toDouble()
+                );
+    doubleSpinBox_pxpermm->setValue(
+                mixanSettings.value("/px_per_mm", 0).toDouble()
+                );
+    checkBox_sizeinmm->setChecked(
+                mixanSettings.value("/size_in_millimeters", false).toBool()
                 );
     checkBox_reportReadOnly->setChecked(
                 mixanSettings.value("/report_is_read_only", true).toBool()
@@ -177,6 +191,8 @@ void MainWindow::initCalcSettings() {
     calcSettings->setPolyPwr(spinBox_polyPower->value());
     calcSettings->setThrAccur(doubleSpinBox_intersectAccur->value());
     calcSettings->setIdealConc(doubleSpinBox_idealConc->value());
+    calcSettings->setpxpermm(doubleSpinBox_pxpermm->value());
+    calcSettings->setShowImgInReport(checkBox_sizeinmm->isChecked());
     calcSettings->setShowImgInReport(checkBox_imagesInReport->isChecked());
     calcSettings->
             setCreateTmpImg(checkBox_createTemporaryGraphics->isChecked());

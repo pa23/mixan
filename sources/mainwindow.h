@@ -75,6 +75,8 @@ private:
     QSpinBox *spinBox_polyPower;
     QDoubleSpinBox *doubleSpinBox_intersectAccur;
     QDoubleSpinBox *doubleSpinBox_idealConc;
+    QDoubleSpinBox *doubleSpinBox_pxpermm;
+    QCheckBox *checkBox_sizeinmm;
     QCheckBox *checkBox_reportReadOnly;
     QCheckBox *checkBox_imagesInReport;
     QCheckBox *checkBox_createTemporaryGraphics;

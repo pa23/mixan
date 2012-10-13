@@ -24,14 +24,18 @@ Settings::Settings() :
     polyPwr  (0),
     thrAccur (0),
     idealConc(0),
+    pxpermm  (0),
+    sizeinmm (true),
     showImgInReport(true),
     createTmpImg(false),
     imgWidth (0) {
 }
 
-void Settings::setPolyPwr(ptrdiff_t pp)     { polyPwr      = pp;     }
-void Settings::setThrAccur(double ta)       { thrAccur     = ta;     }
-void Settings::setIdealConc(double ic)      { idealConc    = ic;     }
-void Settings::setShowImgInReport(bool sir) { showImgInReport = sir; }
-void Settings::setCreateTmpImg(bool cti)    { createTmpImg = cti;    }
-void Settings::setImgWidth(ptrdiff_t iw)    { imgWidth     = iw;     }
+void Settings::setPolyPwr(ptrdiff_t pp)     { polyPwr         = pp;     }
+void Settings::setThrAccur(double ta)       { thrAccur        = ta;     }
+void Settings::setIdealConc(double ic)      { idealConc       = ic;     }
+void Settings::setpxpermm(double pxmm)      { pxpermm         = pxmm;   }
+void Settings::setsizeinmm(bool sizemm)     { sizeinmm        = sizemm; }
+void Settings::setShowImgInReport(bool sir) { showImgInReport = sir;    }
+void Settings::setCreateTmpImg(bool cti)    { createTmpImg    = cti;    }
+void Settings::setImgWidth(ptrdiff_t iw)    { imgWidth        = iw;     }

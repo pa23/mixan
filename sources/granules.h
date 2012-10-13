@@ -39,6 +39,7 @@ class Granules {
 public:
 
     Granules(const QString &, const size_t &, const size_t &);
+    Granules(const QString &, const size_t &, const size_t &, const double &);
     virtual ~Granules();
 
     void analyze();
@@ -58,6 +59,7 @@ private:
     QString imgFileName;
     size_t limCol1;
     size_t limCol2;
+    double pxpermm;
 
     QImage img;
 
@@ -71,6 +73,7 @@ private:
     double meanSizePart;
     double meanCompPart;
 
+    void init();
     void findAreas();
     void IplImage2QImage(const IplImage *);
     void defHistsData();
