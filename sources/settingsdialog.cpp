@@ -43,7 +43,10 @@ void SettingsDialog::on_pushButton_defaults_clicked() {
     ui->spinBox_polyPower->setValue(9);
     ui->doubleSpinBox_intersectAccur->setValue(0.00025);
     ui->doubleSpinBox_idealConc->setValue(0.5);
-    ui->spinBox_imgWidth->setValue(600);
+    ui->doubleSpinBox_pxpermm->setValue(0);
+    ui->checkBox_sizeinmm->setChecked(false);
     ui->checkBox_reportRO->setChecked(true);
+    ui->checkBox_imagesInReport->setChecked(true);
     ui->checkBox_createTempGraph->setChecked(false);
+    ui->spinBox_imgWidth->setValue(600);
 }
