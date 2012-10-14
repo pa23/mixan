@@ -192,7 +192,7 @@ void MainWindow::initCalcSettings() {
     calcSettings->setThrAccur(doubleSpinBox_intersectAccur->value());
     calcSettings->setIdealConc(doubleSpinBox_idealConc->value());
     calcSettings->setpxpermm(doubleSpinBox_pxpermm->value());
-    calcSettings->setShowImgInReport(checkBox_sizeinmm->isChecked());
+    calcSettings->setsizeinmm(checkBox_sizeinmm->isChecked());
     calcSettings->setShowImgInReport(checkBox_imagesInReport->isChecked());
     calcSettings->
             setCreateTmpImg(checkBox_createTemporaryGraphics->isChecked());

@@ -34,7 +34,6 @@ void saveGraphics(const QPixmap &,
                   const QString &);
 
 void saveHistograms(const QVector<QImage> &,
-                    const QVector<QImage> &,
                     const QString &);
 
 void realSavingImages(const QVector< QSharedPointer<Granules> > &,

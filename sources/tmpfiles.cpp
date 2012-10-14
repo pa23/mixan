@@ -66,11 +66,8 @@ void saveGraphics(const QPixmap &pixmap1,
     }
 }
 
-void saveHistograms(const QVector<QImage> &histograms_area,
-                    const QVector<QImage> &histograms_circul,
+void saveHistograms(const QVector<QImage> &histograms,
                     const QString &path) {
-
-    if ( histograms_area.size() != histograms_circul.size() ) { return; }
 
     QDir tempDir;
 
@@ -86,25 +83,13 @@ void saveHistograms(const QVector<QImage> &histograms_area,
         }
     }
 
-    for ( ptrdiff_t n=0; n<histograms_area.size(); n++ ) {
+    for ( ptrdiff_t n=0; n<histograms.size(); n++ ) {
 
-        if ( !histograms_area[n].save(path
-                                      + QDir::separator()
-                                      + "histogram_"
-                                      + QString::number(n)
-                                      + ".1.png") ) {
-
-            QMessageBox::warning(
-                        0,
-                        "mixan",
-                        QObject::tr("Can not save image to file!"));
-        }
-
-        if ( !histograms_circul[n].save(path
-                                        + QDir::separator()
-                                        + "histogram_"
-                                        + QString::number(n)
-                                        + ".2.png") ) {
+        if ( !histograms[n].save(path
+                                 + QDir::separator()
+                                 + "histogram_"
+                                 + QString::number(n)
+                                 + ".png") ) {
 
             QMessageBox::warning(
                         0,

@@ -30,6 +30,13 @@
 #include "granules.h"
 #include "settings.h"
 
+struct HistXSetup {
+
+    double minval;
+    double maxval;
+    double step;
+};
+
 void createGraphics(QVector<QImage> &,
                     const QSharedPointer<Material> &,
                     const QSharedPointer<Material> &,
@@ -37,9 +44,10 @@ void createGraphics(QVector<QImage> &,
                     const QString &);
 
 void createHistograms(QVector<QImage> &,
-                      QVector<QImage> &,
                       const QVector< QSharedPointer<Granules> > &,
                       const QSharedPointer<Settings> &,
-                      const QString &);
+                      const QString &,
+                      double &,
+                      double &);
 
 #endif // GRAPHICS_H

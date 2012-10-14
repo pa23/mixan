@@ -28,6 +28,7 @@
 #include <QPalette>
 #include <QObject>
 
+#include "graphics.h"
 #include "material.h"
 #include "granules.h"
 #include "settings.h"
@@ -229,14 +230,16 @@ void createGraphics(QVector<QImage> &graphics,
     }
 }
 
-void createHistograms(QVector<QImage> &histograms_area,
-                      QVector<QImage> &histograms_circul,
+void createHistograms(QVector<QImage> &histograms,
                       const QVector< QSharedPointer<Granules> > &granules,
                       const QSharedPointer<Settings> &settings,
-                      const QString &path) {
+                      const QString &path,
+                      double &meanArea,
+                      double &meanCompact) {
 
-    histograms_area.clear();
-    histograms_circul.clear();
+    histograms.clear();
+    meanArea = 0;
+    meanCompact = 0;
 
     //
 
@@ -244,119 +247,252 @@ void createHistograms(QVector<QImage> &histograms_area,
 
     //
 
-    for ( ptrdiff_t n=0; n<granules.size(); n++ ) {
+    QVector<double> areas = granules[0]->areaValues();
+    QVector<double> compacts = granules[0]->compactValues();;
 
-        double minval1 = granules[n]->hist1XSetup().minval;
-        double step1 = granules[n]->hist1XSetup().step;
+    for ( ptrdiff_t n=1; n<granules.size(); n++ ) {
 
-        QVector<double> hist1vls = granules[n]->hist1Values();
-
-        //
-
-        QVector<QwtIntervalSample> hist1data;
-
-        double tmpmin1 = minval1;
-        double tmpmax1 = tmpmin1 + step1;
-
-        for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
-
-            hist1data.push_back(QwtIntervalSample(hist1vls[i],
-                                                  tmpmin1,
-                                                  tmpmax1));
-
-            tmpmin1 += step1;
-            tmpmax1 += step1;
-        }
-
-        //
-
-        QwtText xAxisTitle1(QObject::tr("Granule area"));
-        xAxisTitle1.setFont(QFont("Liberation Sans", 12));
-
-        QwtText yAxisTitle1("n_i / N");
-        yAxisTitle1.setFont(QFont("Liberation Sans", 12));
-
-        QSharedPointer<QwtPlot> histogram1(new QwtPlot());
-        histogram1->setPalette(QPalette(QColor(Qt::white)));
-        histogram1->setFrameShape(QFrame::NoFrame);
-        histogram1->setFrameShadow(QFrame::Plain);
-        histogram1->setCanvasLineWidth(0);
-        histogram1->setAxisTitle(QwtPlot::xBottom, xAxisTitle1);
-        histogram1->setAxisTitle(QwtPlot::yLeft, yAxisTitle1);
-
-        QSharedPointer<QwtPlotHistogram> hist1(new QwtPlotHistogram());
-        hist1->setStyle(QwtPlotHistogram::Columns);
-        hist1->setRenderHint(QwtPlotItem::RenderAntialiased);
-
-        hist1->setSamples(hist1data);
-        hist1->attach(histogram1.data());
-
-        histogram1->resize(600, 400);
-        histogram1->replot();
-
-        QPixmap pixmap1(histogram1->size());
-        histogram1->render(&pixmap1);
-
-        histograms_area.push_back(pixmap1.toImage());
-
-        //
-
-        double minval2 = granules[n]->hist2XSetup().minval;
-        double step2 = granules[n]->hist2XSetup().step;
-
-        QVector<double> hist2vls = granules[n]->hist2Values();
-
-        //
-
-        QVector<QwtIntervalSample> hist2data;
-
-        double tmpmin2 = minval2;
-        double tmpmax2 = tmpmin2 + step2;
-
-        for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
-
-            hist2data.push_back(QwtIntervalSample(hist2vls[i],
-                                                  tmpmin2,
-                                                  tmpmax2));
-
-            tmpmin2 += step2;
-            tmpmax2 += step2;
-        }
-
-        //
-
-        QwtText xAxisTitle2(QObject::tr("Granule circularity"));
-        xAxisTitle2.setFont(QFont("Liberation Sans", 12));
-
-        QwtText yAxisTitle2("n_i / N");
-        yAxisTitle2.setFont(QFont("Liberation Sans", 12));
-
-        QSharedPointer<QwtPlot> histogram2(new QwtPlot());
-        histogram2->setPalette(QPalette(QColor(Qt::white)));
-        histogram2->setFrameShape(QFrame::NoFrame);
-        histogram2->setFrameShadow(QFrame::Plain);
-        histogram2->setCanvasLineWidth(0);
-        histogram2->setAxisTitle(QwtPlot::xBottom, xAxisTitle2);
-        histogram2->setAxisTitle(QwtPlot::yLeft, yAxisTitle2);
-
-        QSharedPointer<QwtPlotHistogram> hist2(new QwtPlotHistogram());
-        hist2->setStyle(QwtPlotHistogram::Columns);
-        hist2->setRenderHint(QwtPlotItem::RenderAntialiased);
-
-        hist2->setSamples(hist2data);
-        hist2->attach(histogram2.data());
-
-        histogram2->resize(600, 400);
-        histogram2->replot();
-
-        QPixmap pixmap2(histogram2->size());
-        histogram2->render(&pixmap2);
-
-        histograms_circul.push_back(pixmap2.toImage());
+        areas += granules[n]->areaValues();
+        compacts += granules[n]->compactValues();
     }
+
+    if ( areas.isEmpty()    ||
+         compacts.isEmpty() ||
+         (areas.size() != compacts.size()) ) { return; }
+
+    //
+
+    HistXSetup histAreasXSet;
+    histAreasXSet.minval = areas[0];
+    histAreasXSet.maxval = areas[0];
+
+    HistXSetup histCompactsXSet;
+    histCompactsXSet.minval = compacts[0];
+    histCompactsXSet.maxval = compacts[0];
+
+    for ( ptrdiff_t i=1; i<areas.size(); i++ ) {
+
+        meanArea += areas[i];
+        meanCompact += compacts[i];
+
+        //
+
+        if ( areas[i] < histAreasXSet.minval ) {
+
+            histAreasXSet.minval = areas[i];
+        }
+
+        if ( areas[i] > histAreasXSet.maxval ) {
+
+            histAreasXSet.maxval = areas[i];
+        }
+
+        if ( compacts[i] < histCompactsXSet.minval ) {
+
+            histCompactsXSet.minval = compacts[i];
+        }
+
+        if ( compacts[i] > histCompactsXSet.maxval ) {
+
+            histCompactsXSet.maxval = compacts[i];
+        }
+    }
+
+    meanArea /= areas.size();
+    meanCompact /= compacts.size();
+
+    histAreasXSet.step =
+            (histAreasXSet.maxval - histAreasXSet.minval) / HISTDIMENSION;
+
+    histCompactsXSet.step =
+            (histCompactsXSet.maxval - histCompactsXSet.minval) / HISTDIMENSION;
+
+    //
+
+    QVector<double> histAreasVls;
+    histAreasVls.resize(HISTDIMENSION);
+
+    QVector<double> histCompactsVls;
+    histCompactsVls.resize(HISTDIMENSION);
+
+    double tmpmin1 = histAreasXSet.minval;
+    double tmpmax1 = tmpmin1 + histAreasXSet.step;
+
+    for ( ptrdiff_t n=0; n<areas.size(); n++ ) {
+
+        for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
+
+            if ( i == (HISTDIMENSION-1) ) {
+
+                if ( areas[n]>=tmpmin1 &&
+                     areas[n]<(tmpmax1+histAreasXSet.step) ) {
+
+                    histAreasVls[i]++;
+                    break;
+                }
+            }
+            else {
+
+                if ( areas[n]>=tmpmin1 && areas[n]<tmpmax1 ) {
+
+                    histAreasVls[i]++;
+                    break;
+                }
+            }
+
+            tmpmin1 += histAreasXSet.step;
+            tmpmax1 += histAreasXSet.step;
+        }
+
+        tmpmin1 = histAreasXSet.minval;
+        tmpmax1 = tmpmin1 + histAreasXSet.step;
+    }
+
+    for ( ptrdiff_t i=0; i<histAreasVls.size(); i++ ) {
+
+        histAreasVls[i] /= areas.size();
+    }
+
+    //
+
+    double tmpmin2 = histCompactsXSet.minval;
+    double tmpmax2 = tmpmin2 + histCompactsXSet.step;
+
+    for ( ptrdiff_t n=0; n<compacts.size(); n++ ) {
+
+        for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
+
+            if ( i == (HISTDIMENSION-1) ) {
+
+                if ( compacts[n]>=tmpmin2 &&
+                     compacts[n]<(tmpmax2+histCompactsXSet.step) ) {
+
+                    histCompactsVls[i]++;
+                    break;
+                }
+            }
+            else {
+
+                if ( compacts[n]>=tmpmin2 && compacts[n]<tmpmax2 ) {
+
+                    histCompactsVls[i]++;
+                    break;
+                }
+            }
+
+            tmpmin2 += histCompactsXSet.step;
+            tmpmax2 += histCompactsXSet.step;
+        }
+
+        tmpmin2 = histCompactsXSet.minval;
+        tmpmax2 = tmpmin2 + histCompactsXSet.step;
+    }
+
+    for ( ptrdiff_t i=0; i<histCompactsVls.size(); i++ ) {
+
+        histCompactsVls[i] /= compacts.size();
+    }
+
+    //
+
+    QVector<QwtIntervalSample> hist1data;
+
+    double tmpmin1g = histAreasXSet.minval;
+    double tmpmax1g = tmpmin1g + histAreasXSet.step;
+
+    for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
+
+        hist1data.push_back(QwtIntervalSample(histAreasVls[i],
+                                              tmpmin1g,
+                                              tmpmax1g));
+
+        tmpmin1g += histAreasXSet.step;
+        tmpmax1g += histAreasXSet.step;
+    }
+
+    //
+
+    QwtText xAxisTitle1(QObject::tr("Granule area"));
+    xAxisTitle1.setFont(QFont("Liberation Sans", 12));
+
+    QwtText yAxisTitle1("n_i / N");
+    yAxisTitle1.setFont(QFont("Liberation Sans", 12));
+
+    QSharedPointer<QwtPlot> histogram1(new QwtPlot());
+    histogram1->setPalette(QPalette(QColor(Qt::white)));
+    histogram1->setFrameShape(QFrame::NoFrame);
+    histogram1->setFrameShadow(QFrame::Plain);
+    histogram1->setCanvasLineWidth(0);
+    histogram1->setAxisTitle(QwtPlot::xBottom, xAxisTitle1);
+    histogram1->setAxisTitle(QwtPlot::yLeft, yAxisTitle1);
+
+    QSharedPointer<QwtPlotHistogram> hist1(new QwtPlotHistogram());
+    hist1->setStyle(QwtPlotHistogram::Columns);
+    hist1->setRenderHint(QwtPlotItem::RenderAntialiased);
+
+    hist1->setSamples(hist1data);
+    hist1->attach(histogram1.data());
+
+    histogram1->resize(600, 400);
+    histogram1->replot();
+
+    QPixmap pixmap1(histogram1->size());
+    histogram1->render(&pixmap1);
+
+    histograms.push_back(pixmap1.toImage());
+
+    //
+
+    QVector<QwtIntervalSample> hist2data;
+
+    double tmpmin2g = histCompactsXSet.minval;
+    double tmpmax2g = tmpmin2g + histCompactsXSet.step;
+
+    for ( ptrdiff_t i=0; i<HISTDIMENSION; i++ ) {
+
+        hist2data.push_back(QwtIntervalSample(histCompactsVls[i],
+                                              tmpmin2g,
+                                              tmpmax2g));
+
+        tmpmin2g += histCompactsXSet.step;
+        tmpmax2g += histCompactsXSet.step;
+    }
+
+    //
+
+    QwtText xAxisTitle2(QObject::tr("Granule circularity"));
+    xAxisTitle2.setFont(QFont("Liberation Sans", 12));
+
+    QwtText yAxisTitle2("n_i / N");
+    yAxisTitle2.setFont(QFont("Liberation Sans", 12));
+
+    QSharedPointer<QwtPlot> histogram2(new QwtPlot());
+    histogram2->setPalette(QPalette(QColor(Qt::white)));
+    histogram2->setFrameShape(QFrame::NoFrame);
+    histogram2->setFrameShadow(QFrame::Plain);
+    histogram2->setCanvasLineWidth(0);
+    histogram2->setAxisTitle(QwtPlot::xBottom, xAxisTitle2);
+    histogram2->setAxisTitle(QwtPlot::yLeft, yAxisTitle2);
+
+    QSharedPointer<QwtPlotHistogram> hist2(new QwtPlotHistogram());
+    hist2->setStyle(QwtPlotHistogram::Columns);
+    hist2->setRenderHint(QwtPlotItem::RenderAntialiased);
+
+    hist2->setSamples(hist2data);
+    hist2->attach(histogram2.data());
+
+    histogram2->resize(600, 400);
+    histogram2->replot();
+
+    QPixmap pixmap2(histogram2->size());
+    histogram2->render(&pixmap2);
+
+    histograms.push_back(pixmap2.toImage());
+
+    //
 
     if ( settings->val_createTmpImg() ) {
 
-        saveHistograms(histograms_area, histograms_circul, path);
+        saveHistograms(histograms, path);
     }
 }

@@ -79,8 +79,7 @@ private:
     QVector< QSharedPointer<Granules> > granules;
 
     QVector<QImage> graphics;
-    QVector<QImage> histograms_area;
-    QVector<QImage> histograms_circul;
+    QVector<QImage> histograms;
 
     QSharedPointer<QProgressDialog> progressDialog;
     QSharedPointer< QFutureWatcher<void> > futureWatcher;
@@ -92,6 +91,7 @@ private:
            ANALTYPE_GRANULATION };
 
     void runAnalysis();
+    void freeMemory();
 
     QString tempPath;
     QString lastCalcDateTime;

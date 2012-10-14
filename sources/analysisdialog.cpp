@@ -404,6 +404,14 @@ void AnalysisDialog::showAnalysisResults() {
                    settings,
                    tempPath + QDir::separator() + lastCalcDateTime);
 
+    if ( graphics.size() != 3 ) {
+
+        QMessageBox::warning(this, "mixan", tr("Can not create graphics!"));
+        freeMemory();
+
+        return;
+    }
+
     //
 
     report->moveCursor(QTextCursor::End);
@@ -453,6 +461,8 @@ void AnalysisDialog::showAnalysisResults() {
         report->moveCursor(QTextCursor::End);
 
         thrmsg.clear();
+        freeMemory();
+
         return;
     }
 
@@ -625,15 +635,36 @@ void AnalysisDialog::showAnalysisResults() {
               ANALTYPE_GRANULATION &&
               granules.size() != 0 ) {
 
-        createHistograms(histograms_area,
-                         histograms_circul,
+        double meanArea = 0;
+        double meanCompact = 0;
+
+        createHistograms(histograms,
                          granules,
                          settings,
-                         tempPath + QDir::separator() + lastCalcDateTime);
+                         tempPath + QDir::separator() + lastCalcDateTime,
+                         meanArea,
+                         meanCompact);
+
+        if ( histograms.size() != 2 ) {
+
+            QMessageBox::warning(this,
+                                 "mixan",
+                                 tr("Can not create histograms!"));
+            freeMemory();
+
+            return;
+        }
+
+        //
 
         QString imgname;
+        ptrdiff_t totalParticlesNumber = 0;
 
         for ( ptrdiff_t i=0; i<granules.size(); i++ ) {
+
+            totalParticlesNumber += granules[i]->partNumber();
+
+            //
 
             imgname = granules[i]->imageFileName();
 
@@ -676,7 +707,7 @@ void AnalysisDialog::showAnalysisResults() {
             }
 
             report->insertHtml(
-                        "<br><br>"
+                        "<br>"
                         + tr("Image file")
                         + ": "
                         + imgname
@@ -684,54 +715,59 @@ void AnalysisDialog::showAnalysisResults() {
                         );
 
             report->insertHtml(
-                        "<br>"
-                        + tr("Particles found")
+                        tr("Particles found")
                         + ": <b>"
                         + QString::number(granules[i]->partNumber())
                         + "</b><br>"
                         );
-
-            report->insertHtml(
-                        "<br>"
-                        + tr("Particle-size distribution")
-                        + ":<br>"
-                        );
-            report->textCursor().insertImage(histograms_area[i]);
-
-            report->insertHtml(
-                        "<br><br>"
-                        + tr("Mean size particles")
-                        + ": <b>"
-                        + QString::number(granules[i]->meanSizeParticles())
-                        + "</b> "
-                        );
-
-            if ( settings->val_sizeinmm() ) {
-
-                report->insertHtml(tr("mm2"));
-            }
-            else {
-
-                report->insertHtml(tr("px"));
-            }
-
-            report->insertHtml(
-                        "<br><br>"
-                        + tr("Particle-circularity distribution")
-                        + ":<br>"
-                        );
-            report->textCursor().insertImage(histograms_circul[i]);
-
-            report->insertHtml(
-                        "<br><br>"
-                        + tr("Mean compact particles")
-                        + ": <b>"
-                        + QString::number(granules[i]->meanCompactParticles())
-                        + "</b>"
-                        );
-
-            report->insertHtml("<br>");
         }
+
+        report->insertHtml(
+                    "<br>"
+                    + tr("Total particles number (on all images)")
+                    + ": <b>"
+                    + QString::number(totalParticlesNumber)
+                    + "</b><br>"
+                    );
+
+        report->insertHtml(
+                    "<br>"
+                    + tr("Total particle-size distribution")
+                    + ":<br>"
+                    );
+        report->textCursor().insertImage(histograms[0]);
+
+        report->insertHtml(
+                    "<br><br>"
+                    + tr("Mean size particles")
+                    + ": <b>"
+                    + QString::number(meanArea)
+                    + "</b> "
+                    );
+
+        if ( settings->val_sizeinmm() ) {
+
+            report->insertHtml(tr("mm2"));
+        }
+        else {
+
+            report->insertHtml(tr("px"));
+        }
+
+        report->insertHtml(
+                    "<br><br>"
+                    + tr("Total particle-circularity distribution")
+                    + ":<br>"
+                    );
+        report->textCursor().insertImage(histograms[1]);
+
+        report->insertHtml(
+                    "<br><br>"
+                    + tr("Mean compact particles")
+                    + ": <b>"
+                    + QString::number(meanCompact)
+                    + "</b>"
+                    );
 
         report->insertHtml("<br><hr><br>");
         report->moveCursor(QTextCursor::End);
@@ -755,9 +791,13 @@ void AnalysisDialog::showAnalysisResults() {
 
     //
 
+    freeMemory();
+}
+
+void AnalysisDialog::freeMemory() {
+
     graphics.clear();
-    histograms_area.clear();
-    histograms_circul.clear();
+    histograms.clear();
     material1->clear();
     material2->clear();
     probes.clear();
