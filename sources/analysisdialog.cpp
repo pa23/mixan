@@ -363,7 +363,7 @@ void AnalysisDialog::runAnalysis() {
                                                item(i)->text(),
                                                limcol1,
                                                limcol2,
-                                               settings->val_pxpermm()));
+                                               settings->val_pxpermm2()));
 
                     grans->analyze();
                     granules.push_back(grans);
@@ -451,7 +451,7 @@ void AnalysisDialog::showAnalysisResults() {
                     "<br>* "
                     + tr("Pixels per square millimeter")
                     + ": "
-                    + QString::number(settings->val_pxpermm())
+                    + QString::number(settings->val_pxpermm2())
                     );
     }
 
@@ -768,6 +768,51 @@ void AnalysisDialog::showAnalysisResults() {
                     + QString::number(meanCompact)
                     + "</b>"
                     );
+
+        //
+
+        if ( settings->val_sizeinmm() &&
+             !(settings->val_sieveHoleDiameters().isEmpty()) ) {
+
+            QStringList diameters = settings->val_sieveHoleDiameters().
+                    split(";", QString::SkipEmptyParts);
+
+            QVector<double> sieveHoles;
+            QVector<double> remainders;
+
+            for ( ptrdiff_t i=0; i<diameters.size(); i++ ) {
+
+                sieveHoles.push_back(diameters[i].toDouble());
+            }
+
+            defRemainders(granules, sieveHoles, remainders);
+
+            QString str = "<br><br>"
+                    + tr("Remainders on sieves")
+                    + ":"
+                    + "<table>";
+
+            for ( ptrdiff_t i=(remainders.size()-1); i>=0; i-- ) {
+
+                str += "<tr><td colspan=\"5\">"
+                        + tr("Sieve")
+                        + "</td><td colspan=\"5\">#"
+                        + QString::number(i)
+                        + "</td><td>(</td><td align=\"right\">"
+                        + QString::number(sieveHoles[i], 'f', 3)
+                        + "<td>"
+                        + tr("mm")
+                        + "</td><td>)</td><td align=\"right\" colspan=\"10\">"
+                        + QString::number(remainders[i]*100, 'f', 2)
+                        + "</td><td>%</td></tr>";
+            }
+
+            str += "</table>";
+
+            report->insertHtml(str);
+        }
+
+        //
 
         report->insertHtml("<br><hr><br>");
         report->moveCursor(QTextCursor::End);

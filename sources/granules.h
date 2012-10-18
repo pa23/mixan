@@ -37,23 +37,25 @@ public:
 
     void analyze();
 
-    QString         imageFileName() const { return imgFileName; }
-    QImage          resImage()      const { return img;         }
-    QVector<double> areaValues()    const { return areas;       }
-    QVector<double> compactValues() const { return compacts;    }
-    ptrdiff_t       partNumber()    const;
+    QString         imageFileName()   const { return imgFileName; }
+    QImage          resImage()        const { return img;         }
+    QVector<double> areaValues()      const { return areas;       }
+    QVector<double> compactValues()   const { return compacts;    }
+    QVector<double> minOverallSizes() const { return minosizes;   }
+    ptrdiff_t       partNumber()      const;
 
 private:
 
     QString imgFileName;
     size_t limCol1;
     size_t limCol2;
-    double pxpermm;
+    double pxpermm2;
 
     QImage img;
 
     QVector<double> areas;
     QVector<double> compacts;
+    QVector<double> minosizes;
 
     void findAreas();
     void IplImage2QImage(const IplImage *);

@@ -97,3 +97,38 @@ size_t defThreshColor(const Material *m1,
 
     return 0;
 }
+
+void defRemainders(const QVector< QSharedPointer<Granules> > &granules,
+                   QVector<double> &sieveHoles,
+                   QVector<double> &remainders) {
+
+    QVector<double> minosizes = granules[0]->minOverallSizes();
+
+    for ( ptrdiff_t n=1; n<granules.size(); n++ ) {
+
+        minosizes += granules[n]->minOverallSizes();
+    }
+
+    qSort(sieveHoles);
+    remainders.clear();
+    remainders.resize(sieveHoles.size());
+
+    //
+
+    for ( ptrdiff_t n=0; n<minosizes.size(); n++ ) {
+
+        for ( ptrdiff_t m=(sieveHoles.size()-1); m>=0; m-- ) {
+
+            if ( minosizes[n] > sieveHoles[m] ) {
+
+                remainders[m]++;
+                break;
+            }
+        }
+    }
+
+    for ( ptrdiff_t i=0; i<remainders.size(); i++ ) {
+
+        remainders[i] /= minosizes.size();
+    }
+}

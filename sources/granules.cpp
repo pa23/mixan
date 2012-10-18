@@ -29,12 +29,14 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 
+#include <cmath>
+
 Granules::Granules(const QString &fileName,
                    const size_t &lim1,
                    const size_t &lim2) :
     limCol1(0),
     limCol2(0),
-    pxpermm(0) {
+    pxpermm2(0) {
 
     imgFileName = fileName;
     limCol1 = lim1;
@@ -47,13 +49,13 @@ Granules::Granules(const QString &fileName,
                    const double &k) :
     limCol1(0),
     limCol2(0),
-    pxpermm(0) {
+    pxpermm2(0) {
 
     imgFileName = fileName;
     limCol1 = lim1;
     limCol2 = lim2;
 
-    if ( k != 0 ) { pxpermm = k; }
+    if ( k != 0 ) { pxpermm2 = k; }
 }
 
 Granules::~Granules() {
@@ -141,6 +143,9 @@ void Granules::findAreas() {
     double perim = 0;
     double comp = 0;
 
+    CvBox2D rect;
+    double pxpermm = sqrt(pxpermm2);
+
     for ( CvSeq *seq = contours; seq != 0; seq = seq->h_next ) {
 
         area = cvContourArea(seq);
@@ -151,10 +156,37 @@ void Granules::findAreas() {
 
         //
 
-        if   ( pxpermm == 0 ) { areas.push_back(area);         }
-        else                  { areas.push_back(area/pxpermm); }
+        if   ( pxpermm2 == 0 ) { areas.push_back(area);          }
+        else                   { areas.push_back(area/pxpermm2); }
 
         compacts.push_back(comp);
+
+        //
+
+        rect = cvMinAreaRect2(seq);
+
+        if ( pxpermm2 == 0 ) {
+
+            if ( rect.size.width < rect.size.height ) {
+
+                minosizes.push_back(rect.size.width);
+            }
+            else {
+
+                minosizes.push_back(rect.size.height);
+            }
+        }
+        else {
+
+            if ( rect.size.width < rect.size.height ) {
+
+                minosizes.push_back(rect.size.width/pxpermm);
+            }
+            else {
+
+                minosizes.push_back(rect.size.height/pxpermm);
+            }
+        }
 
         //
 

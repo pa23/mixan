@@ -28,6 +28,7 @@
 #include <QDoubleSpinBox>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QLineEdit>
 #include <QCloseEvent>
 
 #include "settingsdialog.h"
@@ -75,8 +76,9 @@ private:
     QSpinBox *spinBox_polyPower;
     QDoubleSpinBox *doubleSpinBox_intersectAccur;
     QDoubleSpinBox *doubleSpinBox_idealConc;
-    QDoubleSpinBox *doubleSpinBox_pxpermm;
     QCheckBox *checkBox_sizeinmm;
+    QDoubleSpinBox *doubleSpinBox_pxpermm2;
+    QLineEdit *lineEdit_sieveHoleDiameters;
     QCheckBox *checkBox_reportReadOnly;
     QCheckBox *checkBox_imagesInReport;
     QCheckBox *checkBox_createTemporaryGraphics;

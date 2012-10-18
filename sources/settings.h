@@ -23,6 +23,8 @@
 
 #include <iostream>
 
+#include <QString>
+
 using std::ptrdiff_t;
 
 class Settings {
@@ -34,28 +36,31 @@ public:
     void setPolyPwr(ptrdiff_t);
     void setThrAccur(double);
     void setIdealConc(double);
-    void setpxpermm(double);
     void setsizeinmm(bool);
+    void setpxpermm2(double);
+    void setSieveHoleDiameters(QString);
     void setShowImgInReport(bool);
     void setCreateTmpImg(bool);
     void setImgWidth(ptrdiff_t);
 
-    ptrdiff_t val_polyPwr()         const { return polyPwr;         }
-    double    val_thrAccur()        const { return thrAccur;        }
-    double    val_idealConc()       const { return idealConc;       }
-    double    val_pxpermm()         const { return pxpermm;         }
-    bool      val_sizeinmm()        const { return sizeinmm;        }
-    bool      val_showImgInReport() const { return showImgInReport; }
-    bool      val_createTmpImg()    const { return createTmpImg;    }
-    ptrdiff_t val_imgWidth()        const { return imgWidth;        }
+    ptrdiff_t val_polyPwr()            const { return polyPwr;            }
+    double    val_thrAccur()           const { return thrAccur;           }
+    double    val_idealConc()          const { return idealConc;          }
+    bool      val_sizeinmm()           const { return sizeinmm;           }
+    double    val_pxpermm2()           const { return pxpermm2;           }
+    QString   val_sieveHoleDiameters() const { return sieveHoleDiameters; }
+    bool      val_showImgInReport()    const { return showImgInReport;    }
+    bool      val_createTmpImg()       const { return createTmpImg;       }
+    ptrdiff_t val_imgWidth()           const { return imgWidth;           }
 
 private:
 
     ptrdiff_t polyPwr;
     double    thrAccur;
     double    idealConc;
-    double    pxpermm;
     bool      sizeinmm;
+    double    pxpermm2;
+    QString   sieveHoleDiameters;
     bool      showImgInReport;
     bool      createTmpImg;
     ptrdiff_t imgWidth;

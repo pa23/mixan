@@ -218,6 +218,21 @@
         <translation>Общее распределение частиц по &quot;компактности&quot; формы</translation>
     </message>
     <message>
+        <location filename="../sources/analysisdialog.cpp" line="791"/>
+        <source>Remainders on sieves</source>
+        <translation>Остатки на ситах</translation>
+    </message>
+    <message>
+        <location filename="../sources/analysisdialog.cpp" line="798"/>
+        <source>Sieve</source>
+        <translation>Сито</translation>
+    </message>
+    <message>
+        <location filename="../sources/analysisdialog.cpp" line="804"/>
+        <source>mm</source>
+        <translation>мм</translation>
+    </message>
+    <message>
         <location filename="../sources/analysisdialog.cpp" line="742"/>
         <source>Mean size particles</source>
         <translation>Средний размер частиц</translation>
@@ -312,7 +327,7 @@
     </message>
     <message>
         <location filename="../sources/mainwindow.ui" line="146"/>
-        <location filename="../sources/mainwindow.cpp" line="293"/>
+        <location filename="../sources/mainwindow.cpp" line="301"/>
         <source>About mixan</source>
         <translation>О mixan</translation>
     </message>
@@ -367,12 +382,12 @@
         <translation>Анализ смесей сыпучих материалов и эмульсий.</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.cpp" line="208"/>
+        <location filename="../sources/mainwindow.cpp" line="216"/>
         <source>Save report to PDF...</source>
         <translation>Сохранить отчет в PDF...</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.cpp" line="315"/>
+        <location filename="../sources/mainwindow.cpp" line="323"/>
         <source>Report contains data. Save it?</source>
         <translation>Отчет содержит данные. Сохранить их?</translation>
     </message>
@@ -380,34 +395,34 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../sources/granules.cpp" line="96"/>
+        <location filename="../sources/granules.cpp" line="98"/>
         <location filename="../sources/material.cpp" line="58"/>
         <location filename="../sources/mix.cpp" line="52"/>
         <source>Can not load image</source>
         <translation>Невозможно загрузить изображение</translation>
     </message>
     <message>
-        <location filename="../sources/granules.cpp" line="105"/>
+        <location filename="../sources/granules.cpp" line="107"/>
         <source>Can not allocate memory for grayImage!</source>
         <translation>Невозможно выделить память для grayImage!</translation>
     </message>
     <message>
-        <location filename="../sources/granules.cpp" line="110"/>
+        <location filename="../sources/granules.cpp" line="112"/>
         <source>Can not allocate memory for binImage!</source>
         <translation>Невозможно выделить память для binImage!</translation>
     </message>
     <message>
-        <location filename="../sources/granules.cpp" line="115"/>
+        <location filename="../sources/granules.cpp" line="117"/>
         <source>Can not clone origImage!</source>
         <translation>Невозможно клонировать origImage!</translation>
     </message>
     <message>
-        <location filename="../sources/granules.cpp" line="137"/>
+        <location filename="../sources/granules.cpp" line="139"/>
         <source>Can not find contours!</source>
         <translation>Невозможно отыскать контуры!</translation>
     </message>
     <message>
-        <location filename="../sources/granules.cpp" line="214"/>
+        <location filename="../sources/granules.cpp" line="246"/>
         <source>Can not convert image from IplImage to QImage!</source>
         <translation>Невозможно преобразовать изображение из IplImage в QImage!</translation>
     </message>
@@ -486,12 +501,12 @@
         <translation>Настройки расчета</translation>
     </message>
     <message>
-        <location filename="../sources/settingsdialog.ui" line="88"/>
+        <location filename="../sources/settingsdialog.ui" line="95"/>
         <source>Power of the approximate polynom</source>
         <translation>Степень аппроксимирующего полинома</translation>
     </message>
     <message>
-        <location filename="../sources/settingsdialog.ui" line="183"/>
+        <location filename="../sources/settingsdialog.ui" line="190"/>
         <source>Accuracy of color threshold determining</source>
         <translation>Точность определения порогового оттенка</translation>
     </message>
@@ -501,7 +516,7 @@
         <translation>Идеальная концентрация</translation>
     </message>
     <message>
-        <location filename="../sources/settingsdialog.ui" line="176"/>
+        <location filename="../sources/settingsdialog.ui" line="183"/>
         <source>Pixels per square millimeter</source>
         <translation>Пикселей на квадратный миллиметр</translation>
     </message>
@@ -511,42 +526,47 @@
         <translation>Размер частиц в квадратных миллиметрах</translation>
     </message>
     <message>
-        <location filename="../sources/settingsdialog.ui" line="214"/>
+        <location filename="../sources/settingsdialog.ui" line="211"/>
+        <source>Sieve hole diameters (delimiter is &apos;;&apos;)</source>
+        <translation>Диаметры отверстий сит (разделитель &apos;;&apos;)</translation>
+    </message>
+    <message>
+        <location filename="../sources/settingsdialog.ui" line="243"/>
         <source>Report settings</source>
         <translation>Настройки отчета</translation>
     </message>
     <message>
-        <location filename="../sources/settingsdialog.ui" line="220"/>
+        <location filename="../sources/settingsdialog.ui" line="249"/>
         <source>Images in report</source>
         <translation>Изображения в отчете</translation>
     </message>
     <message>
-        <location filename="../sources/settingsdialog.ui" line="230"/>
+        <location filename="../sources/settingsdialog.ui" line="259"/>
         <source>Max width of images in the report [px]</source>
         <translation>Максимальная ширина изображений в отчете [пикселы]</translation>
     </message>
     <message>
-        <location filename="../sources/settingsdialog.ui" line="262"/>
+        <location filename="../sources/settingsdialog.ui" line="291"/>
         <source>mixan temporary directory is ~/mixan_temp</source>
         <translation>Временный каталог mixan ~/mixan_temp</translation>
     </message>
     <message>
-        <location filename="../sources/settingsdialog.ui" line="265"/>
+        <location filename="../sources/settingsdialog.ui" line="294"/>
         <source>Create temporary image files</source>
         <translation>Создавать временные файлы изображений</translation>
     </message>
     <message>
-        <location filename="../sources/settingsdialog.ui" line="272"/>
+        <location filename="../sources/settingsdialog.ui" line="301"/>
         <source>Report is read only</source>
         <translation>Отчет только для чтения</translation>
     </message>
     <message>
-        <location filename="../sources/settingsdialog.ui" line="300"/>
+        <location filename="../sources/settingsdialog.ui" line="329"/>
         <source>Defaults</source>
         <translation>Настройки по умолчанию</translation>
     </message>
     <message>
-        <location filename="../sources/settingsdialog.ui" line="320"/>
+        <location filename="../sources/settingsdialog.ui" line="349"/>
         <source>OK</source>
         <translation></translation>
     </message>
