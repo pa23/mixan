@@ -18,6 +18,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QtCore>
 #include <QPixmap>
 #include <QVector>
 #include <QSharedPointer>
@@ -99,23 +100,22 @@ void saveHistograms(const QVector<QImage> &histograms,
     }
 }
 
-void realSavingImages(const QVector< QSharedPointer<Granules> > &granules,
-                      const QString &path) {
+QVector< QSharedPointer<Granules> > tmpgranules;
+QString tmppath;
 
-    for ( ptrdiff_t n=0; n<granules.size(); n++ ) {
+void realSavingImages(ptrdiff_t &iter) {
 
-        if ( !granules[n]->resImage().save(path
-                                           + QDir::separator()
-                                           + "granules_image_"
-                                           + QString::number(n)
-                                           + ".png") ) {
+    if ( !tmpgranules[iter]->resImage().save(tmppath
+                                             + QDir::separator()
+                                             + "granules_image_"
+                                             + QString::number(iter)
+                                             + ".png") ) {
 
-            QMessageBox::warning(
-                        0,
-                        "mixan",
-                        QObject::tr("Can not save pixmap to file!")
-                        );
-        }
+        QMessageBox::warning(
+                    0,
+                    "mixan",
+                    QObject::tr("Can not save pixmap to file!")
+                    );
     }
 }
 
@@ -137,6 +137,14 @@ void saveImages(const QVector< QSharedPointer<Granules> > &granules,
 
         return;
     }
+
+    //
+
+    tmpgranules.clear();
+    tmpgranules = granules;
+
+    tmppath.clear();
+    tmppath = path;
 
     //
 
@@ -168,10 +176,15 @@ void saveImages(const QVector< QSharedPointer<Granules> > &granules,
                      SLOT(setValue(int))
                      );
 
+    QVector<ptrdiff_t> iterations;
+    for ( ptrdiff_t n=0; n<granules.size(); n++ ) { iterations.push_back(n); }
+
     progressDialog->setLabelText(QObject::tr("Saving temporary image files. "
                                              "Please wait..."));
-    futureWatcher->setFuture(QtConcurrent::
-                             run(&realSavingImages, granules, path));
+    futureWatcher->setFuture(QtConcurrent::map(iterations, &realSavingImages));
     progressDialog->exec();
     futureWatcher->waitForFinished();
+
+    tmpgranules.clear();
+    tmppath.clear();
 }
