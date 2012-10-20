@@ -10,7 +10,7 @@
     </message>
     <message>
         <location filename="../sources/analysisdialog.ui" line="29"/>
-        <location filename="../sources/analysisdialog.cpp" line="425"/>
+        <location filename="../sources/analysisdialog.cpp" line="450"/>
         <source>Type of analysis</source>
         <translation>Тип анализа</translation>
     </message>
@@ -67,198 +67,199 @@
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="138"/>
-        <location filename="../sources/analysisdialog.cpp" line="148"/>
-        <location filename="../sources/analysisdialog.cpp" line="172"/>
-        <location filename="../sources/analysisdialog.cpp" line="182"/>
+        <location filename="../sources/analysisdialog.cpp" line="202"/>
+        <location filename="../sources/analysisdialog.cpp" line="212"/>
+        <location filename="../sources/analysisdialog.cpp" line="236"/>
+        <location filename="../sources/analysisdialog.cpp" line="246"/>
         <source>Select image file...</source>
         <translation>Выбрать файл изображения...</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="206"/>
-        <location filename="../sources/analysisdialog.cpp" line="216"/>
+        <location filename="../sources/analysisdialog.cpp" line="270"/>
+        <location filename="../sources/analysisdialog.cpp" line="280"/>
         <source>Select image files...</source>
         <translation>Выбрать файлы изображений...</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="257"/>
+        <location filename="../sources/analysisdialog.cpp" line="321"/>
         <source>Not enough sources data to analysis.</source>
         <translation>Недостаточно исходных данных для анализа.</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="274"/>
+        <location filename="../sources/analysisdialog.cpp" line="400"/>
         <source>Analysis completed, but</source>
         <translation>Анализ завершен, но</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="409"/>
+        <location filename="../sources/analysisdialog.cpp" line="434"/>
         <source>Can not create graphics!</source>
         <translation>Невозможно создать графики!</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="423"/>
+        <location filename="../sources/analysisdialog.cpp" line="448"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="429"/>
+        <location filename="../sources/analysisdialog.cpp" line="454"/>
         <source>Power of the approximate polynom</source>
         <translation>Степень аппроксимирующего полинома</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="433"/>
+        <location filename="../sources/analysisdialog.cpp" line="458"/>
         <source>Accuracy of color threshold determining</source>
         <translation>Точность определения порогового оттенка</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="442"/>
+        <location filename="../sources/analysisdialog.cpp" line="467"/>
         <source>Ideal concentration</source>
         <translation>Идеальная концентрация</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="452"/>
+        <location filename="../sources/analysisdialog.cpp" line="477"/>
         <source>Pixels per square millimeter</source>
         <translation>Пикселей на квадратный миллиметр</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="471"/>
+        <location filename="../sources/analysisdialog.cpp" line="496"/>
         <source>First material image file</source>
         <translation>Файл изображения первого материала</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="480"/>
+        <location filename="../sources/analysisdialog.cpp" line="505"/>
         <source>Image of the first material</source>
         <translation>Изображение первого материала</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="499"/>
+        <location filename="../sources/analysisdialog.cpp" line="524"/>
         <source>Characteristic of the first material (histogram and polynomial approximant)</source>
         <translation>Характеристика первого материала (гистограмма и полиномиальная аппроксимация)</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="507"/>
+        <location filename="../sources/analysisdialog.cpp" line="532"/>
         <source>Second material image file</source>
         <translation>Файл изображения второго материала</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="515"/>
+        <location filename="../sources/analysisdialog.cpp" line="540"/>
         <source>Image of the second material</source>
         <translation>Изображение второго материала</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="534"/>
+        <location filename="../sources/analysisdialog.cpp" line="559"/>
         <source>Characteristic of the second material (histogram and polynomial approximant)</source>
         <translation>Характеристика второго материала (гистограмма и полиномиальная аппроксимация)</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="542"/>
+        <location filename="../sources/analysisdialog.cpp" line="567"/>
         <source>Visualization of the calculated gray color threshold (polynoms and threshold color)</source>
         <translation>Визуализация рассчитанного порогового оттенка (полиномы и пороговый оттенок)</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="569"/>
-        <location filename="../sources/analysisdialog.cpp" line="675"/>
+        <location filename="../sources/analysisdialog.cpp" line="594"/>
+        <location filename="../sources/analysisdialog.cpp" line="700"/>
         <source>Analysis of image</source>
         <translation>Анализ изображения</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="573"/>
-        <location filename="../sources/analysisdialog.cpp" line="679"/>
+        <location filename="../sources/analysisdialog.cpp" line="598"/>
+        <location filename="../sources/analysisdialog.cpp" line="704"/>
         <source>failed or canceled</source>
         <translation>завершился с ошибкой или был отменен</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="587"/>
+        <location filename="../sources/analysisdialog.cpp" line="612"/>
         <source>Mix image</source>
         <translation>Изображение смеси</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="608"/>
+        <location filename="../sources/analysisdialog.cpp" line="633"/>
         <source>Mix image file</source>
         <translation>Файл изображения смеси</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="612"/>
+        <location filename="../sources/analysisdialog.cpp" line="637"/>
         <source>Concentration of the first component</source>
         <translation>Концентрация первого компонента</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="652"/>
+        <location filename="../sources/analysisdialog.cpp" line="677"/>
         <source>Can not create histograms!</source>
         <translation>Невозможно создать гистограммы!</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="690"/>
+        <location filename="../sources/analysisdialog.cpp" line="715"/>
         <source>Granules image</source>
         <translation>Изображение частиц</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="711"/>
+        <location filename="../sources/analysisdialog.cpp" line="736"/>
         <source>Image file</source>
         <translation>Файл изображения</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="718"/>
+        <location filename="../sources/analysisdialog.cpp" line="743"/>
         <source>Particles found</source>
         <translation>Найдено частиц</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="727"/>
+        <location filename="../sources/analysisdialog.cpp" line="752"/>
         <source>Total particles number (on all images)</source>
         <translation>Общее количество частиц (на всех изображениях)</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="735"/>
+        <location filename="../sources/analysisdialog.cpp" line="760"/>
         <source>Total particle-size distribution</source>
         <translation>Общее распределение частиц по размерам</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="759"/>
+        <location filename="../sources/analysisdialog.cpp" line="784"/>
         <source>Total particle-circularity distribution</source>
         <translation>Общее распределение частиц по &quot;компактности&quot; формы</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="791"/>
+        <location filename="../sources/analysisdialog.cpp" line="816"/>
         <source>Remainders on sieves</source>
         <translation>Остатки на ситах</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="798"/>
+        <location filename="../sources/analysisdialog.cpp" line="823"/>
         <source>Sieve</source>
         <translation>Сито</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="804"/>
+        <location filename="../sources/analysisdialog.cpp" line="829"/>
         <source>mm</source>
         <translation>мм</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="742"/>
+        <location filename="../sources/analysisdialog.cpp" line="767"/>
         <source>Mean size particles</source>
         <translation>Средний размер частиц</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="750"/>
+        <location filename="../sources/analysisdialog.cpp" line="775"/>
         <source>mm2</source>
         <translation>мм2</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="754"/>
+        <location filename="../sources/analysisdialog.cpp" line="779"/>
         <source>px</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="766"/>
+        <location filename="../sources/analysisdialog.cpp" line="791"/>
         <source>Mean compact particles</source>
         <translation>Среднее значение &quot;компактности&quot; формы частиц</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="264"/>
+        <location filename="../sources/analysisdialog.cpp" line="355"/>
+        <location filename="../sources/analysisdialog.cpp" line="389"/>
         <source>Images analysis. Please wait...</source>
         <translation>Идет анализ изображений. Пожалуйста, подождите...</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="280"/>
+        <location filename="../sources/analysisdialog.cpp" line="406"/>
         <source>Analysis completed!</source>
         <translation>Анализ завершен!</translation>
     </message>
@@ -453,27 +454,27 @@
         <translation>Оттенок серого</translation>
     </message>
     <message>
-        <location filename="../sources/tmpfiles.cpp" line="45"/>
-        <location filename="../sources/tmpfiles.cpp" line="81"/>
+        <location filename="../sources/tmpfiles.cpp" line="46"/>
+        <location filename="../sources/tmpfiles.cpp" line="82"/>
         <location filename="../sources/tmpfiles.cpp" line="134"/>
         <source>Can not create temporary directory!</source>
         <translation>Невозможно создать временный каталог!</translation>
     </message>
     <message>
-        <location filename="../sources/tmpfiles.cpp" line="53"/>
-        <location filename="../sources/tmpfiles.cpp" line="59"/>
-        <location filename="../sources/tmpfiles.cpp" line="65"/>
-        <location filename="../sources/tmpfiles.cpp" line="116"/>
+        <location filename="../sources/tmpfiles.cpp" line="54"/>
+        <location filename="../sources/tmpfiles.cpp" line="60"/>
+        <location filename="../sources/tmpfiles.cpp" line="66"/>
+        <location filename="../sources/tmpfiles.cpp" line="117"/>
         <source>Can not save pixmap to file!</source>
         <translation>Невозможно сохранить pixmap в файл!</translation>
     </message>
     <message>
-        <location filename="../sources/tmpfiles.cpp" line="97"/>
+        <location filename="../sources/tmpfiles.cpp" line="98"/>
         <source>Can not save image to file!</source>
         <translation>Невозможно сохранить файл изображения!</translation>
     </message>
     <message>
-        <location filename="../sources/tmpfiles.cpp" line="171"/>
+        <location filename="../sources/tmpfiles.cpp" line="181"/>
         <source>Saving temporary image files. Please wait...</source>
         <translation>Сохранение временных файлов изображений. Пожалуйста, подождите...</translation>
     </message>

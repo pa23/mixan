@@ -86,9 +86,9 @@ win32: {
     LIBS += -Lc:/qwt/lib \
         -Lc:/opencv/build/x86/mingw/bin \
         -lqwt \
-        -lopencv_core231 \
-        -lopencv_imgproc231 \
-        -lopencv_highgui231 \
+        -lopencv_core242 \
+        -lopencv_imgproc242 \
+        -lopencv_highgui242 \
         -Wl,-rpath,.
     DESTDIR = build/win/bin
     MOC_DIR = build/win/moc

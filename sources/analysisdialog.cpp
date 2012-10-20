@@ -40,11 +40,68 @@
 #include <QString>
 #include <QStringList>
 #include <QThread>
-#include <QtConcurrentRun>
+#include <QtConcurrentMap>
 #include <QFutureWatcher>
 #include <QProgressDialog>
 #include <QPixmap>
 #include <QDateTime>
+
+QListWidget *tmp_probesFileNames = 0;
+size_t tmp_tcol = 0;
+QVector< QSharedPointer<Mix> > *tmp_probes = 0;
+size_t tmp_limcol1 = 0;
+size_t tmp_limcol2 = 0;
+QVector< QSharedPointer<Granules> > *tmp_granules = 0;
+bool tmp_sizeinmm = false;
+double tmp_pxpermm2 = 0;
+QString *tmp_thrmsg = 0;
+
+void runMixAnalysis(ptrdiff_t &iter) {
+
+    try {
+
+        QSharedPointer<Mix> probe(new Mix(tmp_probesFileNames->item(iter)->text(),
+                                          tmp_tcol));
+        probe->analyze();
+        tmp_probes->push_back(probe);
+    }
+    catch(MixanError &mixerr) {
+
+        *tmp_thrmsg += mixerr.mixanErrMsg() + "\n";
+    }
+}
+
+void runGranulationAnalysis(ptrdiff_t &iter) {
+
+    try {
+
+        if ( tmp_sizeinmm ) {
+
+            QSharedPointer<Granules>
+                    grans(new Granules(tmp_probesFileNames->item(iter)->text(),
+                                       tmp_limcol1,
+                                       tmp_limcol2,
+                                       tmp_pxpermm2));
+
+            grans->analyze();
+            tmp_granules->push_back(grans);
+        }
+        else {
+
+            QSharedPointer<Granules>
+                    grans(new Granules(tmp_probesFileNames->item(iter)->text(),
+                                       tmp_limcol1,
+                                       tmp_limcol2));
+
+            grans->analyze();
+            tmp_granules->push_back(grans);
+        }
+    }
+    catch(MixanError &mixerr) {
+
+        *tmp_thrmsg += mixerr.mixanErrMsg() + "\n";
+    }
+}
 
 AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
                                QSharedPointer<Settings> sts,
@@ -106,6 +163,13 @@ AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
 
     lastCalcDateTime = "";
     lastImgDir = "";
+
+    //
+
+    tmp_probesFileNames = ui->listWidget_probesFileNames;
+    tmp_probes = &probes;
+    tmp_granules = &granules;
+    tmp_thrmsg = &thrmsg;
 }
 
 AnalysisDialog::~AnalysisDialog() {
@@ -261,11 +325,73 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
     //
 
-    progressDialog->setLabelText(tr("Images analysis. Please wait..."));
-    futureWatcher->setFuture(QtConcurrent::
-                             run(this, &AnalysisDialog::runAnalysis));
-    progressDialog->exec();
-    futureWatcher->waitForFinished();
+    try {
+
+        material1->analyze(ui->lineEdit_mat1FileName->text(),
+                           settings->val_polyPwr());
+        material2->analyze(ui->lineEdit_mat2FileName->text(),
+                           settings->val_polyPwr());
+    }
+    catch(MixanError &mixerr) {
+
+        thrmsg += mixerr.mixanErrMsg() + "\n";
+        return;
+    }
+
+    if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ) {
+
+        probes.clear();
+
+        tmp_tcol = defThreshColor(material1.data(),
+                                  material2.data(),
+                                  settings->val_thrAccur());
+
+        QVector<ptrdiff_t> iterations;
+        for ( ptrdiff_t i=0; i<ui->listWidget_probesFileNames->count(); i++ ) {
+
+            iterations.push_back(i);
+        }
+
+        progressDialog->setLabelText(tr("Images analysis. Please wait..."));
+        futureWatcher->setFuture(QtConcurrent::map(iterations, &runMixAnalysis));
+        progressDialog->exec();
+        futureWatcher->waitForFinished();
+    }
+    else if ( ui->comboBox_analysisType->currentIndex() ==
+              ANALTYPE_GRANULATION ) {
+
+        granules.clear();
+
+        tmp_tcol = defThreshColor(material1.data(),
+                                  material2.data(),
+                                  settings->val_thrAccur());
+
+        if ( material1->thresholdColor() < tmp_tcol ) {
+
+            tmp_limcol1 = 0;
+            tmp_limcol2 = tmp_tcol;
+        }
+        else {
+
+            tmp_limcol1 = tmp_tcol;
+            tmp_limcol2 = 255;
+        }
+
+        tmp_sizeinmm = settings->val_sizeinmm();
+        tmp_pxpermm2 = settings->val_pxpermm2();
+
+        QVector<ptrdiff_t> iterations;
+        for ( ptrdiff_t i=0; i<ui->listWidget_probesFileNames->count(); i++ ) {
+
+            iterations.push_back(i);
+        }
+
+        progressDialog->setLabelText(tr("Images analysis. Please wait..."));
+        futureWatcher->setFuture(QtConcurrent::map(iterations,
+                                                   &runGranulationAnalysis));
+        progressDialog->exec();
+        futureWatcher->waitForFinished();
+    }
 
     //
 
@@ -286,107 +412,6 @@ void AnalysisDialog::on_pushButton_clear_clicked() {
     ui->lineEdit_mat1FileName->clear();
     ui->lineEdit_mat2FileName->clear();
     ui->listWidget_probesFileNames->clear();
-}
-
-void AnalysisDialog::runAnalysis() {
-
-    try {
-
-        material1->analyze( ui->lineEdit_mat1FileName->text(),
-                            settings->val_polyPwr() );
-        material2->analyze( ui->lineEdit_mat2FileName->text(),
-                            settings->val_polyPwr() );
-    }
-    catch(MixanError &mixerr) {
-
-        thrmsg += mixerr.mixanErrMsg() + "\n";
-        return;
-    }
-
-    if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ) {
-
-        probes.clear();
-
-        size_t tcol = defThreshColor( material1.data(),
-                                      material2.data(),
-                                      settings->val_thrAccur() );
-
-        for ( ptrdiff_t i=0; i<ui->listWidget_probesFileNames->count(); i++ ) {
-
-            try {
-
-                QSharedPointer<Mix> probe(new Mix(ui->
-                                                  listWidget_probesFileNames->
-                                                  item(i)->text(),
-                                                  tcol));
-                probe->analyze();
-                probes.push_back(probe);
-            }
-            catch(MixanError &mixerr) {
-
-                thrmsg += mixerr.mixanErrMsg() + "\n";
-                continue;
-            }
-        }
-    }
-    else if ( ui->comboBox_analysisType->currentIndex() ==
-              ANALTYPE_GRANULATION ) {
-
-        granules.clear();
-
-        size_t tcol = defThreshColor( material1.data(),
-                                      material2.data(),
-                                      settings->val_thrAccur() );
-
-        size_t limcol1 = 0;
-        size_t limcol2 = 0;
-
-        if ( material1->thresholdColor() < tcol ) {
-
-            limcol1 = 0;
-            limcol2 = tcol;
-        }
-        else {
-
-            limcol1 = tcol;
-            limcol2 = 255;
-        }
-
-        for ( ptrdiff_t i=0; i<ui->listWidget_probesFileNames->count(); i++ ) {
-
-            try {
-
-                if ( settings->val_sizeinmm() ) {
-
-                    QSharedPointer<Granules>
-                            grans(new Granules(ui->listWidget_probesFileNames->
-                                               item(i)->text(),
-                                               limcol1,
-                                               limcol2,
-                                               settings->val_pxpermm2()));
-
-                    grans->analyze();
-                    granules.push_back(grans);
-                }
-                else {
-
-                    QSharedPointer<Granules>
-                            grans(new Granules(ui->listWidget_probesFileNames->
-                                               item(i)->text(),
-                                               limcol1,
-                                               limcol2));
-
-                    grans->analyze();
-                    granules.push_back(grans);
-                }
-            }
-            catch(MixanError &mixerr) {
-
-                thrmsg += mixerr.mixanErrMsg() + "\n";
-                continue;
-            }
-        }
-    }
 }
 
 void AnalysisDialog::showAnalysisResults() {

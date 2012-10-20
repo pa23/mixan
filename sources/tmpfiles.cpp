@@ -18,17 +18,17 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QtCore>
 #include <QPixmap>
 #include <QVector>
 #include <QSharedPointer>
 #include <QDir>
 #include <QMessageBox>
 #include <QThread>
-#include <QtConcurrentRun>
+#include <QtConcurrentMap>
 #include <QFutureWatcher>
 #include <QProgressDialog>
 
+#include "tmpfiles.h"
 #include "granules.h"
 
 void saveGraphics(const QPixmap &pixmap1,
@@ -100,16 +100,16 @@ void saveHistograms(const QVector<QImage> &histograms,
     }
 }
 
-QVector< QSharedPointer<Granules> > tmpgranules;
-QString tmppath;
+QVector< QSharedPointer<Granules> > tmp_granules1;
+QString tmp_path;
 
 void realSavingImages(ptrdiff_t &iter) {
 
-    if ( !tmpgranules[iter]->resImage().save(tmppath
-                                             + QDir::separator()
-                                             + "granules_image_"
-                                             + QString::number(iter)
-                                             + ".png") ) {
+    if ( !tmp_granules1[iter]->resImage().save(tmp_path
+                                              + QDir::separator()
+                                              + "granules_image_"
+                                              + QString::number(iter)
+                                              + ".png") ) {
 
         QMessageBox::warning(
                     0,
@@ -140,11 +140,10 @@ void saveImages(const QVector< QSharedPointer<Granules> > &granules,
 
     //
 
-    tmpgranules.clear();
-    tmpgranules = granules;
+    clear_intmpfiles();
 
-    tmppath.clear();
-    tmppath = path;
+    tmp_granules1 = granules;
+    tmp_path = path;
 
     //
 
@@ -185,6 +184,13 @@ void saveImages(const QVector< QSharedPointer<Granules> > &granules,
     progressDialog->exec();
     futureWatcher->waitForFinished();
 
-    tmpgranules.clear();
-    tmppath.clear();
+    //
+
+    clear_intmpfiles();
+}
+
+void clear_intmpfiles() {
+
+    tmp_granules1.clear();
+    tmp_path.clear();
 }

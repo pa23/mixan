@@ -90,7 +90,6 @@ private:
            ANALTYPE_MIX,
            ANALTYPE_GRANULATION };
 
-    void runAnalysis();
     void freeMemory();
 
     QString tempPath;
