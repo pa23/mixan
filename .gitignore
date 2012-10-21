@@ -2,3 +2,4 @@ Makefile
 mixan.pro.user
 build/
 translations/mixan_ru.qm
+doc/mixan_user_manual.pdf

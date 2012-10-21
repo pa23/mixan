@@ -287,108 +287,113 @@
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="71"/>
+        <location filename="../sources/mainwindow.ui" line="72"/>
         <source>Edit</source>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="84"/>
+        <location filename="../sources/mainwindow.ui" line="85"/>
         <source>toolBar</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="114"/>
+        <location filename="../sources/mainwindow.ui" line="115"/>
         <source>Save Report...</source>
         <translation>Сохранить отчет...</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="117"/>
+        <location filename="../sources/mainwindow.ui" line="118"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="126"/>
+        <location filename="../sources/mainwindow.ui" line="127"/>
         <source>Quit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="129"/>
+        <location filename="../sources/mainwindow.ui" line="130"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="138"/>
+        <location filename="../sources/mainwindow.ui" line="139"/>
         <source>Analysis...</source>
         <translation>Анализ...</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="141"/>
+        <location filename="../sources/mainwindow.ui" line="142"/>
         <source>F9</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="146"/>
-        <location filename="../sources/mainwindow.cpp" line="301"/>
+        <location filename="../sources/mainwindow.ui" line="147"/>
+        <location filename="../sources/mainwindow.cpp" line="310"/>
         <source>About mixan</source>
         <translation>О mixan</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="149"/>
+        <location filename="../sources/mainwindow.ui" line="200"/>
+        <source>User manual</source>
+        <translation>Руководство пользователя</translation>
+    </message>
+    <message>
+        <location filename="../sources/mainwindow.ui" line="203"/>
         <source>F1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="158"/>
+        <location filename="../sources/mainwindow.ui" line="156"/>
         <source>Clean report window</source>
         <translation>Очистить окно отчета</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="161"/>
+        <location filename="../sources/mainwindow.ui" line="159"/>
         <source>Ctrl+L</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="170"/>
+        <location filename="../sources/mainwindow.ui" line="168"/>
         <source>Print Report...</source>
         <translation>Печать отчета...</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="173"/>
+        <location filename="../sources/mainwindow.ui" line="171"/>
         <source>Ctrl+P</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="182"/>
+        <location filename="../sources/mainwindow.ui" line="180"/>
         <source>Analyze materials</source>
         <translation>Анализ материалов</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="185"/>
+        <location filename="../sources/mainwindow.ui" line="183"/>
         <source>Shift+F9</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="194"/>
+        <location filename="../sources/mainwindow.ui" line="192"/>
         <source>Settings...</source>
         <translation>Настройки...</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.ui" line="197"/>
+        <location filename="../sources/mainwindow.ui" line="195"/>
         <source>F2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.cpp" line="57"/>
+        <location filename="../sources/mainwindow.cpp" line="58"/>
         <source>Analysis of granular material mixes and emulsions.</source>
         <translation>Анализ смесей сыпучих материалов и эмульсий.</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.cpp" line="216"/>
+        <location filename="../sources/mainwindow.cpp" line="217"/>
         <source>Save report to PDF...</source>
         <translation>Сохранить отчет в PDF...</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.cpp" line="323"/>
+        <location filename="../sources/mainwindow.cpp" line="332"/>
         <source>Report contains data. Save it?</source>
         <translation>Отчет содержит данные. Сохранить их?</translation>
     </message>
@@ -474,7 +479,7 @@
         <translation>Невозможно сохранить файл изображения!</translation>
     </message>
     <message>
-        <location filename="../sources/tmpfiles.cpp" line="181"/>
+        <location filename="../sources/tmpfiles.cpp" line="182"/>
         <source>Saving temporary image files. Please wait...</source>
         <translation>Сохранение временных файлов изображений. Пожалуйста, подождите...</translation>
     </message>

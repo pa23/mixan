@@ -60,6 +60,7 @@ private slots:
     void on_action_cleanReportWindow_activated();
     void on_action_settings_activated();
     void on_action_analysis_activated();
+    void on_action_userManual_activated();
     void on_action_about_mixan_activated();
 
     void reportReadOnlyChanged();

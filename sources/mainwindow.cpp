@@ -39,6 +39,7 @@
 #include <QSharedPointer>
 #include <QFont>
 #include <QCloseEvent>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -268,6 +269,14 @@ void MainWindow::on_action_analysis_activated() {
     initCalcSettings();
 
     analysisDialog->exec();
+}
+
+void MainWindow::on_action_userManual_activated() {
+
+    if ( !QDesktopServices::openUrl(QUrl("mixan_user_manual.pdf")) ) {
+
+        QDesktopServices::openUrl(QUrl("/usr/share/mixan/doc/mixan_user_manual.pdf"));
+    }
 }
 
 void MainWindow::on_action_about_mixan_activated() {

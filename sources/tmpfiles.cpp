@@ -100,16 +100,16 @@ void saveHistograms(const QVector<QImage> &histograms,
     }
 }
 
-QVector< QSharedPointer<Granules> > tmp_granules1;
-QString tmp_path;
+const QVector< QSharedPointer<Granules> > *tmp_granules_tf = 0;
+const QString *tmp_path_tf = 0;
 
 void realSavingImages(ptrdiff_t &iter) {
 
-    if ( !tmp_granules1[iter]->resImage().save(tmp_path
-                                              + QDir::separator()
-                                              + "granules_image_"
-                                              + QString::number(iter)
-                                              + ".png") ) {
+    if ( !tmp_granules_tf->at(iter)->resImage().save(*tmp_path_tf
+                                                     + QDir::separator()
+                                                     + "granules_image_"
+                                                     + QString::number(iter)
+                                                     + ".png") ) {
 
         QMessageBox::warning(
                     0,
@@ -140,10 +140,8 @@ void saveImages(const QVector< QSharedPointer<Granules> > &granules,
 
     //
 
-    clear_intmpfiles();
-
-    tmp_granules1 = granules;
-    tmp_path = path;
+    tmp_granules_tf = &granules;
+    tmp_path_tf = &path;
 
     //
 
@@ -176,21 +174,14 @@ void saveImages(const QVector< QSharedPointer<Granules> > &granules,
                      );
 
     QVector<ptrdiff_t> iterations;
-    for ( ptrdiff_t n=0; n<granules.size(); n++ ) { iterations.push_back(n); }
+    for ( ptrdiff_t n=0; n<tmp_granules_tf->size(); n++ ) {
+
+        iterations.push_back(n);
+    }
 
     progressDialog->setLabelText(QObject::tr("Saving temporary image files. "
                                              "Please wait..."));
     futureWatcher->setFuture(QtConcurrent::map(iterations, &realSavingImages));
     progressDialog->exec();
     futureWatcher->waitForFinished();
-
-    //
-
-    clear_intmpfiles();
-}
-
-void clear_intmpfiles() {
-
-    tmp_granules1.clear();
-    tmp_path.clear();
 }

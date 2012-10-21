@@ -1,7 +1,7 @@
 # Maintainer: Artem Petrov <pa2311@gmail.com>
 
 pkgname=mixan
-pkgver=2.1.0
+pkgver=2.2.0
 pkgrel=1
 epoch=
 pkgdesc="Analysis of granular material mixes and emulsions."
@@ -33,4 +33,10 @@ build() {
 package() {
     cd ${srcdir}/$pkgname-$pkgver
     make INSTALL_ROOT="$pkgdir" install
+    mkdir $pkgdir/usr/share
+    mkdir $pkgdir/usr/share/mixan
+    mkdir $pkgdir/usr/share/mixan/translations
+    cp translations/*.qm $pkgdir/usr/share/mixan/translations
+    mkdir $pkgdir/usr/share/mixan/doc
+    cp doc/mixan_user_manual.pdf $pkgdir/usr/share/mixan/doc
 }

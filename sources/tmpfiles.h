@@ -36,11 +36,7 @@ void saveGraphics(const QPixmap &,
 void saveHistograms(const QVector<QImage> &,
                     const QString &);
 
-void realSavingImages(ptrdiff_t &);
-
 void saveImages(const QVector< QSharedPointer<Granules> > &,
                 const QString &);
-
-void clear_intmpfiles();
 
 #endif // TMPFILES_H
