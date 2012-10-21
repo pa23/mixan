@@ -358,6 +358,9 @@
   <tabstop>spinBox_polyPower</tabstop>
   <tabstop>doubleSpinBox_intersectAccur</tabstop>
   <tabstop>doubleSpinBox_idealConc</tabstop>
+  <tabstop>checkBox_sizeinmm</tabstop>
+  <tabstop>doubleSpinBox_pxpermm2</tabstop>
+  <tabstop>lineEdit_sieveHoleDiameters</tabstop>
   <tabstop>checkBox_reportRO</tabstop>
   <tabstop>checkBox_imagesInReport</tabstop>
   <tabstop>checkBox_createTempGraph</tabstop>

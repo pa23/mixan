@@ -96,10 +96,15 @@ MainWindow::MainWindow(QWidget *parent) :
             findChild<QComboBox *>("comboBox_analysisType");
 
     connect(checkBox_reportReadOnly,
-            SIGNAL(clicked()),
+            SIGNAL(stateChanged(int)),
             this,
-            SLOT(reportReadOnlyChanged())
+            SLOT(reportReadOnlyChanged(int))
             );
+
+    connect(checkBox_sizeinmm,
+            SIGNAL(stateChanged(int)),
+            this,
+            SLOT(sizeinmmChanged(int)));
 
     //
 
@@ -191,7 +196,8 @@ void MainWindow::readProgramSettings() {
 
     //
 
-    reportReadOnlyChanged();
+    reportReadOnlyChanged(checkBox_reportReadOnly->isChecked());
+    sizeinmmChanged(checkBox_sizeinmm->isChecked());
 }
 
 void MainWindow::initCalcSettings() {
@@ -273,9 +279,11 @@ void MainWindow::on_action_analysis_activated() {
 
 void MainWindow::on_action_userManual_activated() {
 
-    if ( !QDesktopServices::openUrl(QUrl("mixan_user_manual.pdf")) ) {
+    if ( !QDesktopServices::openUrl(QUrl("mixan_user_manual_ru.pdf")) ) {
 
-        QDesktopServices::openUrl(QUrl("/usr/share/mixan/doc/mixan_user_manual.pdf"));
+        QDesktopServices::openUrl(
+                    QUrl("/usr/share/mixan/doc/mixan_user_manual_ru.pdf")
+                    );
     }
 }
 
@@ -310,15 +318,29 @@ void MainWindow::on_action_about_mixan_activated() {
     QMessageBox::about(this, tr("About mixan"), str);
 }
 
-void MainWindow::reportReadOnlyChanged() {
+void MainWindow::reportReadOnlyChanged(int state) {
 
-    if ( checkBox_reportReadOnly->isChecked() ) {
+    if ( state == 0 ) {
 
-        ui->textBrowser_report->setReadOnly(true);
+        ui->textBrowser_report->setReadOnly(false);
     }
     else {
 
-        ui->textBrowser_report->setReadOnly(false);
+        ui->textBrowser_report->setReadOnly(true);
+    }
+}
+
+void MainWindow::sizeinmmChanged(int state) {
+
+    if ( state == 0 ) {
+
+        doubleSpinBox_pxpermm2->setEnabled(false);
+        lineEdit_sieveHoleDiameters->setEnabled(false);
+    }
+    else {
+
+        doubleSpinBox_pxpermm2->setEnabled(true);
+        lineEdit_sieveHoleDiameters->setEnabled(true);
     }
 }
 

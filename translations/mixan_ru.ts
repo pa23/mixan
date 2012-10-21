@@ -6,7 +6,7 @@
     <message>
         <location filename="../sources/analysisdialog.ui" line="14"/>
         <source>mixan: analysis</source>
-        <translation>mixan: Анализ</translation>
+        <translation>mixan: анализ</translation>
     </message>
     <message>
         <location filename="../sources/analysisdialog.ui" line="29"/>

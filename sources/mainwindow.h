@@ -63,7 +63,8 @@ private slots:
     void on_action_userManual_activated();
     void on_action_about_mixan_activated();
 
-    void reportReadOnlyChanged();
+    void reportReadOnlyChanged(int);
+    void sizeinmmChanged(int);
 
 private:
 
