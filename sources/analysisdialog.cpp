@@ -104,7 +104,7 @@ void runGranulationAnalysis(ptrdiff_t &iter) {
 }
 
 AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
-                               QSharedPointer<Settings> sts,
+                               const QSharedPointer<Settings> &sts,
                                QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AnalysisDialog) {

@@ -18,9 +18,9 @@ Dependences
     OpenCV >= 2.4.2 (libopencv_core.so, libopencv_imgproc.so,
                      libopencv_highgui.so)
   MS Windows x86
-    Qt x86 >=4.8.2 (QtCore4.dll, QtGui4.dll)
+    Qt x86 >=4.8.1 (QtCore4.dll, QtGui4.dll, QtSvg4.dll)
     Qwt >= 6.0.1 (qwt.dll)
-    OpenCV >= 2.4.2 (libopencv_core231.dll, libopencv_imgproc231.dll,
-                     libopencv_highgui231.dll)
-    MinGW (libgcc_s_dw2-1.dll, mingwm10.dll, libstdc++-6.dll)
+    OpenCV >= 2.4.2 (libopencv_core242.dll, libopencv_imgproc242.dll,
+                     libopencv_highgui242.dll)
+    MinGW (libgcc_s_dw2-1.dll, mingwm10.dll)
 --------------------------------------------------------------------------------

@@ -77,13 +77,12 @@ void Material::analyze(const QString &imgFileName, const ptrdiff_t &polyPwr) {
 void Material::clear() {
 
     fileName.clear();
-    threshColor = 0;
+    origImage = QImage();
     histogram.clear();
+    threshColor = 0;
+    polynomPower = 0;
     polyVal.clear();
     polylimits.clear();
-
-    QImage tmpImg;
-    origImage.swap(tmpImg);
 }
 
 bool Material::isEmpty() const {

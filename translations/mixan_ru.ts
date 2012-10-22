@@ -328,7 +328,7 @@
     </message>
     <message>
         <location filename="../sources/mainwindow.ui" line="147"/>
-        <location filename="../sources/mainwindow.cpp" line="310"/>
+        <location filename="../sources/mainwindow.cpp" line="318"/>
         <source>About mixan</source>
         <translation>О mixan</translation>
     </message>
@@ -388,12 +388,12 @@
         <translation>Анализ смесей сыпучих материалов и эмульсий.</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.cpp" line="217"/>
+        <location filename="../sources/mainwindow.cpp" line="223"/>
         <source>Save report to PDF...</source>
         <translation>Сохранить отчет в PDF...</translation>
     </message>
     <message>
-        <location filename="../sources/mainwindow.cpp" line="332"/>
+        <location filename="../sources/mainwindow.cpp" line="354"/>
         <source>Report contains data. Save it?</source>
         <translation>Отчет содержит данные. Сохранить их?</translation>
     </message>
@@ -433,7 +433,7 @@
         <translation>Невозможно преобразовать изображение из IplImage в QImage!</translation>
     </message>
     <message>
-        <location filename="../sources/material.cpp" line="99"/>
+        <location filename="../sources/material.cpp" line="98"/>
         <location filename="../sources/mix.cpp" line="73"/>
         <source>No image!</source>
         <translation>Изображений нет!</translation>

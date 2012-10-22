@@ -49,7 +49,7 @@ class AnalysisDialog : public QDialog {
 public:
 
     explicit AnalysisDialog(QTextBrowser *, // report widget
-                            QSharedPointer<Settings>,
+                            const QSharedPointer<Settings> &,
                             QWidget *parent = 0);
     ~AnalysisDialog();
 
