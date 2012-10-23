@@ -27,12 +27,16 @@
 
 #include <opencv/cv.h>
 
+#include "settings.h"
+
 class Granules {
 
 public:
 
-    Granules(const QString &, const size_t &, const size_t &);
-    Granules(const QString &, const size_t &, const size_t &, const double &);
+    Granules(const QString &,
+             const size_t &,
+             const size_t &,
+             const Settings *);
     virtual ~Granules();
 
     void analyze();
@@ -49,7 +53,7 @@ private:
     QString imgFileName;
     size_t limCol1;
     size_t limCol2;
-    double pxpermm2;
+    const Settings *settings;
 
     QImage img;
 

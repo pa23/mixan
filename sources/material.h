@@ -25,6 +25,8 @@
 #include <QImage>
 #include <QVector>
 
+#include "settings.h"
+
 class Material {
 
 public:
@@ -32,9 +34,8 @@ public:
     Material();
     virtual ~Material();
 
-    void analyze(const QString &, const ptrdiff_t &);
+    void analyze(const QString &, const Settings *);
     void clear();
-    bool isEmpty() const;
 
     QString imageFileName()            const { return fileName;    }
     QImage originalImage()             const { return origImage;   }

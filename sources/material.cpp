@@ -41,14 +41,14 @@ Material::Material() :
 Material::~Material() {
 }
 
-void Material::analyze(const QString &imgFileName, const ptrdiff_t &polyPwr) {
+void Material::analyze(const QString &imgFileName, const Settings *settings) {
 
     fileName = "";
 
     histogram.clear();
     histogram.resize(256);
 
-    polynomPower = polyPwr;
+    polynomPower = settings->val_polyPwr();
 
     //
 
@@ -72,6 +72,11 @@ void Material::analyze(const QString &imgFileName, const ptrdiff_t &polyPwr) {
     }
 
     fileName = imgFileName;
+
+    if ( !settings->val_showImgInReport() && !settings->val_createTmpImg() ) {
+
+        origImage = QImage();
+    }
 }
 
 void Material::clear() {
@@ -83,12 +88,6 @@ void Material::clear() {
     polynomPower = 0;
     polyVal.clear();
     polylimits.clear();
-}
-
-bool Material::isEmpty() const {
-
-    if ( origImage.isNull() ) { return true;  }
-    else                      { return false; }
 }
 
 void Material::defHistogram() {

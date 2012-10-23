@@ -46,10 +46,6 @@ void createGraphics(QVector<QImage> &graphics,
 
     //
 
-    if ( material1->isEmpty() || material2->isEmpty() ) { return; }
-
-    //
-
     QVector<double> x(256);
     for ( ptrdiff_t i=0; i<x.size(); i++ ) { x[i] = i; }
 

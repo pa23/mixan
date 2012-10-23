@@ -27,21 +27,19 @@
 #include <QImage>
 #include <QObject>
 
-Mix::Mix(const QString &imgFileName, const size_t &threshCol) :
+Mix::Mix(const QString &imgFileName,
+         const size_t &threshCol,
+         const Settings *set) :
     threshColor(0),
+    settings(0),
     conc(0) {
 
     fileName = imgFileName;
     threshColor = threshCol;
+    settings = set;
 }
 
 Mix::~Mix() {
-}
-
-bool Mix::isEmpty() const {
-
-    if ( origImage.isNull() ) { return true;  }
-    else                      { return false; }
 }
 
 void Mix::analyze() {
@@ -63,6 +61,11 @@ void Mix::analyze() {
     catch(MixanError &mixerr) {
 
         throw;
+    }
+
+    if ( !settings->val_showImgInReport() && !settings->val_createTmpImg() ) {
+
+        origImage = QImage();
     }
 }
 

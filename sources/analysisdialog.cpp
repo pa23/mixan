@@ -46,22 +46,23 @@
 #include <QPixmap>
 #include <QDateTime>
 
+const Settings *tmp_settings = 0;
 QListWidget *tmp_probesFileNames = 0;
 size_t tmp_tcol = 0;
 QVector< QSharedPointer<Mix> > *tmp_probes = 0;
 size_t tmp_limcol1 = 0;
 size_t tmp_limcol2 = 0;
 QVector< QSharedPointer<Granules> > *tmp_granules = 0;
-bool tmp_sizeinmm = false;
-double tmp_pxpermm2 = 0;
 QString *tmp_thrmsg = 0;
 
 void runMixAnalysis(ptrdiff_t &iter) {
 
     try {
 
-        QSharedPointer<Mix> probe(new Mix(tmp_probesFileNames->item(iter)->text(),
-                                          tmp_tcol));
+        QSharedPointer<Mix>
+                probe(new Mix(tmp_probesFileNames->item(iter)->text(),
+                              tmp_tcol,
+                              tmp_settings));
         probe->analyze();
         tmp_probes->push_back(probe);
     }
@@ -75,27 +76,14 @@ void runGranulationAnalysis(ptrdiff_t &iter) {
 
     try {
 
-        if ( tmp_sizeinmm ) {
+        QSharedPointer<Granules>
+                grans(new Granules(tmp_probesFileNames->item(iter)->text(),
+                                   tmp_limcol1,
+                                   tmp_limcol2,
+                                   tmp_settings));
 
-            QSharedPointer<Granules>
-                    grans(new Granules(tmp_probesFileNames->item(iter)->text(),
-                                       tmp_limcol1,
-                                       tmp_limcol2,
-                                       tmp_pxpermm2));
-
-            grans->analyze();
-            tmp_granules->push_back(grans);
-        }
-        else {
-
-            QSharedPointer<Granules>
-                    grans(new Granules(tmp_probesFileNames->item(iter)->text(),
-                                       tmp_limcol1,
-                                       tmp_limcol2));
-
-            grans->analyze();
-            tmp_granules->push_back(grans);
-        }
+        grans->analyze();
+        tmp_granules->push_back(grans);
     }
     catch(MixanError &mixerr) {
 
@@ -166,6 +154,7 @@ AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
 
     //
 
+    tmp_settings = settings.data();
     tmp_probesFileNames = ui->listWidget_probesFileNames;
     tmp_probes = &probes;
     tmp_granules = &granules;
@@ -327,10 +316,8 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
     try {
 
-        material1->analyze(ui->lineEdit_mat1FileName->text(),
-                           settings->val_polyPwr());
-        material2->analyze(ui->lineEdit_mat2FileName->text(),
-                           settings->val_polyPwr());
+        material1->analyze(ui->lineEdit_mat1FileName->text(), settings.data());
+        material2->analyze(ui->lineEdit_mat2FileName->text(), settings.data());
     }
     catch(MixanError &mixerr) {
 
@@ -376,9 +363,6 @@ void AnalysisDialog::on_pushButton_run_clicked() {
             tmp_limcol1 = tmp_tcol;
             tmp_limcol2 = 255;
         }
-
-        tmp_sizeinmm = settings->val_sizeinmm();
-        tmp_pxpermm2 = settings->val_pxpermm2();
 
         QVector<ptrdiff_t> iterations;
         for ( ptrdiff_t i=0; i<ui->listWidget_probesFileNames->count(); i++ ) {

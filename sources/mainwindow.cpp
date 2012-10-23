@@ -40,6 +40,7 @@
 #include <QFont>
 #include <QCloseEvent>
 #include <QDesktopServices>
+#include <QFile>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -279,11 +280,21 @@ void MainWindow::on_action_analysis_activated() {
 
 void MainWindow::on_action_userManual_activated() {
 
-    if ( !QDesktopServices::openUrl(QUrl("mixan_user_manual_ru.pdf")) ) {
+    if ( QFile::exists("mixan_user_manual_ru.pdf") ) {
+
+        QDesktopServices::openUrl(QUrl("mixan_user_manual_ru.pdf"));
+    }
+    else if ( QFile::exists("/usr/share/mixan/doc/mixan_user_manual_ru.pdf") ) {
 
         QDesktopServices::openUrl(
                     QUrl("/usr/share/mixan/doc/mixan_user_manual_ru.pdf")
                     );
+    }
+    else {
+
+        QMessageBox::warning(this,
+                             "mixan",
+                             tr("Can not find documentation file!"));
     }
 }
 

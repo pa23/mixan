@@ -1,7 +1,7 @@
 # Maintainer: Artem Petrov <pa2311@gmail.com>
 
 pkgname=mixan
-pkgver=2.2.0
+pkgver=2.2.1
 pkgrel=1
 epoch=
 pkgdesc="Analysis of granular material mixes and emulsions."

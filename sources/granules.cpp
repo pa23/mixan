@@ -33,29 +33,16 @@
 
 Granules::Granules(const QString &fileName,
                    const size_t &lim1,
-                   const size_t &lim2) :
-    limCol1(0),
-    limCol2(0),
-    pxpermm2(0) {
-
-    imgFileName = fileName;
-    limCol1 = lim1;
-    limCol2 = lim2;
-}
-
-Granules::Granules(const QString &fileName,
-                   const size_t &lim1,
                    const size_t &lim2,
-                   const double &k) :
+                   const Settings *set) :
     limCol1(0),
     limCol2(0),
-    pxpermm2(0) {
+    settings(0) {
 
     imgFileName = fileName;
     limCol1 = lim1;
     limCol2 = lim2;
-
-    if ( k != 0 ) { pxpermm2 = k; }
+    settings = set;
 }
 
 Granules::~Granules() {
@@ -104,15 +91,24 @@ void Granules::findAreas() {
 
     if ( !(grayImage = cvCreateImage(cvGetSize(origImage), IPL_DEPTH_8U, 1)) ) {
 
+        cvReleaseImage(&origImage);
+
         throw MixanError(QObject::tr("Can not allocate memory for grayImage!"));
     }
 
     if ( !(binImage = cvCreateImage(cvGetSize(origImage), IPL_DEPTH_8U, 1)) ) {
 
+        cvReleaseImage(&origImage);
+        cvReleaseImage(&grayImage);
+
         throw MixanError(QObject::tr("Can not allocate memory for binImage!"));
     }
 
     if ( !(dstImage = cvCloneImage(origImage)) ) {
+
+        cvReleaseImage(&origImage);
+        cvReleaseImage(&grayImage);
+        cvReleaseImage(&binImage);
 
         throw MixanError(QObject::tr("Can not clone origImage!"));
     }
@@ -136,6 +132,12 @@ void Granules::findAreas() {
                                 CV_CHAIN_APPROX_SIMPLE,
                                 cvPoint(0, 0)) ) ) {
 
+        cvReleaseImage(&origImage);
+        cvReleaseImage(&grayImage);
+        cvReleaseImage(&binImage);
+        cvReleaseImage(&dstImage);
+        cvReleaseMemStorage(&storage);
+
         throw MixanError(QObject::tr("Can not find contours!"));
     }
 
@@ -144,6 +146,7 @@ void Granules::findAreas() {
     double comp = 0;
 
     CvBox2D rect;
+    double pxpermm2 = settings->val_pxpermm2();
     double pxpermm = sqrt(pxpermm2);
 
     for ( CvSeq *seq = contours; seq != 0; seq = seq->h_next ) {
@@ -165,18 +168,7 @@ void Granules::findAreas() {
 
         rect = cvMinAreaRect2(seq);
 
-        if ( pxpermm2 == 0 ) {
-
-            if ( rect.size.width < rect.size.height ) {
-
-                minosizes.push_back(rect.size.width);
-            }
-            else {
-
-                minosizes.push_back(rect.size.height);
-            }
-        }
-        else {
+        if ( settings->val_sizeinmm() && (pxpermm2 != 0) ) {
 
             if ( rect.size.width < rect.size.height ) {
 
@@ -187,31 +179,53 @@ void Granules::findAreas() {
                 minosizes.push_back(rect.size.height/pxpermm);
             }
         }
+        else {
+
+            if ( rect.size.width < rect.size.height ) {
+
+                minosizes.push_back(rect.size.width);
+            }
+            else {
+
+                minosizes.push_back(rect.size.height);
+            }
+        }
 
         //
 
-        cvDrawContours(dstImage,
-                       seq,
-                       CV_RGB(255, 0, 0),
-                       CV_RGB(0, 0, 255),
-                       0, 1, 8);
+        if ( settings->val_showImgInReport() || settings->val_createTmpImg() ) {
+
+            cvDrawContours(dstImage,
+                           seq,
+                           CV_RGB(255, 0, 0),
+                           CV_RGB(0, 0, 255),
+                           0, 1, 8);
+        }
+    }
+
+    if ( settings->val_showImgInReport() || settings->val_createTmpImg() ) {
+
+        try {
+
+            IplImage2QImage(dstImage);
+        }
+        catch (MixanError &mixerr) {
+
+            cvReleaseImage(&origImage);
+            cvReleaseImage(&grayImage);
+            cvReleaseImage(&binImage);
+            cvReleaseImage(&dstImage);
+            cvReleaseMemStorage(&storage);
+
+            throw;
+        }
     }
 
     cvReleaseImage(&origImage);
     cvReleaseImage(&grayImage);
     cvReleaseImage(&binImage);
-
-    try {
-
-        IplImage2QImage(dstImage);
-    }
-    catch (MixanError &mixerr) {
-
-        cvReleaseImage(&dstImage);
-        throw;
-    }
-
     cvReleaseImage(&dstImage);
+    cvReleaseMemStorage(&storage);
 }
 
 void Granules::IplImage2QImage(const IplImage *iplImg) {

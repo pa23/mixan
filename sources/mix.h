@@ -25,15 +25,15 @@
 #include <QImage>
 
 #include "material.h"
+#include "settings.h"
 
 class Mix {
 
 public:
 
-    Mix(const QString &, const size_t &);
+    Mix(const QString &, const size_t &, const Settings *);
     virtual ~Mix();
 
-    bool isEmpty() const;
     void analyze();
 
     QString imageFileName() const { return fileName;    }
@@ -46,6 +46,7 @@ private:
 
     QString fileName;
     size_t threshColor;
+    const Settings *settings;
 
     QImage origImage;
     double conc;
