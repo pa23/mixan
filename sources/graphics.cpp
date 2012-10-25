@@ -230,12 +230,12 @@ void createHistograms(QVector<QImage> &histograms,
                       const QVector< QSharedPointer<Granules> > &granules,
                       const QSharedPointer<Settings> &settings,
                       const QString &path,
+                      double &minArea,
+                      double &maxArea,
                       double &meanArea,
                       double &meanCompact) {
 
     histograms.clear();
-    meanArea = 0;
-    meanCompact = 0;
 
     //
 
@@ -244,7 +244,7 @@ void createHistograms(QVector<QImage> &histograms,
     //
 
     QVector<double> areas = granules[0]->areaValues();
-    QVector<double> compacts = granules[0]->compactValues();;
+    QVector<double> compacts = granules[0]->compactValues();
 
     for ( ptrdiff_t n=1; n<granules.size(); n++ ) {
 
@@ -266,10 +266,20 @@ void createHistograms(QVector<QImage> &histograms,
     histCompactsXSet.minval = compacts[0];
     histCompactsXSet.maxval = compacts[0];
 
+    minArea = areas[0];
+    maxArea = areas[0];
+    meanArea = areas[0];
+    meanCompact = compacts[0];
+
     for ( ptrdiff_t i=1; i<areas.size(); i++ ) {
+
+        if ( areas[i] < minArea ) { minArea = areas[i]; }
+        if ( areas[i] > maxArea ) { maxArea = areas[i]; }
 
         meanArea += areas[i];
         meanCompact += compacts[i];
+
+        //
 
         //
 

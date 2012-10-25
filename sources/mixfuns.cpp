@@ -102,12 +102,19 @@ void defRemainders(const QVector< QSharedPointer<Granules> > &granules,
                    QVector<double> &sieveHoles,
                    QVector<double> &remainders) {
 
+    QVector<double> areas = granules[0]->areaValues();
     QVector<double> minosizes = granules[0]->minOverallSizes();
 
     for ( ptrdiff_t n=1; n<granules.size(); n++ ) {
 
+        areas += granules[n]->areaValues();
         minosizes += granules[n]->minOverallSizes();
     }
+
+    double totalArea = 0;
+    for ( ptrdiff_t i=0; i<areas.size(); i++ ) { totalArea += areas[i]; }
+
+    //
 
     qSort(sieveHoles);
     remainders.clear();
@@ -121,7 +128,7 @@ void defRemainders(const QVector< QSharedPointer<Granules> > &granules,
 
             if ( minosizes[n] > sieveHoles[m] ) {
 
-                remainders[m]++;
+                remainders[m] += areas[n];
                 break;
             }
         }
@@ -129,6 +136,6 @@ void defRemainders(const QVector< QSharedPointer<Granules> > &granules,
 
     for ( ptrdiff_t i=0; i<remainders.size(); i++ ) {
 
-        remainders[i] /= minosizes.size();
+        remainders[i] /= totalArea;
     }
 }

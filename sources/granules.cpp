@@ -159,16 +159,12 @@ void Granules::findAreas() {
 
         //
 
-        if   ( pxpermm2 == 0 ) { areas.push_back(area);          }
-        else                   { areas.push_back(area/pxpermm2); }
-
         compacts.push_back(comp);
-
-        //
-
         rect = cvMinAreaRect2(seq);
 
         if ( settings->val_sizeinmm() && (pxpermm2 != 0) ) {
+
+            areas.push_back(area/pxpermm2);
 
             if ( rect.size.width < rect.size.height ) {
 
@@ -180,6 +176,8 @@ void Granules::findAreas() {
             }
         }
         else {
+
+            areas.push_back(area);
 
             if ( rect.size.width < rect.size.height ) {
 

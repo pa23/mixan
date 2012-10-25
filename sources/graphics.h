@@ -48,6 +48,8 @@ void createHistograms(QVector<QImage> &,
                       const QSharedPointer<Settings> &,
                       const QString &,
                       double &,
+                      double &,
+                      double &,
                       double &);
 
 #endif // GRAPHICS_H

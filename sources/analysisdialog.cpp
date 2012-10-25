@@ -644,6 +644,8 @@ void AnalysisDialog::showAnalysisResults() {
               ANALTYPE_GRANULATION &&
               granules.size() != 0 ) {
 
+        double minArea = 0;
+        double maxArea = 0;
         double meanArea = 0;
         double meanCompact = 0;
 
@@ -651,6 +653,8 @@ void AnalysisDialog::showAnalysisResults() {
                          granules,
                          settings,
                          tempPath + QDir::separator() + lastCalcDateTime,
+                         minArea,
+                         maxArea,
                          meanArea,
                          meanCompact);
 
@@ -718,6 +722,8 @@ void AnalysisDialog::showAnalysisResults() {
             report->insertHtml(
                         "<br>"
                         + tr("Image file")
+                        + " #"
+                        + QString::number(i)
                         + ": "
                         + imgname
                         + "<br>"
@@ -748,10 +754,8 @@ void AnalysisDialog::showAnalysisResults() {
 
         report->insertHtml(
                     "<br><br>"
-                    + tr("Mean size particles")
-                    + ": <b>"
-                    + QString::number(meanArea)
-                    + "</b> "
+                    + tr("Size of particles")
+                    + " ["
                     );
 
         if ( settings->val_sizeinmm() ) {
@@ -762,6 +766,22 @@ void AnalysisDialog::showAnalysisResults() {
 
             report->insertHtml(tr("px"));
         }
+
+        report->insertHtml(
+                    "]:<br>"
+                    + tr("minimum_size")
+                    + " = <b>"
+                    + QString::number(minArea)
+                    + "</b><br>"
+                    + tr("maximum_size")
+                    + " = <b>"
+                    + QString::number(maxArea)
+                    + "</b><br>"
+                    + tr("mean_size")
+                    + " = <b>"
+                    + QString::number(meanArea)
+                    + "</b>"
+                    );
 
         report->insertHtml(
                     "<br><br>"

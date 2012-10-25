@@ -157,13 +157,13 @@
     </message>
     <message>
         <location filename="../sources/analysisdialog.cpp" line="578"/>
-        <location filename="../sources/analysisdialog.cpp" line="684"/>
+        <location filename="../sources/analysisdialog.cpp" line="688"/>
         <source>Analysis of image</source>
         <translation>Анализ изображения</translation>
     </message>
     <message>
         <location filename="../sources/analysisdialog.cpp" line="582"/>
-        <location filename="../sources/analysisdialog.cpp" line="688"/>
+        <location filename="../sources/analysisdialog.cpp" line="692"/>
         <source>failed or canceled</source>
         <translation>завершился с ошибкой или был отменен</translation>
     </message>
@@ -183,72 +183,87 @@
         <translation>Концентрация первого компонента</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="661"/>
+        <location filename="../sources/analysisdialog.cpp" line="665"/>
         <source>Can not create histograms!</source>
         <translation>Невозможно создать гистограммы!</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="699"/>
+        <location filename="../sources/analysisdialog.cpp" line="703"/>
         <source>Granules image</source>
         <translation>Изображение частиц</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="720"/>
+        <location filename="../sources/analysisdialog.cpp" line="724"/>
         <source>Image file</source>
         <translation>Файл изображения</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="727"/>
+        <location filename="../sources/analysisdialog.cpp" line="733"/>
         <source>Particles found</source>
         <translation>Найдено частиц</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="736"/>
+        <location filename="../sources/analysisdialog.cpp" line="742"/>
         <source>Total particles number (on all images)</source>
         <translation>Общее количество частиц (на всех изображениях)</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="744"/>
+        <location filename="../sources/analysisdialog.cpp" line="750"/>
         <source>Total particle-size distribution</source>
         <translation>Общее распределение частиц по размерам</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="768"/>
+        <location filename="../sources/analysisdialog.cpp" line="772"/>
+        <source>minimum_size</source>
+        <translation>минимальный_размер</translation>
+    </message>
+    <message>
+        <location filename="../sources/analysisdialog.cpp" line="776"/>
+        <source>maximum_size</source>
+        <translation>максимальный_размер</translation>
+    </message>
+    <message>
+        <location filename="../sources/analysisdialog.cpp" line="788"/>
         <source>Total particle-circularity distribution</source>
         <translation>Общее распределение частиц по &quot;компактности&quot; формы</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="800"/>
+        <location filename="../sources/analysisdialog.cpp" line="820"/>
         <source>Remainders on sieves</source>
         <translation>Остатки на ситах</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="807"/>
+        <location filename="../sources/analysisdialog.cpp" line="827"/>
         <source>Sieve</source>
         <translation>Сито</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="813"/>
+        <location filename="../sources/analysisdialog.cpp" line="833"/>
         <source>mm</source>
         <translation>мм</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="751"/>
-        <source>Mean size particles</source>
-        <translation>Средний размер частиц</translation>
-    </message>
-    <message>
-        <location filename="../sources/analysisdialog.cpp" line="759"/>
+        <location filename="../sources/analysisdialog.cpp" line="763"/>
         <source>mm2</source>
         <translation>мм2</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="763"/>
+        <location filename="../sources/analysisdialog.cpp" line="757"/>
+        <source>Size of particles</source>
+        <translation>Размеры частиц</translation>
+    </message>
+    <message>
+        <location filename="../sources/analysisdialog.cpp" line="767"/>
         <source>px</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="775"/>
+        <location filename="../sources/analysisdialog.cpp" line="780"/>
+        <source>mean_size</source>
+        <translation>средний_размер</translation>
+    </message>
+    <message>
+        <location filename="../sources/analysisdialog.cpp" line="795"/>
         <source>Mean compact particles</source>
         <translation>Среднее значение &quot;компактности&quot; формы частиц</translation>
     </message>
@@ -433,7 +448,7 @@
         <translation>Невозможно отыскать контуры!</translation>
     </message>
     <message>
-        <location filename="../sources/granules.cpp" line="260"/>
+        <location filename="../sources/granules.cpp" line="258"/>
         <source>Can not convert image from IplImage to QImage!</source>
         <translation>Невозможно преобразовать изображение из IplImage в QImage!</translation>
     </message>
@@ -489,12 +504,12 @@
         <translation>Сохранение временных файлов изображений. Пожалуйста, подождите...</translation>
     </message>
     <message>
-        <location filename="../sources/graphics.cpp" line="411"/>
+        <location filename="../sources/graphics.cpp" line="421"/>
         <source>Granule area</source>
         <translation>Размер частицы</translation>
     </message>
     <message>
-        <location filename="../sources/graphics.cpp" line="459"/>
+        <location filename="../sources/graphics.cpp" line="469"/>
         <source>Granule circularity</source>
         <translation>&quot;Компактность&quot; формы частицы</translation>
     </message>
