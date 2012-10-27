@@ -80,7 +80,8 @@ private:
     QDoubleSpinBox *doubleSpinBox_idealConc;
     QCheckBox *checkBox_sizeinmm;
     QDoubleSpinBox *doubleSpinBox_pxpermm2;
-    QLineEdit *lineEdit_sieveHoleDiameters;
+    QLineEdit *lineEdit_sievesCellDiameter;
+    QLineEdit *lineEdit_sievesCellDimension;
     QCheckBox *checkBox_reportReadOnly;
     QCheckBox *checkBox_imagesInReport;
     QCheckBox *checkBox_createTemporaryGraphics;

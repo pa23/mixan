@@ -38,20 +38,22 @@ public:
     void setIdealConc(double);
     void setsizeinmm(bool);
     void setpxpermm2(double);
-    void setSieveHoleDiameters(QString);
+    void setSievesCellDiameter(QString);
+    void setSievesCellDimension(QString);
     void setShowImgInReport(bool);
     void setCreateTmpImg(bool);
     void setImgWidth(ptrdiff_t);
 
-    ptrdiff_t val_polyPwr()            const { return polyPwr;            }
-    double    val_thrAccur()           const { return thrAccur;           }
-    double    val_idealConc()          const { return idealConc;          }
-    bool      val_sizeinmm()           const { return sizeinmm;           }
-    double    val_pxpermm2()           const { return pxpermm2;           }
-    QString   val_sieveHoleDiameters() const { return sieveHoleDiameters; }
-    bool      val_showImgInReport()    const { return showImgInReport;    }
-    bool      val_createTmpImg()       const { return createTmpImg;       }
-    ptrdiff_t val_imgWidth()           const { return imgWidth;           }
+    ptrdiff_t val_polyPwr()             const { return polyPwr;             }
+    double    val_thrAccur()            const { return thrAccur;            }
+    double    val_idealConc()           const { return idealConc;           }
+    bool      val_sizeinmm()            const { return sizeinmm;            }
+    double    val_pxpermm2()            const { return pxpermm2;            }
+    QString   val_sievesCellDiameter()  const { return sievesCellDiameter;  }
+    QString   val_sievesCellDimension() const { return sievesCellDimension; }
+    bool      val_showImgInReport()     const { return showImgInReport;     }
+    bool      val_createTmpImg()        const { return createTmpImg;        }
+    ptrdiff_t val_imgWidth()            const { return imgWidth;            }
 
 private:
 
@@ -60,7 +62,8 @@ private:
     double    idealConc;
     bool      sizeinmm;
     double    pxpermm2;
-    QString   sieveHoleDiameters;
+    QString   sievesCellDiameter;
+    QString   sievesCellDimension;
     bool      showImgInReport;
     bool      createTmpImg;
     ptrdiff_t imgWidth;

@@ -45,7 +45,8 @@ void SettingsDialog::on_pushButton_defaults_clicked() {
     ui->doubleSpinBox_idealConc->setValue(0.5);
     ui->checkBox_sizeinmm->setChecked(false);
     ui->doubleSpinBox_pxpermm2->setValue(0);
-    ui->lineEdit_sieveHoleDiameters->setText("");
+    ui->lineEdit_sievesCellDiameter->setText("10;5");
+    ui->lineEdit_sievesCellDimension->setText("2.5;1.25;0.63;0.315;0.14;0.071;0.05");
     ui->checkBox_reportRO->setChecked(true);
     ui->checkBox_imagesInReport->setChecked(true);
     ui->checkBox_createTempGraph->setChecked(false);

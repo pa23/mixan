@@ -31,12 +31,52 @@ Settings::Settings() :
     imgWidth (0) {
 }
 
-void Settings::setPolyPwr(ptrdiff_t pp)         { polyPwr            = pp;     }
-void Settings::setThrAccur(double ta)           { thrAccur           = ta;     }
-void Settings::setIdealConc(double ic)          { idealConc          = ic;     }
-void Settings::setsizeinmm(bool sizemm)         { sizeinmm           = sizemm; }
-void Settings::setpxpermm2(double pxmm)         { pxpermm2           = pxmm;   }
-void Settings::setSieveHoleDiameters(QString d) { sieveHoleDiameters = d;      }
-void Settings::setShowImgInReport(bool sir)     { showImgInReport    = sir;    }
-void Settings::setCreateTmpImg(bool cti)        { createTmpImg       = cti;    }
-void Settings::setImgWidth(ptrdiff_t iw)        { imgWidth           = iw;     }
+void Settings::setPolyPwr(ptrdiff_t pp) {
+
+    polyPwr = pp;
+}
+
+void Settings::setThrAccur(double ta) {
+
+    thrAccur = ta;
+}
+
+void Settings::setIdealConc(double ic) {
+
+    idealConc = ic;
+}
+
+void Settings::setsizeinmm(bool sizemm) {
+
+    sizeinmm = sizemm;
+}
+
+void Settings::setpxpermm2(double pxmm) {
+
+    pxpermm2 = pxmm;
+}
+
+void Settings::setSievesCellDiameter(QString d) {
+
+    sievesCellDiameter = d;
+}
+
+void Settings::setSievesCellDimension(QString d) {
+
+    sievesCellDimension = d;
+}
+
+void Settings::setShowImgInReport(bool sir) {
+
+    showImgInReport = sir;
+}
+
+void Settings::setCreateTmpImg(bool cti) {
+
+    createTmpImg = cti;
+}
+
+void Settings::setImgWidth(ptrdiff_t iw) {
+
+    imgWidth = iw;
+}

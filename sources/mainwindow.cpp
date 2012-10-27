@@ -83,8 +83,10 @@ MainWindow::MainWindow(QWidget *parent) :
             findChild<QCheckBox *>("checkBox_sizeinmm");
     doubleSpinBox_pxpermm2 = settingsDialog->
             findChild<QDoubleSpinBox *>("doubleSpinBox_pxpermm2");
-    lineEdit_sieveHoleDiameters = settingsDialog->
-            findChild<QLineEdit *>("lineEdit_sieveHoleDiameters");
+    lineEdit_sievesCellDiameter = settingsDialog->
+            findChild<QLineEdit *>("lineEdit_sievesCellDiameter");
+    lineEdit_sievesCellDimension = settingsDialog->
+            findChild<QLineEdit *>("lineEdit_sievesCellDimension");
     checkBox_reportReadOnly = settingsDialog->
             findChild<QCheckBox *>("checkBox_reportRO");
     checkBox_imagesInReport = settingsDialog->
@@ -138,8 +140,10 @@ void MainWindow::writeProgramSettings() {
                            checkBox_sizeinmm->isChecked());
     mixanSettings.setValue("/px_per_mm",
                            doubleSpinBox_pxpermm2->value());
-    mixanSettings.setValue("/sieve_hole_diameters",
-                           lineEdit_sieveHoleDiameters->text());
+    mixanSettings.setValue("/sieves_cell_diameter",
+                           lineEdit_sievesCellDiameter->text());
+    mixanSettings.setValue("/sieves_cell_dimension",
+                           lineEdit_sievesCellDimension->text());
     mixanSettings.setValue("/report_is_read_only",
                            checkBox_reportReadOnly->isChecked());
     mixanSettings.setValue("/show_images_in_report",
@@ -174,8 +178,13 @@ void MainWindow::readProgramSettings() {
     doubleSpinBox_pxpermm2->setValue(
                 mixanSettings.value("/px_per_mm", 0).toDouble()
                 );
-    lineEdit_sieveHoleDiameters->setText(
-                mixanSettings.value("/sieve_hole_diameters", "").toString()
+    lineEdit_sievesCellDiameter->setText(
+                mixanSettings.value("/sieves_cell_diameter",
+                                    "10;5").toString()
+                );
+    lineEdit_sievesCellDimension->setText(
+                mixanSettings.value("/sieves_cell_dimension",
+                                    "2.5;1.25;0.63;0.315;0.14;0.071;0.05").toString()
                 );
     checkBox_reportReadOnly->setChecked(
                 mixanSettings.value("/report_is_read_only", true).toBool()
@@ -208,7 +217,8 @@ void MainWindow::initCalcSettings() {
     calcSettings->setIdealConc(doubleSpinBox_idealConc->value());
     calcSettings->setsizeinmm(checkBox_sizeinmm->isChecked());
     calcSettings->setpxpermm2(doubleSpinBox_pxpermm2->value());
-    calcSettings->setSieveHoleDiameters(lineEdit_sieveHoleDiameters->text());
+    calcSettings->setSievesCellDiameter(lineEdit_sievesCellDiameter->text());
+    calcSettings->setSievesCellDimension(lineEdit_sievesCellDimension->text());
     calcSettings->setShowImgInReport(checkBox_imagesInReport->isChecked());
     calcSettings->
             setCreateTmpImg(checkBox_createTemporaryGraphics->isChecked());
@@ -346,12 +356,12 @@ void MainWindow::sizeinmmChanged(int state) {
     if ( state == 0 ) {
 
         doubleSpinBox_pxpermm2->setEnabled(false);
-        lineEdit_sieveHoleDiameters->setEnabled(false);
+        lineEdit_sievesCellDiameter->setEnabled(false);
     }
     else {
 
         doubleSpinBox_pxpermm2->setEnabled(true);
-        lineEdit_sieveHoleDiameters->setEnabled(true);
+        lineEdit_sievesCellDimension->setEnabled(true);
     }
 }
 

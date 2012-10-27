@@ -23,9 +23,10 @@
 
 #include <QString>
 
-const QString VERSION = "v2.2.4";
+const QString VERSION = "v2.3.0";
 const QString TMPDIR = "mixan_temp";
 
 const ptrdiff_t HISTDIMENSION = 20;
+const double CELLKOEFF = 1.25;
 
 #endif // CONSTANTS_H

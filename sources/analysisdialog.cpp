@@ -462,6 +462,44 @@ void AnalysisDialog::showAnalysisResults() {
                     + ": "
                     + QString::number(settings->val_pxpermm2())
                     );
+
+        if ( settings->val_sievesCellDiameter().isEmpty() ) {
+
+            report->insertHtml(
+                        "<br>* "
+                        + tr("Sieves cell diameter, mm")
+                        + ": "
+                        + tr("no values")
+                        );
+        }
+        else {
+
+            report->insertHtml(
+                        "<br>* "
+                        + tr("Sieves cell diameter, mm")
+                        + ": "
+                        + settings->val_sievesCellDiameter()
+                        );
+        }
+
+        if ( settings->val_sievesCellDimension().isEmpty() ) {
+
+            report->insertHtml(
+                        "<br>* "
+                        + tr("Sieves cell dimension, mm")
+                        + ": "
+                        + tr("no values")
+                        );
+        }
+        else {
+
+            report->insertHtml(
+                        "<br>* "
+                        + tr("Sieves cell dimension, mm")
+                        + ": "
+                        + settings->val_sievesCellDimension()
+                        );
+        }
     }
 
     if ( !thrmsg.isEmpty() ) {
@@ -801,38 +839,66 @@ void AnalysisDialog::showAnalysisResults() {
         //
 
         if ( settings->val_sizeinmm() &&
-             !(settings->val_sieveHoleDiameters().isEmpty()) ) {
+             (!(settings->val_sievesCellDiameter().isEmpty()) ||
+              !(settings->val_sievesCellDimension().isEmpty())) ) {
 
-            QStringList diameters = settings->val_sieveHoleDiameters().
+            QStringList diameters =
+                    settings->val_sievesCellDiameter().
+                    split(";", QString::SkipEmptyParts);
+            QStringList dimensions =
+                    settings->val_sievesCellDimension().
                     split(";", QString::SkipEmptyParts);
 
-            QVector<double> sieveHoles;
-            QVector<double> remainders;
+            QHash<QString, double> cells;
+            QVector<double> sieveCells;
 
-            for ( ptrdiff_t i=0; i<diameters.size(); i++ ) {
+            if ( !diameters.isEmpty() ) {
 
-                sieveHoles.push_back(diameters[i].toDouble());
+                double diam = 0;
+
+                for ( ptrdiff_t i=0; i<diameters.size(); i++ ) {
+
+                    diam = diameters[i].toDouble();
+
+                    cells.insert(diameters[i], diam);
+                    sieveCells.push_back(diam);
+                }
             }
 
-            defRemainders(granules, sieveHoles, remainders);
+            if ( !dimensions.isEmpty() ) {
+
+                double reducedDim = 0;
+
+                for ( ptrdiff_t i=0; i<dimensions.size(); i++ ) {
+
+                    reducedDim = dimensions[i].toDouble() * CELLKOEFF;
+
+                    cells.insert(dimensions[i], reducedDim);
+                    sieveCells.push_back(reducedDim);
+                }
+            }
+
+            QVector<double> partRemainders;
+
+            defPartRemainders(granules, sieveCells, partRemainders);
 
             QString str = "<br><br>"
                     + tr("Remainders on sieves")
                     + ":"
                     + "<table>";
 
-            for ( ptrdiff_t i=(remainders.size()-1); i>=0; i-- ) {
+            for ( ptrdiff_t i=(sieveCells.size()-1); i>=0; i-- ) {
 
                 str += "<tr><td colspan=\"5\">"
                         + tr("Sieve")
                         + "</td><td colspan=\"5\">#"
                         + QString::number(i)
                         + "</td><td>(</td><td align=\"right\">"
-                        + QString::number(sieveHoles[i], 'f', 3)
+                        + cells.key(sieveCells[i])
                         + "<td>"
                         + tr("mm")
                         + "</td><td>)</td><td align=\"right\" colspan=\"10\">"
-                        + QString::number(remainders[i]*100, 'f', 2)
+                        + QString::number(partRemainders[i]*100, 'f', 2)
                         + "</td><td>%</td></tr>";
             }
 
