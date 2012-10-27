@@ -396,6 +396,7 @@
   <tabstop>checkBox_sizeinmm</tabstop>
   <tabstop>doubleSpinBox_pxpermm2</tabstop>
   <tabstop>lineEdit_sievesCellDiameter</tabstop>
+  <tabstop>lineEdit_sievesCellDimension</tabstop>
   <tabstop>checkBox_reportRO</tabstop>
   <tabstop>checkBox_imagesInReport</tabstop>
   <tabstop>checkBox_createTempGraph</tabstop>

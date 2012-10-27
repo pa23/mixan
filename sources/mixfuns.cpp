@@ -98,9 +98,10 @@ size_t defThreshColor(const Material *m1,
     return 0;
 }
 
-void defPartRemainders(const QVector< QSharedPointer<Granules> > &granules,
-                       QVector<double> &sieveCells,
-                       QVector<double> &partRemainders) {
+void defRemainders(const QVector< QSharedPointer<Granules> > &granules,
+                   QVector<double> &sieveCells,
+                   QVector<double> &partRemainders,
+                   QVector<double> &totalRemainders) {
 
     QVector<double> areas = granules[0]->areaValues();
     QVector<double> minosizes = granules[0]->minOverallSizes();
@@ -117,8 +118,12 @@ void defPartRemainders(const QVector< QSharedPointer<Granules> > &granules,
     //
 
     qSort(sieveCells);
+
     partRemainders.clear();
     partRemainders.resize(sieveCells.size());
+
+    totalRemainders.clear();
+    totalRemainders.resize(sieveCells.size());
 
     //
 
@@ -137,5 +142,15 @@ void defPartRemainders(const QVector< QSharedPointer<Granules> > &granules,
     for ( ptrdiff_t i=0; i<partRemainders.size(); i++ ) {
 
         partRemainders[i] /= totalArea;
+    }
+
+    //
+
+    totalRemainders[partRemainders.size()-1] =
+            partRemainders[partRemainders.size()-1];
+
+    for ( ptrdiff_t i=(partRemainders.size()-2); i>=0; i-- ) {
+
+        totalRemainders[i] = totalRemainders[i+1] + partRemainders[i];
     }
 }

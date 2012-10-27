@@ -246,17 +246,27 @@
         <translation>Общее распределение частиц по &quot;компактности&quot; формы</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="886"/>
+        <location filename="../sources/analysisdialog.cpp" line="887"/>
         <source>Remainders on sieves</source>
         <translation>Остатки на ситах</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="893"/>
+        <location filename="../sources/analysisdialog.cpp" line="889"/>
+        <source>Particular</source>
+        <translation>Частный</translation>
+    </message>
+    <message>
+        <location filename="../sources/analysisdialog.cpp" line="891"/>
+        <source>Total</source>
+        <translation>Полный</translation>
+    </message>
+    <message>
+        <location filename="../sources/analysisdialog.cpp" line="897"/>
         <source>Sieve</source>
         <translation>Сито</translation>
     </message>
     <message>
-        <location filename="../sources/analysisdialog.cpp" line="899"/>
+        <location filename="../sources/analysisdialog.cpp" line="903"/>
         <source>mm</source>
         <translation>мм</translation>
     </message>

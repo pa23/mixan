@@ -34,8 +34,9 @@ size_t defThreshColor(const Material *,
                       const Material *,
                       const double &);
 
-void defPartRemainders(const QVector< QSharedPointer<Granules> > &,
-                       QVector<double> &,
-                       QVector<double> &);
+void defRemainders(const QVector< QSharedPointer<Granules> > &,
+                   QVector<double> &,
+                   QVector<double> &,
+                   QVector<double> &);
 
 #endif // MIXFUNS_H

@@ -879,13 +879,17 @@ void AnalysisDialog::showAnalysisResults() {
             }
 
             QVector<double> partRemainders;
+            QVector<double> totalRemainders;
 
-            defPartRemainders(granules, sieveCells, partRemainders);
+            defRemainders(granules, sieveCells, partRemainders, totalRemainders);
 
             QString str = "<br><br>"
                     + tr("Remainders on sieves")
-                    + ":"
-                    + "<table>";
+                    + "<table><tr><td align=\"right\" colspan=\"25\">"
+                    + tr("Particular")
+                    + "</td><td align=\"right\" colspan=\"11\">"
+                    + tr("Total")
+                    +"</td></tr>";
 
             for ( ptrdiff_t i=(sieveCells.size()-1); i>=0; i-- ) {
 
@@ -899,6 +903,9 @@ void AnalysisDialog::showAnalysisResults() {
                         + tr("mm")
                         + "</td><td>)</td><td align=\"right\" colspan=\"10\">"
                         + QString::number(partRemainders[i]*100, 'f', 2)
+                        + "</td><td>%</td>"
+                        + "<td align=\"right\" colspan=\"10\">"
+                        + QString::number(totalRemainders[i]*100, 'f', 2)
                         + "</td><td>%</td></tr>";
             }
 
