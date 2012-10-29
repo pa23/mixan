@@ -325,7 +325,11 @@ void AnalysisDialog::on_pushButton_run_clicked() {
         return;
     }
 
-    if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ) {
+    if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MATERIALS ) {
+
+        showAnalysisResults();
+    }
+    else if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ) {
 
         probes.clear();
 
@@ -891,7 +895,11 @@ void AnalysisDialog::showAnalysisResults() {
                     + tr("Total")
                     +"</td></tr>";
 
+            ptrdiff_t i_fm = 0;
+
             for ( ptrdiff_t i=(sieveCells.size()-1); i>=0; i-- ) {
+
+                if ( cells.key(sieveCells[i]) == "2.5" ) { i_fm = i; }
 
                 str += "<tr><td colspan=\"5\">"
                         + tr("Sieve")
@@ -912,6 +920,30 @@ void AnalysisDialog::showAnalysisResults() {
             str += "</table>";
 
             report->insertHtml(str);
+
+            //
+
+            if ( cells.contains("2.5") &&
+                 cells.contains("1.25") &&
+                 cells.contains("0.63") &&
+                 cells.contains("0.315") &&
+                 (cells.contains("0.14") || cells.contains("0.16")) ) {
+
+                double summFullRem = 0;
+
+                for ( ptrdiff_t i=i_fm; i>(i_fm-5); i-- ) {
+
+                    summFullRem += totalRemainders[i]*100;
+                }
+
+                report->insertHtml(
+                            "<br><br>"
+                            + tr("Fineness modulus")
+                            + ": <b>"
+                            + QString::number(summFullRem/100, 'f', 3)
+                            + "</b>"
+                            );
+            }
         }
 
         //
