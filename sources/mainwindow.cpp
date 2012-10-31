@@ -357,10 +357,12 @@ void MainWindow::sizeinmmChanged(int state) {
 
         doubleSpinBox_pxpermm2->setEnabled(false);
         lineEdit_sievesCellDiameter->setEnabled(false);
+        lineEdit_sievesCellDimension->setEnabled(false);
     }
     else {
 
         doubleSpinBox_pxpermm2->setEnabled(true);
+        lineEdit_sievesCellDiameter->setEnabled(true);
         lineEdit_sievesCellDimension->setEnabled(true);
     }
 }
