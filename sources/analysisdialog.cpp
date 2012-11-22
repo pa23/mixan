@@ -109,6 +109,8 @@ AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
     ui->setupUi(this);
     progressDialog->setWindowTitle("mixan: progress");
 
+    //
+
     connect(futureWatcher.data(),
             SIGNAL(finished()),
             this,

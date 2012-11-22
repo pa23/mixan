@@ -49,54 +49,6 @@ MainWindow::MainWindow(QWidget *parent) :
     settingsDialog(QSharedPointer<SettingsDialog>(new SettingsDialog())),
     analysisDialog(QSharedPointer<AnalysisDialog>
                    (new AnalysisDialog(ui->textBrowser_report, calcSettings))),
-    spinBox_polyPower(
-        settingsDialog->
-        findChild<QSpinBox *>("spinBox_polyPower")
-        ),
-    doubleSpinBox_intersectAccur(
-        settingsDialog->
-        findChild<QDoubleSpinBox *>("doubleSpinBox_intersectAccur")
-        ),
-    doubleSpinBox_idealConc(
-        settingsDialog->
-        findChild<QDoubleSpinBox *>("doubleSpinBox_idealConc")
-        ),
-    checkBox_sizeinmm(
-        settingsDialog->
-        findChild<QCheckBox *>("checkBox_sizeinmm")
-        ),
-    doubleSpinBox_pxpermm2(
-        settingsDialog->
-        findChild<QDoubleSpinBox *>("doubleSpinBox_pxpermm2")
-        ),
-    lineEdit_sievesCellDiameter(
-        settingsDialog->
-        findChild<QLineEdit *>("lineEdit_sievesCellDiameter")
-        ),
-    lineEdit_sievesCellDimension(
-        settingsDialog->
-        findChild<QLineEdit *>("lineEdit_sievesCellDimension")
-        ),
-    checkBox_reportReadOnly(
-        settingsDialog->
-        findChild<QCheckBox *>("checkBox_reportRO")
-        ),
-    checkBox_imagesInReport(
-        settingsDialog->
-        findChild<QCheckBox *>("checkBox_imagesInReport")
-        ),
-    checkBox_createTemporaryGraphics(
-        settingsDialog->
-        findChild<QCheckBox *>("checkBox_createTempGraph")
-        ),
-    spinBox_imgWidth(
-        settingsDialog->
-        findChild<QSpinBox *>("spinBox_imgWidth")
-        ),
-    comboBox_analysisType(
-        analysisDialog->
-        findChild<QComboBox *>("comboBox_analysisType")
-        ),
     reportCaption(
         "<br><b>mixan "
         + VERSION
@@ -113,6 +65,33 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->textBrowser_report->setUndoRedoEnabled(false);
     ui->textBrowser_report->setHtml(reportCaption);
+
+    //
+
+    spinBox_polyPower = settingsDialog->
+            findChild<QSpinBox *>("spinBox_polyPower");
+    doubleSpinBox_intersectAccur = settingsDialog->
+            findChild<QDoubleSpinBox *>("doubleSpinBox_intersectAccur");
+    doubleSpinBox_idealConc = settingsDialog->
+            findChild<QDoubleSpinBox *>("doubleSpinBox_idealConc");
+    checkBox_sizeinmm = settingsDialog->
+            findChild<QCheckBox *>("checkBox_sizeinmm");
+    doubleSpinBox_pxpermm2 = settingsDialog->
+            findChild<QDoubleSpinBox *>("doubleSpinBox_pxpermm2");
+    lineEdit_sievesCellDiameter = settingsDialog->
+            findChild<QLineEdit *>("lineEdit_sievesCellDiameter");
+    lineEdit_sievesCellDimension = settingsDialog->
+            findChild<QLineEdit *>("lineEdit_sievesCellDimension");
+    checkBox_reportReadOnly = settingsDialog->
+            findChild<QCheckBox *>("checkBox_reportRO");
+    checkBox_imagesInReport = settingsDialog->
+            findChild<QCheckBox *>("checkBox_imagesInReport");
+    checkBox_createTemporaryGraphics = settingsDialog->
+            findChild<QCheckBox *>("checkBox_createTempGraph");
+    spinBox_imgWidth = settingsDialog->
+            findChild<QSpinBox *>("spinBox_imgWidth");
+    comboBox_analysisType = analysisDialog->
+            findChild<QComboBox *>("comboBox_analysisType");
 
     //
 
