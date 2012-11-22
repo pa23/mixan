@@ -99,15 +99,22 @@ AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
     report(txtbrowser),
     settings(sts),
     filters("Images (*.png *.jpg *.jpeg *.bmp);;All files (*.*)"),
-    material1(QSharedPointer<Material>(new Material())),
-    material2(QSharedPointer<Material>(new Material())),
-    progressDialog(QSharedPointer<QProgressDialog>(new QProgressDialog())),
-    futureWatcher(QSharedPointer< QFutureWatcher<void> >
-                  (new QFutureWatcher<void>)),
     tempPath(QDir::homePath() + QDir::separator() + TMPDIR + QDir::separator()) {
 
     ui->setupUi(this);
+
+    //
+
+    material1 = QSharedPointer<Material>(new Material());
+    material2 = QSharedPointer<Material>(new Material());
+
+    //
+
+    progressDialog = QSharedPointer<QProgressDialog>(new QProgressDialog());
     progressDialog->setWindowTitle("mixan: progress");
+
+    futureWatcher = QSharedPointer< QFutureWatcher<void> >
+            (new QFutureWatcher<void>);
 
     //
 
@@ -314,6 +321,7 @@ void AnalysisDialog::on_pushButton_run_clicked() {
     catch(const MixanError &mixerr) {
 
         thrmsg += mixerr.mixanErrMsg() + "\n";
+        showAnalysisResults();
         return;
     }
 

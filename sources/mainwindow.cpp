@@ -46,17 +46,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     mixanSettings("pa23software", "mixan"),
-    settingsDialog(QSharedPointer<SettingsDialog>(new SettingsDialog())),
-    analysisDialog(QSharedPointer<AnalysisDialog>
-                   (new AnalysisDialog(ui->textBrowser_report, calcSettings))),
     reportCaption(
         "<br><b>mixan "
         + VERSION
         + "</b><br>"
         + tr("Analysis of granular material mixes and emulsions.")
         + "<br><hr><br>"
-        ),
-    calcSettings(QSharedPointer<Settings>(new Settings())) {
+        ) {
 
     ui->setupUi(this);
     setWindowTitle("mixan " + VERSION);
@@ -67,6 +63,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textBrowser_report->setHtml(reportCaption);
 
     //
+
+    calcSettings = QSharedPointer<Settings>(new Settings());
+
+    //
+
+    settingsDialog = QSharedPointer<SettingsDialog>(new SettingsDialog());
+    analysisDialog = QSharedPointer<AnalysisDialog>
+            (new AnalysisDialog(ui->textBrowser_report, calcSettings));
 
     spinBox_polyPower = settingsDialog->
             findChild<QSpinBox *>("spinBox_polyPower");

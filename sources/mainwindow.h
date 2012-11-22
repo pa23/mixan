@@ -72,6 +72,8 @@ private:
 
     QSettings mixanSettings;
 
+    QSharedPointer<Settings> calcSettings;
+
     QSharedPointer<SettingsDialog> settingsDialog;
     QSharedPointer<AnalysisDialog> analysisDialog;
 
@@ -89,8 +91,6 @@ private:
     QComboBox *comboBox_analysisType;
 
     QString reportCaption;
-
-    QSharedPointer<Settings> calcSettings;
 
     void writeProgramSettings();
     void readProgramSettings();
