@@ -47,9 +47,9 @@ void createHistograms(QVector<QImage> &,
                       const QVector< QSharedPointer<Granules> > &,
                       const QSharedPointer<Settings> &,
                       const QString &,
-                      double &,
-                      double &,
-                      double &,
-                      double &);
+                      double,
+                      double,
+                      double,
+                      double);
 
 #endif // GRAPHICS_H

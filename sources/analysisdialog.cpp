@@ -66,7 +66,7 @@ void runMixAnalysis(ptrdiff_t &iter) {
         probe->analyze();
         tmp_probes->push_back(probe);
     }
-    catch(MixanError &mixerr) {
+    catch(const MixanError &mixerr) {
 
         *tmp_thrmsg += mixerr.mixanErrMsg() + "\n";
     }
@@ -85,7 +85,7 @@ void runGranulationAnalysis(ptrdiff_t &iter) {
         grans->analyze();
         tmp_granules->push_back(grans);
     }
-    catch(MixanError &mixerr) {
+    catch(const MixanError &mixerr) {
 
         *tmp_thrmsg += mixerr.mixanErrMsg() + "\n";
     }
@@ -95,27 +95,19 @@ AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
                                const QSharedPointer<Settings> &sts,
                                QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::AnalysisDialog) {
+    ui(new Ui::AnalysisDialog),
+    report(txtbrowser),
+    settings(sts),
+    filters("Images (*.png *.jpg *.jpeg *.bmp);;All files (*.*)"),
+    material1(QSharedPointer<Material>(new Material())),
+    material2(QSharedPointer<Material>(new Material())),
+    progressDialog(QSharedPointer<QProgressDialog>(new QProgressDialog())),
+    futureWatcher(QSharedPointer< QFutureWatcher<void> >
+                  (new QFutureWatcher<void>)),
+    tempPath(QDir::homePath() + QDir::separator() + TMPDIR + QDir::separator()) {
 
     ui->setupUi(this);
-
-    report = txtbrowser;
-    settings = sts;
-
-    filters = "Images (*.png *.jpg *.jpeg *.bmp);;All files (*.*)";
-
-    //
-
-    material1 = QSharedPointer<Material>(new Material());
-    material2 = QSharedPointer<Material>(new Material());
-
-    //
-
-    progressDialog = QSharedPointer<QProgressDialog>(new QProgressDialog());
     progressDialog->setWindowTitle("mixan: progress");
-
-    futureWatcher = QSharedPointer< QFutureWatcher<void> >
-            (new QFutureWatcher<void>);
 
     connect(futureWatcher.data(),
             SIGNAL(finished()),
@@ -143,14 +135,6 @@ AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
             progressDialog.data(),
             SLOT(setValue(int))
             );
-
-    tempPath = QDir::homePath()
-            + QDir::separator()
-            + TMPDIR
-            + QDir::separator();
-
-    lastCalcDateTime = "";
-    lastImgDir = "";
 
     //
 
@@ -182,27 +166,29 @@ void AnalysisDialog::on_comboBox_analysisType_currentIndexChanged(int index) {
 
 void AnalysisDialog::on_pushButton_selectMat1_clicked() {
 
-    QString mat1ImageFileName = "";
+    QString mat1ImageFileName;
 
     if ( !lastImgDir.isEmpty() ) {
 
-        mat1ImageFileName =
-                QFileDialog::getOpenFileName( this,
-                                              tr("Select image file..."),
-                                              lastImgDir,
-                                              filters,
-                                              0,
-                                              0 );
+        mat1ImageFileName = QFileDialog::getOpenFileName(
+                    this,
+                    tr("Select image file..."),
+                    lastImgDir,
+                    filters,
+                    0,
+                    0
+                    );
     }
     else {
 
-        mat1ImageFileName =
-                QFileDialog::getOpenFileName( this,
-                                              tr("Select image file..."),
-                                              QDir::currentPath(),
-                                              filters,
-                                              0,
-                                              0 );
+        mat1ImageFileName = QFileDialog::getOpenFileName(
+                    this,
+                    tr("Select image file..."),
+                    QDir::currentPath(),
+                    filters,
+                    0,
+                    0
+                    );
     }
 
     if ( !mat1ImageFileName.isEmpty() ) {
@@ -216,27 +202,29 @@ void AnalysisDialog::on_pushButton_selectMat1_clicked() {
 
 void AnalysisDialog::on_pushButton_selectMat2_clicked() {
 
-    QString mat2ImageFileName = "";
+    QString mat2ImageFileName;
 
     if ( !lastImgDir.isEmpty() ) {
 
-        mat2ImageFileName =
-                QFileDialog::getOpenFileName( this,
-                                              tr("Select image file..."),
-                                              lastImgDir,
-                                              filters,
-                                              0,
-                                              0 );
+        mat2ImageFileName = QFileDialog::getOpenFileName(
+                    this,
+                    tr("Select image file..."),
+                    lastImgDir,
+                    filters,
+                    0,
+                    0
+                    );
     }
     else {
 
-        mat2ImageFileName =
-                QFileDialog::getOpenFileName( this,
-                                              tr("Select image file..."),
-                                              QDir::currentPath(),
-                                              filters,
-                                              0,
-                                              0 );
+        mat2ImageFileName = QFileDialog::getOpenFileName(
+                    this,
+                    tr("Select image file..."),
+                    QDir::currentPath(),
+                    filters,
+                    0,
+                    0
+                    );
     }
 
     if ( !mat2ImageFileName.isEmpty() ) {
@@ -254,23 +242,25 @@ void AnalysisDialog::on_pushButton_selectProbes_clicked() {
 
     if ( !lastImgDir.isEmpty() ) {
 
-        mixImageFileNames =
-                QFileDialog::getOpenFileNames( this,
-                                               tr("Select image files..."),
-                                               lastImgDir,
-                                               filters,
-                                               0,
-                                               0 );
+        mixImageFileNames = QFileDialog::getOpenFileNames(
+                    this,
+                    tr("Select image files..."),
+                    lastImgDir,
+                    filters,
+                    0,
+                    0
+                    );
     }
     else {
 
-        mixImageFileNames =
-                QFileDialog::getOpenFileNames( this,
-                                               tr("Select image files..."),
-                                               QDir::currentPath(),
-                                               filters,
-                                               0,
-                                               0 );
+        mixImageFileNames = QFileDialog::getOpenFileNames(
+                    this,
+                    tr("Select image files..."),
+                    QDir::currentPath(),
+                    filters,
+                    0,
+                    0
+                    );
     }
 
     ui->listWidget_probesFileNames->clear();
@@ -319,7 +309,7 @@ void AnalysisDialog::on_pushButton_run_clicked() {
         material1->analyze(ui->lineEdit_mat1FileName->text(), settings.data());
         material2->analyze(ui->lineEdit_mat2FileName->text(), settings.data());
     }
-    catch(MixanError &mixerr) {
+    catch(const MixanError &mixerr) {
 
         thrmsg += mixerr.mixanErrMsg() + "\n";
         return;
@@ -457,8 +447,8 @@ void AnalysisDialog::showAnalysisResults() {
                     + QString::number(settings->val_idealConc())
                     );
     }
-
-    if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_GRANULATION ) {
+    else if ( ui->comboBox_analysisType->currentIndex() ==
+              ANALTYPE_GRANULATION ) {
 
         report->insertHtml(
                     "<br>* "

@@ -38,8 +38,8 @@ public:
     void setIdealConc(double);
     void setsizeinmm(bool);
     void setpxpermm2(double);
-    void setSievesCellDiameter(QString);
-    void setSievesCellDimension(QString);
+    void setSievesCellDiameter(const QString &);
+    void setSievesCellDimension(const QString &);
     void setShowImgInReport(bool);
     void setCreateTmpImg(bool);
     void setImgWidth(ptrdiff_t);

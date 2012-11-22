@@ -27,7 +27,7 @@ class MixanError {
 
 public:
 
-    explicit MixanError(QString);
+    explicit MixanError(const QString &);
     QString mixanErrMsg() const;
 
 private:

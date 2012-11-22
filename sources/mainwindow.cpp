@@ -45,58 +45,76 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    mixanSettings("pa23software", "mixan") {
+    mixanSettings("pa23software", "mixan"),
+    settingsDialog(QSharedPointer<SettingsDialog>(new SettingsDialog())),
+    analysisDialog(QSharedPointer<AnalysisDialog>
+                   (new AnalysisDialog(ui->textBrowser_report, calcSettings))),
+    spinBox_polyPower(
+        settingsDialog->
+        findChild<QSpinBox *>("spinBox_polyPower")
+        ),
+    doubleSpinBox_intersectAccur(
+        settingsDialog->
+        findChild<QDoubleSpinBox *>("doubleSpinBox_intersectAccur")
+        ),
+    doubleSpinBox_idealConc(
+        settingsDialog->
+        findChild<QDoubleSpinBox *>("doubleSpinBox_idealConc")
+        ),
+    checkBox_sizeinmm(
+        settingsDialog->
+        findChild<QCheckBox *>("checkBox_sizeinmm")
+        ),
+    doubleSpinBox_pxpermm2(
+        settingsDialog->
+        findChild<QDoubleSpinBox *>("doubleSpinBox_pxpermm2")
+        ),
+    lineEdit_sievesCellDiameter(
+        settingsDialog->
+        findChild<QLineEdit *>("lineEdit_sievesCellDiameter")
+        ),
+    lineEdit_sievesCellDimension(
+        settingsDialog->
+        findChild<QLineEdit *>("lineEdit_sievesCellDimension")
+        ),
+    checkBox_reportReadOnly(
+        settingsDialog->
+        findChild<QCheckBox *>("checkBox_reportRO")
+        ),
+    checkBox_imagesInReport(
+        settingsDialog->
+        findChild<QCheckBox *>("checkBox_imagesInReport")
+        ),
+    checkBox_createTemporaryGraphics(
+        settingsDialog->
+        findChild<QCheckBox *>("checkBox_createTempGraph")
+        ),
+    spinBox_imgWidth(
+        settingsDialog->
+        findChild<QSpinBox *>("spinBox_imgWidth")
+        ),
+    comboBox_analysisType(
+        analysisDialog->
+        findChild<QComboBox *>("comboBox_analysisType")
+        ),
+    reportCaption(
+        "<br><b>mixan "
+        + VERSION
+        + "</b><br>"
+        + tr("Analysis of granular material mixes and emulsions.")
+        + "<br><hr><br>"
+        ),
+    calcSettings(QSharedPointer<Settings>(new Settings())) {
 
     ui->setupUi(this);
-
     setWindowTitle("mixan " + VERSION);
 
     //
-
-    reportCaption = "<br><b>mixan "
-            + VERSION
-            + "</b><br>"
-            + tr("Analysis of granular material mixes and emulsions.")
-            + "<br><hr><br>";
 
     ui->textBrowser_report->setUndoRedoEnabled(false);
     ui->textBrowser_report->setHtml(reportCaption);
 
     //
-
-    calcSettings = QSharedPointer<Settings>(new Settings());
-
-    settingsDialog = QSharedPointer<SettingsDialog>(new SettingsDialog());
-
-    analysisDialog = QSharedPointer<AnalysisDialog>
-            (new AnalysisDialog(ui->textBrowser_report, calcSettings));
-
-    //
-
-    spinBox_polyPower = settingsDialog->
-            findChild<QSpinBox *>("spinBox_polyPower");
-    doubleSpinBox_intersectAccur = settingsDialog->
-            findChild<QDoubleSpinBox *>("doubleSpinBox_intersectAccur");
-    doubleSpinBox_idealConc = settingsDialog->
-            findChild<QDoubleSpinBox *>("doubleSpinBox_idealConc");
-    checkBox_sizeinmm = settingsDialog->
-            findChild<QCheckBox *>("checkBox_sizeinmm");
-    doubleSpinBox_pxpermm2 = settingsDialog->
-            findChild<QDoubleSpinBox *>("doubleSpinBox_pxpermm2");
-    lineEdit_sievesCellDiameter = settingsDialog->
-            findChild<QLineEdit *>("lineEdit_sievesCellDiameter");
-    lineEdit_sievesCellDimension = settingsDialog->
-            findChild<QLineEdit *>("lineEdit_sievesCellDimension");
-    checkBox_reportReadOnly = settingsDialog->
-            findChild<QCheckBox *>("checkBox_reportRO");
-    checkBox_imagesInReport = settingsDialog->
-            findChild<QCheckBox *>("checkBox_imagesInReport");
-    checkBox_createTemporaryGraphics = settingsDialog->
-            findChild<QCheckBox *>("checkBox_createTempGraph");
-    spinBox_imgWidth = settingsDialog->
-            findChild<QSpinBox *>("spinBox_imgWidth");
-    comboBox_analysisType = analysisDialog->
-            findChild<QComboBox *>("comboBox_analysisType");
 
     connect(checkBox_reportReadOnly,
             SIGNAL(stateChanged(int)),

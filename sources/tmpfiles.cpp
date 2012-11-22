@@ -105,11 +105,14 @@ const QString *tmp_path_tf = 0;
 
 void realSavingImages(ptrdiff_t &iter) {
 
-    if ( !tmp_granules_tf->at(iter)->resImage().save(*tmp_path_tf
-                                                     + QDir::separator()
-                                                     + "granules_image_"
-                                                     + QString::number(iter)
-                                                     + ".png") ) {
+    if ( !tmp_granules_tf->at(iter)->resImage().save(
+             *tmp_path_tf
+             + QDir::separator()
+             + "granules_image_"
+             + QString::number(iter)
+             + ".png"
+             )
+         ) {
 
         QMessageBox::warning(
                     0,

@@ -43,7 +43,7 @@ Material::~Material() {
 
 void Material::analyze(const QString &imgFileName, const Settings *settings) {
 
-    fileName = "";
+    fileName.clear();
 
     histogram.clear();
     histogram.resize(256);
@@ -58,7 +58,8 @@ void Material::analyze(const QString &imgFileName, const Settings *settings) {
                     QObject::tr("Can not load image")
                     + " "
                     + imgFileName
-                    + "!\n");
+                    + "!\n"
+                    );
     }
 
     try {
@@ -66,7 +67,7 @@ void Material::analyze(const QString &imgFileName, const Settings *settings) {
         defHistogram();
         defThreshColor();
     }
-    catch(MixanError &mixerr) {
+    catch(const MixanError &mixerr) {
 
         throw;
     }
@@ -133,7 +134,7 @@ void Material::defThreshColor() {
 
         polyCoeff = polyapprox(x, histogram, polynomPower);
     }
-    catch(MixanError &mixerr) {
+    catch(const MixanError &mixerr) {
 
         throw;
     }

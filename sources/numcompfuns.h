@@ -25,7 +25,7 @@
 
 QVector<double> polyapprox(const QVector<double> &,  // x
                            const QVector<double> &,  // y
-                           const ptrdiff_t &);       // polyPower
+                           ptrdiff_t);               // polyPower
 
 // size of x must be equal of size y
 

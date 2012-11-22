@@ -25,7 +25,7 @@
 #include <cmath>
 
 double Vc(const QVector<double> &concentrations,
-          const double &idealconc) {
+          double idealconc) {
 
     double summ_concdiff = 0;
     size_t probesnum = concentrations.size();
@@ -41,7 +41,7 @@ double Vc(const QVector<double> &concentrations,
 
 size_t defThreshColor(const Material *m1,
                       const Material *m2,
-                      const double &intersectaccur) {
+                      double intersectaccur) {
 
     const Material *mat1;
     const Material *mat2;

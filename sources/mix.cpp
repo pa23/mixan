@@ -28,15 +28,12 @@
 #include <QObject>
 
 Mix::Mix(const QString &imgFileName,
-         const size_t &threshCol,
+         size_t threshCol,
          const Settings *set) :
-    threshColor(0),
-    settings(0),
+    fileName(imgFileName),
+    threshColor(threshCol),
+    settings(set),
     conc(0) {
-
-    fileName = imgFileName;
-    threshColor = threshCol;
-    settings = set;
 }
 
 Mix::~Mix() {
@@ -58,7 +55,7 @@ void Mix::analyze() {
 
         defConc();
     }
-    catch(MixanError &mixerr) {
+    catch(const MixanError &mixerr) {
 
         throw;
     }

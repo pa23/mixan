@@ -56,12 +56,12 @@ void Settings::setpxpermm2(double pxmm) {
     pxpermm2 = pxmm;
 }
 
-void Settings::setSievesCellDiameter(QString d) {
+void Settings::setSievesCellDiameter(const QString &d) {
 
     sievesCellDiameter = d;
 }
 
-void Settings::setSievesCellDimension(QString d) {
+void Settings::setSievesCellDimension(const QString &d) {
 
     sievesCellDimension = d;
 }

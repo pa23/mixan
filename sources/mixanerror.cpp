@@ -20,7 +20,7 @@
 
 #include "mixanerror.h"
 
-MixanError::MixanError(QString errStr) {
+MixanError::MixanError(const QString &errStr) {
 
     errMsg = errStr;
 }

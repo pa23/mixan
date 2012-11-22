@@ -28,7 +28,7 @@
 
 QVector<double> polyapprox(const QVector<double> &x,
                            const QVector<double> &y,
-                           const ptrdiff_t &K) {      // polynom power
+                           ptrdiff_t K) {             // polynom power
 
     ptrdiff_t N = x.size();
 
@@ -66,7 +66,7 @@ QVector<double> polyapprox(const QVector<double> &x,
 
             for ( ptrdiff_t k=0; k<N; k++ ) {
 
-                sums[i][j] += pow( x[k], i+j );
+                sums[i][j] += pow(x[k], i+j);
             }
         }
     }
@@ -77,7 +77,7 @@ QVector<double> polyapprox(const QVector<double> &x,
 
         for ( ptrdiff_t k=0; k<N; k++ ) {
 
-            b[i] += pow( x[k], i ) * y[k];
+            b[i] += pow(x[k], i) * y[k];
         }
     }
 

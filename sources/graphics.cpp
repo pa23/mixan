@@ -52,10 +52,10 @@ void createGraphics(QVector<QImage> &graphics,
     //
 
     QwtText xAxisTitle(QObject::tr("gray color"));
-    xAxisTitle.setFont(QFont("Liberation Sans", 12));
+    xAxisTitle.setFont(QFont("DejaVu Sans", 12));
 
     QwtText yAxisTitle("n_i / N");
-    yAxisTitle.setFont(QFont("Liberation Sans", 12));
+    yAxisTitle.setFont(QFont("DejaVu Sans", 12));
 
     //
 
@@ -230,10 +230,10 @@ void createHistograms(QVector<QImage> &histograms,
                       const QVector< QSharedPointer<Granules> > &granules,
                       const QSharedPointer<Settings> &settings,
                       const QString &path,
-                      double &minArea,
-                      double &maxArea,
-                      double &meanArea,
-                      double &meanCompact) {
+                      double minArea,
+                      double maxArea,
+                      double meanArea,
+                      double meanCompact) {
 
     histograms.clear();
 
@@ -278,8 +278,6 @@ void createHistograms(QVector<QImage> &histograms,
 
         meanArea += areas[i];
         meanCompact += compacts[i];
-
-        //
 
         //
 
@@ -467,10 +465,10 @@ void createHistograms(QVector<QImage> &histograms,
     //
 
     QwtText xAxisTitle2(QObject::tr("Granule circularity"));
-    xAxisTitle2.setFont(QFont("Liberation Sans", 12));
+    xAxisTitle2.setFont(QFont("DejaVu Sans", 12));
 
     QwtText yAxisTitle2("n_i / N");
-    yAxisTitle2.setFont(QFont("Liberation Sans", 12));
+    yAxisTitle2.setFont(QFont("DejaVu Sans", 12));
 
     QSharedPointer<QwtPlot> histogram2(new QwtPlot());
     histogram2->setPalette(QPalette(QColor(Qt::white)));

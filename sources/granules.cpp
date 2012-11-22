@@ -32,17 +32,13 @@
 #include <cmath>
 
 Granules::Granules(const QString &fileName,
-                   const size_t &lim1,
-                   const size_t &lim2,
+                   size_t lim1,
+                   size_t lim2,
                    const Settings *set) :
-    limCol1(0),
-    limCol2(0),
-    settings(0) {
-
-    imgFileName = fileName;
-    limCol1 = lim1;
-    limCol2 = lim2;
-    settings = set;
+    imgFileName(fileName),
+    limCol1(lim1),
+    limCol2(lim2),
+    settings(set) {
 }
 
 Granules::~Granules() {
@@ -54,7 +50,7 @@ void Granules::analyze() {
 
         findAreas();
     }
-    catch(MixanError &mixerr) {
+    catch(const MixanError &mixerr) {
 
         throw;
     }
@@ -207,7 +203,7 @@ void Granules::findAreas() {
 
             IplImage2QImage(dstImage);
         }
-        catch (MixanError &mixerr) {
+        catch (const MixanError &mixerr) {
 
             cvReleaseImage(&origImage);
             cvReleaseImage(&grayImage);
