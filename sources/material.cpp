@@ -62,15 +62,8 @@ void Material::analyze(const QString &imgFileName, const Settings *settings) {
                     );
     }
 
-    try {
-
-        defHistogram();
-        defThreshColor();
-    }
-    catch(const MixanError &mixerr) {
-
-        throw;
-    }
+    defHistogram();
+    defThreshColor();
 
     fileName = imgFileName;
 
@@ -129,15 +122,7 @@ void Material::defThreshColor() {
     //
 
     QVector<double> polyCoeff;
-
-    try {
-
-        polyCoeff = polyapprox(x, histogram, polynomPower);
-    }
-    catch(const MixanError &mixerr) {
-
-        throw;
-    }
+    polyCoeff = polyapprox(x, histogram, polynomPower);
 
     //
 

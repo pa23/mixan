@@ -51,14 +51,7 @@ void Mix::analyze() {
                     );
     }
 
-    try {
-
-        defConc();
-    }
-    catch(const MixanError &mixerr) {
-
-        throw;
-    }
+    defConc();
 
     if ( !settings->val_showImgInReport() && !settings->val_createTmpImg() ) {
 

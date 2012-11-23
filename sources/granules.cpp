@@ -46,14 +46,7 @@ Granules::~Granules() {
 
 void Granules::analyze() {
 
-    try {
-
-        findAreas();
-    }
-    catch(const MixanError &mixerr) {
-
-        throw;
-    }
+    findAreas();
 }
 
 ptrdiff_t Granules::partNumber() const {
