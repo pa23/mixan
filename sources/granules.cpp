@@ -32,8 +32,8 @@
 #include <cmath>
 
 Granules::Granules(const QString &fileName,
-                   size_t lim1,
-                   size_t lim2,
+                   const size_t lim1,
+                   const size_t lim2,
                    const Settings *set) :
     imgFileName(fileName),
     limCol1(lim1),
@@ -142,8 +142,8 @@ void Granules::findAreas() {
     double comp = 0;
 
     CvBox2D rect;
-    double pxpermm2 = settings->val_pxpermm2();
-    double pxpermm = sqrt(pxpermm2);
+    const double pxpermm2 = settings->val_pxpermm2();
+    const double pxpermm = sqrt(pxpermm2);
 
     for ( CvSeq *seq = contours; seq != 0; seq = seq->h_next ) {
 
@@ -226,8 +226,8 @@ void Granules::IplImage2QImage(const IplImage *iplImg) {
 
     /* http://www.developer.nokia.com/Community/Wiki/Using_OpenCV_with_Qt */
 
-    ptrdiff_t height = iplImg->height;
-    ptrdiff_t width = iplImg->width;
+    const ptrdiff_t height = iplImg->height;
+    const ptrdiff_t width = iplImg->width;
 
     if ( iplImg->depth == IPL_DEPTH_8U && iplImg->nChannels == 3 ) {
 

@@ -21,11 +21,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include <iostream>
-
 #include <QString>
-
-using std::ptrdiff_t;
 
 class Settings {
 
@@ -33,16 +29,16 @@ public:
 
     Settings();
 
-    void setPolyPwr(ptrdiff_t);
-    void setThrAccur(double);
-    void setIdealConc(double);
-    void setsizeinmm(bool);
-    void setpxpermm2(double);
+    void setPolyPwr(const ptrdiff_t);
+    void setThrAccur(const double);
+    void setIdealConc(const double);
+    void setsizeinmm(const bool);
+    void setpxpermm2(const double);
     void setSievesCellDiameter(const QString &);
     void setSievesCellDimension(const QString &);
-    void setShowImgInReport(bool);
-    void setCreateTmpImg(bool);
-    void setImgWidth(ptrdiff_t);
+    void setShowImgInReport(const bool);
+    void setCreateTmpImg(const bool);
+    void setImgWidth(const ptrdiff_t);
 
     ptrdiff_t val_polyPwr()             const { return polyPwr;             }
     double    val_thrAccur()            const { return thrAccur;            }

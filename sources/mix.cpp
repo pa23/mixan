@@ -28,7 +28,7 @@
 #include <QObject>
 
 Mix::Mix(const QString &imgFileName,
-         size_t threshCol,
+         const size_t threshCol,
          const Settings *set) :
     fileName(imgFileName),
     threshColor(threshCol),

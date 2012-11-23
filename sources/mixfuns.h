@@ -28,11 +28,11 @@
 #include "granules.h"
 
 double Vc(const QVector<double> &,
-          double);
+          const double);
 
 size_t defThreshColor(const Material *,
                       const Material *,
-                      double);
+                      const double);
 
 void defRemainders(const QVector< QSharedPointer<Granules> > &,
                    QVector<double> &,

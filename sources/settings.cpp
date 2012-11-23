@@ -31,27 +31,27 @@ Settings::Settings() :
     imgWidth (0) {
 }
 
-void Settings::setPolyPwr(ptrdiff_t pp) {
+void Settings::setPolyPwr(const ptrdiff_t pp) {
 
     polyPwr = pp;
 }
 
-void Settings::setThrAccur(double ta) {
+void Settings::setThrAccur(const double ta) {
 
     thrAccur = ta;
 }
 
-void Settings::setIdealConc(double ic) {
+void Settings::setIdealConc(const double ic) {
 
     idealConc = ic;
 }
 
-void Settings::setsizeinmm(bool sizemm) {
+void Settings::setsizeinmm(const bool sizemm) {
 
     sizeinmm = sizemm;
 }
 
-void Settings::setpxpermm2(double pxmm) {
+void Settings::setpxpermm2(const double pxmm) {
 
     pxpermm2 = pxmm;
 }
@@ -66,17 +66,17 @@ void Settings::setSievesCellDimension(const QString &d) {
     sievesCellDimension = d;
 }
 
-void Settings::setShowImgInReport(bool sir) {
+void Settings::setShowImgInReport(const bool sir) {
 
     showImgInReport = sir;
 }
 
-void Settings::setCreateTmpImg(bool cti) {
+void Settings::setCreateTmpImg(const bool cti) {
 
     createTmpImg = cti;
 }
 
-void Settings::setImgWidth(ptrdiff_t iw) {
+void Settings::setImgWidth(const ptrdiff_t iw) {
 
     imgWidth = iw;
 }

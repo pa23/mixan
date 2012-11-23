@@ -194,12 +194,12 @@ void createGraphics(QVector<QImage> &graphics,
     QSharedPointer<QwtPlotCurve> curve33(new QwtPlotCurve());
     curve33->setRenderHint(QwtPlotItem::RenderAntialiased);
 
-    double tcolm = defThreshColor(material1.data(),
-                                  material2.data(),
-                                  settings->val_thrAccur());
+    const double tcolm = defThreshColor(material1.data(),
+                                        material2.data(),
+                                        settings->val_thrAccur());
 
-    double max1 = y12[material1->thresholdColor()];
-    double max2 = y22[material2->thresholdColor()];
+    const double max1 = y12[material1->thresholdColor()];
+    const double max2 = y22[material2->thresholdColor()];
 
     QVector<double> x33(2, tcolm);
     QVector<double> y33(2);

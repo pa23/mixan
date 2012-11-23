@@ -100,7 +100,7 @@ void Material::defHistogram() {
 
     //
 
-    double N = origImage.width() * origImage.height();
+    const double N = origImage.width() * origImage.height();
 
     for ( ptrdiff_t i=0; i<origImage.width(); i++ ) {
 

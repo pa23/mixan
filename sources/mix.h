@@ -31,7 +31,7 @@ class Mix {
 
 public:
 
-    Mix(const QString &, size_t, const Settings *);
+    Mix(const QString &, const size_t, const Settings *);
     virtual ~Mix();
 
     void analyze();

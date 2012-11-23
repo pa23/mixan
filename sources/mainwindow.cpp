@@ -228,9 +228,9 @@ void MainWindow::initCalcSettings() {
 
 void MainWindow::on_action_saveReport_activated() {
 
-    QString filters = "PDF files (*.pdf);;All files (*.*)";
+    const QString filters = "PDF files (*.pdf);;All files (*.*)";
 
-    QString reportFileName(QFileDialog::getSaveFileName(
+    const QString reportFileName(QFileDialog::getSaveFileName(
                                this,
                                tr("Save report to PDF..."),
                                "noname.pdf",
@@ -311,7 +311,7 @@ void MainWindow::on_action_userManual_activated() {
 
 void MainWindow::on_action_about_mixan_activated() {
 
-    QString str = "<b>mixan " + VERSION + "</b>\n"
+    const QString str = "<b>mixan " + VERSION + "</b>\n"
             "<br><br>Analysis of granular material mixes and emulsions."
             "<br><br>Copyright (C) 2011-2012 Artem Petrov "
             "<a href= \"mailto:pa2311@gmail.com\" >pa2311@gmail.com</a>"

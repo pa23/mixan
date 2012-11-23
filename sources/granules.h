@@ -34,8 +34,8 @@ class Granules {
 public:
 
     Granules(const QString &,
-             size_t,
-             size_t,
+             const size_t,
+             const size_t,
              const Settings *);
     virtual ~Granules();
 

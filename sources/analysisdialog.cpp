@@ -55,7 +55,7 @@ size_t tmp_limcol2 = 0;
 QVector< QSharedPointer<Granules> > *tmp_granules = 0;
 QString *tmp_thrmsg = 0;
 
-void runMixAnalysis(ptrdiff_t &iter) {
+void runMixAnalysis(const ptrdiff_t &iter) {
 
     try {
 
@@ -72,7 +72,7 @@ void runMixAnalysis(ptrdiff_t &iter) {
     }
 }
 
-void runGranulationAnalysis(ptrdiff_t &iter) {
+void runGranulationAnalysis(const ptrdiff_t &iter) {
 
     try {
 
@@ -407,9 +407,9 @@ void AnalysisDialog::showAnalysisResults() {
     lastCalcDateTime =
             QDateTime::currentDateTime().toString("dd-MM-yyyy_hh-mm-ss");
 
-    bool showImg = settings->val_showImgInReport();
-    bool createTmpImgFiles = settings->val_createTmpImg();
-    ptrdiff_t imgWidth = settings->val_imgWidth();
+    const bool showImg = settings->val_showImgInReport();
+    const bool createTmpImgFiles = settings->val_createTmpImg();
+    const ptrdiff_t imgWidth = settings->val_imgWidth();
 
     createGraphics(graphics,
                    material1,

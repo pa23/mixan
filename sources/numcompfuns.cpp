@@ -28,9 +28,9 @@
 
 QVector<double> polyapprox(const QVector<double> &x,
                            const QVector<double> &y,
-                           ptrdiff_t K) {             // polynom power
+                           const ptrdiff_t K) {             // polynom power
 
-    ptrdiff_t N = x.size();
+    const ptrdiff_t N = x.size();
 
     if ( N != y.size() ) {
 
