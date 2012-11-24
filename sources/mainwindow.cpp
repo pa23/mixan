@@ -46,6 +46,21 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     mixanSettings("pa23software", "mixan"),
+    calcSettings(new Settings()),
+    settingsDialog(new SettingsDialog(this)),
+    analysisDialog(new AnalysisDialog(this)),
+    spinBox_polyPower(0),
+    doubleSpinBox_intersectAccur(0),
+    doubleSpinBox_idealConc(0),
+    checkBox_sizeinmm(0),
+    doubleSpinBox_pxpermm2(0),
+    lineEdit_sievesCellDiameter(0),
+    lineEdit_sievesCellDimension(0),
+    checkBox_reportReadOnly(0),
+    checkBox_imagesInReport(0),
+    checkBox_createTemporaryGraphics(0),
+    spinBox_imgWidth(0),
+    comboBox_analysisType(0),
     reportCaption(
         "<br><b>mixan "
         + VERSION
@@ -64,13 +79,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //
 
-    calcSettings = QSharedPointer<Settings>(new Settings());
+    analysisDialog->init(ui->textBrowser_report, calcSettings.data());
 
     //
-
-    settingsDialog = QSharedPointer<SettingsDialog>(new SettingsDialog());
-    analysisDialog = QSharedPointer<AnalysisDialog>
-            (new AnalysisDialog(ui->textBrowser_report, calcSettings));
 
     spinBox_polyPower = settingsDialog->
             findChild<QSpinBox *>("spinBox_polyPower");

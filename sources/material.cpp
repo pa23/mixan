@@ -31,8 +31,14 @@
 #include <QObject>
 
 Material::Material() :
+    fileName(),
+    origImage(),
+    histogramAbs(),
+    histogramRel(),
     threshColor(0),
-    polynomPower(0) {
+    polynomPower(0),
+    polyVal(),
+    polylimits() {
 
     histogramAbs.clear();
     histogramAbs.resize(256);

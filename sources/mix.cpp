@@ -27,12 +27,15 @@
 #include <QImage>
 #include <QObject>
 
+#include <QDebug>
+
 Mix::Mix(const QString &imgFileName,
          const size_t threshCol,
          const Settings *set) :
     fileName(imgFileName),
     threshColor(threshCol),
     settings(set),
+    origImage(),
     conc(0) {
 }
 

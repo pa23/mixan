@@ -20,12 +20,6 @@
 
 #include "mixanerror.h"
 
-MixanError::MixanError(const QString &errStr) {
-
-    errMsg = errStr;
-}
-
-QString MixanError::mixanErrMsg() const {
-
-    return errMsg;
+MixanError::MixanError(const QString &errStr) :
+    errMsg(errStr) {
 }

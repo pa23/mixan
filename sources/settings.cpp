@@ -26,6 +26,8 @@ Settings::Settings() :
     idealConc(0),
     sizeinmm (true),
     pxpermm2 (0),
+    sievesCellDiameter(),
+    sievesCellDimension(),
     showImgInReport(true),
     createTmpImg(false),
     imgWidth (0) {

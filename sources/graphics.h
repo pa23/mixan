@@ -38,14 +38,14 @@ struct HistXSetup {
 };
 
 void createGraphics(QVector<QImage> &,
-                    const QSharedPointer<Material> &,
-                    const QSharedPointer<Material> &,
-                    const QSharedPointer<Settings> &,
+                    const Material *,
+                    const Material *,
+                    const Settings *,
                     const QString &);
 
 void createHistograms(QVector<QImage> &,
                       const QVector< QSharedPointer<Granules> > &,
-                      const QSharedPointer<Settings> &,
+                      const Settings *,
                       const QString &,
                       double &,
                       double &,

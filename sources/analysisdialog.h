@@ -48,10 +48,11 @@ class AnalysisDialog : public QDialog {
 
 public:
 
-    explicit AnalysisDialog(QTextBrowser *, // report widget
-                            const QSharedPointer<Settings> &,
-                            QWidget *parent = 0);
+    explicit AnalysisDialog(QWidget *parent = 0);
     ~AnalysisDialog();
+
+    void init(QTextBrowser *,    // report widget
+              const Settings *);
 
 private slots:
 
@@ -69,7 +70,7 @@ private:
     Ui::AnalysisDialog *ui;
 
     QTextBrowser *report;
-    QSharedPointer<Settings> settings;
+    const Settings *settings;
 
     QString filters;
 
@@ -81,20 +82,19 @@ private:
     QVector<QImage> graphics;
     QVector<QImage> histograms;
 
-    QSharedPointer<QProgressDialog> progressDialog;
-    QSharedPointer< QFutureWatcher<void> > futureWatcher;
+    QProgressDialog *progressDialog;
+    QFutureWatcher<void> *futureWatcher;
 
     QString thrmsg;
+    QString tempPath;
+    QString lastCalcDateTime;
+    QString lastImgDir;
 
     enum { ANALTYPE_MATERIALS,
            ANALTYPE_MIX,
            ANALTYPE_GRANULATION };
 
     void freeMemory();
-
-    QString tempPath;
-    QString lastCalcDateTime;
-    QString lastImgDir;
 
 };
 

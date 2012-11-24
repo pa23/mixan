@@ -74,8 +74,8 @@ private:
 
     QSharedPointer<Settings> calcSettings;
 
-    QSharedPointer<SettingsDialog> settingsDialog;
-    QSharedPointer<AnalysisDialog> analysisDialog;
+    SettingsDialog *settingsDialog;
+    AnalysisDialog *analysisDialog;
 
     QSpinBox *spinBox_polyPower;
     QDoubleSpinBox *doubleSpinBox_intersectAccur;

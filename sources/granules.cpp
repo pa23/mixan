@@ -38,7 +38,11 @@ Granules::Granules(const QString &fileName,
     imgFileName(fileName),
     limCol1(lim1),
     limCol2(lim2),
-    settings(set) {
+    settings(set),
+    img(),
+    areas(),
+    compacts(),
+    minosizes() {
 }
 
 Granules::~Granules() {

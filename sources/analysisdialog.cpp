@@ -45,6 +45,7 @@
 #include <QProgressDialog>
 #include <QPixmap>
 #include <QDateTime>
+#include <QSharedPointer>
 
 const Settings *tmp_settings = 0;
 QListWidget *tmp_probesFileNames = 0;
@@ -63,6 +64,7 @@ void runMixAnalysis(const ptrdiff_t &iter) {
                 probe(new Mix(tmp_probesFileNames->item(iter)->text(),
                               tmp_tcol,
                               tmp_settings));
+
         probe->analyze();
         tmp_probes->push_back(probe);
     }
@@ -91,63 +93,59 @@ void runGranulationAnalysis(const ptrdiff_t &iter) {
     }
 }
 
-AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
-                               const QSharedPointer<Settings> &sts,
-                               QWidget *parent) :
+AnalysisDialog::AnalysisDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AnalysisDialog),
-    report(txtbrowser),
-    settings(sts),
+    report(0),
+    settings(0),
     filters("Images (*.png *.jpg *.jpeg *.bmp);;All files (*.*)"),
-    tempPath(QDir::homePath() + QDir::separator() + TMPDIR + QDir::separator()) {
+    material1(new Material()),
+    material2(new Material()),
+    probes(),
+    granules(),
+    graphics(),
+    histograms(),
+    progressDialog(new QProgressDialog(this)),
+    futureWatcher(new QFutureWatcher<void>()),
+    thrmsg(),
+    tempPath(QDir::homePath() + QDir::separator() + TMPDIR + QDir::separator()),
+    lastCalcDateTime(),
+    lastImgDir() {
 
     ui->setupUi(this);
-
-    //
-
-    material1 = QSharedPointer<Material>(new Material());
-    material2 = QSharedPointer<Material>(new Material());
-
-    //
-
-    progressDialog = QSharedPointer<QProgressDialog>(new QProgressDialog());
     progressDialog->setWindowTitle("mixan: progress");
 
-    futureWatcher = QSharedPointer< QFutureWatcher<void> >
-            (new QFutureWatcher<void>);
-
     //
 
-    connect(futureWatcher.data(),
+    connect(futureWatcher,
             SIGNAL(finished()),
             this,
             SLOT(showAnalysisResults())
             );
 
-    connect(futureWatcher.data(),
+    connect(futureWatcher,
             SIGNAL(finished()),
-            progressDialog.data(),
+            progressDialog,
             SLOT(reset())
             );
-    connect(progressDialog.data(),
+    connect(progressDialog,
             SIGNAL(canceled()),
-            futureWatcher.data(),
+            futureWatcher,
             SLOT(cancel())
             );
-    connect(futureWatcher.data(),
+    connect(futureWatcher,
             SIGNAL(progressRangeChanged(int,int)),
-            progressDialog.data(),
+            progressDialog,
             SLOT(setRange(int,int))
             );
-    connect(futureWatcher.data(),
+    connect(futureWatcher,
             SIGNAL(progressValueChanged(int)),
-            progressDialog.data(),
+            progressDialog,
             SLOT(setValue(int))
             );
 
     //
 
-    tmp_settings = settings.data();
     tmp_probesFileNames = ui->listWidget_probesFileNames;
     tmp_probes = &probes;
     tmp_granules = &granules;
@@ -157,6 +155,14 @@ AnalysisDialog::AnalysisDialog(QTextBrowser *txtbrowser,
 AnalysisDialog::~AnalysisDialog() {
 
     delete ui;
+}
+
+void AnalysisDialog::init(QTextBrowser *txtbrowser, const Settings *sts) {
+
+    report = txtbrowser;
+    settings = sts;
+
+    tmp_settings = settings;
 }
 
 void AnalysisDialog::on_comboBox_analysisType_currentIndexChanged(int index) {
@@ -315,8 +321,8 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
     try {
 
-        material1->analyze(ui->lineEdit_mat1FileName->text(), settings.data());
-        material2->analyze(ui->lineEdit_mat2FileName->text(), settings.data());
+        material1->analyze(ui->lineEdit_mat1FileName->text(), settings);
+        material2->analyze(ui->lineEdit_mat2FileName->text(), settings);
     }
     catch(const MixanError &mixerr) {
 
@@ -412,8 +418,8 @@ void AnalysisDialog::showAnalysisResults() {
     const ptrdiff_t imgWidth = settings->val_imgWidth();
 
     createGraphics(graphics,
-                   material1,
-                   material2,
+                   material1.data(),
+                   material2.data(),
                    settings,
                    tempPath + QDir::separator() + lastCalcDateTime);
 

@@ -37,9 +37,9 @@
 #include "tmpfiles.h"
 
 void createGraphics(QVector<QImage> &graphics,
-                    const QSharedPointer<Material> &material1,
-                    const QSharedPointer<Material> &material2,
-                    const QSharedPointer<Settings> &settings,
+                    const Material *material1,
+                    const Material *material2,
+                    const Settings *settings,
                     const QString &path) {
 
     graphics.clear();
@@ -194,8 +194,8 @@ void createGraphics(QVector<QImage> &graphics,
     QSharedPointer<QwtPlotCurve> curve33(new QwtPlotCurve());
     curve33->setRenderHint(QwtPlotItem::RenderAntialiased);
 
-    const double tcolm = defThreshColor(material1.data(),
-                                        material2.data(),
+    const double tcolm = defThreshColor(material1,
+                                        material2,
                                         settings->val_thrAccur());
 
     const double max1 = y12[material1->thresholdColor()];
@@ -228,7 +228,7 @@ void createGraphics(QVector<QImage> &graphics,
 
 void createHistograms(QVector<QImage> &histograms,
                       const QVector< QSharedPointer<Granules> > &granules,
-                      const QSharedPointer<Settings> &settings,
+                      const Settings *settings,
                       const QString &path,
                       double &minArea,
                       double &maxArea,
