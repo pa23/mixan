@@ -37,19 +37,21 @@ public:
     void analyze(const QString &, const Settings *);
     void clear();
 
-    QString imageFileName()            const { return fileName;    }
-    QImage originalImage()             const { return origImage;   }
-    size_t thresholdColor()            const { return threshColor; }
-    QVector<double> histogramValues()  const { return histogram;   }
-    QVector<double> polynomValues()    const { return polyVal;     }
-    QVector<ptrdiff_t> polynomLimits() const { return polylimits;  }
+    QString imageFileName()                 const { return fileName;     }
+    QImage originalImage()                  const { return origImage;    }
+    size_t thresholdColor()                 const { return threshColor;  }
+    QVector<ptrdiff_t> histogramAbsValues() const { return histogramAbs; }
+    QVector<double> histogramRelValues()    const { return histogramRel; }
+    QVector<double> polynomValues()         const { return polyVal;      }
+    QVector<ptrdiff_t> polynomLimits()      const { return polylimits;   }
 
 private:
 
     QString fileName;
     QImage origImage;
 
-    QVector<double> histogram;
+    QVector<ptrdiff_t> histogramAbs;
+    QVector<double> histogramRel;
     size_t threshColor;
 
     ptrdiff_t polynomPower;
@@ -57,7 +59,8 @@ private:
     QVector<ptrdiff_t> polylimits;
 
     void defHistogram();
-    void defThreshColor();
+    void defThreshColorPA(); // through polynomial approximation of histogram
+    void defThreshColorGC(); // through gravity center of figure
     void corrPolyVals();
 
 };

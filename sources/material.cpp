@@ -34,8 +34,11 @@ Material::Material() :
     threshColor(0),
     polynomPower(0) {
 
-    histogram.clear();
-    histogram.resize(256);
+    histogramAbs.clear();
+    histogramAbs.resize(256);
+
+    histogramRel.clear();
+    histogramRel.resize(256);
 }
 
 Material::~Material() {
@@ -45,8 +48,11 @@ void Material::analyze(const QString &imgFileName, const Settings *settings) {
 
     fileName.clear();
 
-    histogram.clear();
-    histogram.resize(256);
+    histogramAbs.clear();
+    histogramAbs.resize(256);
+
+    histogramRel.clear();
+    histogramRel.resize(256);
 
     polynomPower = settings->val_polyPwr();
 
@@ -63,7 +69,8 @@ void Material::analyze(const QString &imgFileName, const Settings *settings) {
     }
 
     defHistogram();
-    defThreshColor();
+    defThreshColorPA();
+    //defThreshColorGC();
 
     fileName = imgFileName;
 
@@ -77,7 +84,8 @@ void Material::clear() {
 
     fileName.clear();
     origImage = QImage();
-    histogram.clear();
+    histogramAbs.clear();
+    histogramRel.clear();
     threshColor = 0;
     polynomPower = 0;
     polyVal.clear();
@@ -99,17 +107,17 @@ void Material::defHistogram() {
 
         for ( ptrdiff_t j=0; j<origImage.height(); j++ ) {
 
-            histogram[(size_t)qGray(origImage.pixel(i, j))]++;
+            histogramAbs[(size_t)qGray(origImage.pixel(i, j))]++;
         }
     }
 
     for ( ptrdiff_t i=0; i<256; i++ ) {
 
-        histogram[i] /= N;
+        histogramRel[i] = histogramAbs[i] / N;
     }
 }
 
-void Material::defThreshColor() {
+void Material::defThreshColorPA() {
 
     polyVal.clear();
     polyVal.resize(256);
@@ -122,7 +130,7 @@ void Material::defThreshColor() {
     //
 
     QVector<double> polyCoeff;
-    polyCoeff = polyapprox(x, histogram, polynomPower);
+    polyCoeff = polyapprox(x, histogramRel, polynomPower);
 
     //
 
@@ -155,6 +163,19 @@ void Material::defThreshColor() {
     //
 
     corrPolyVals();
+}
+
+void Material::defThreshColorGC() {
+
+    double My = 0;
+    const double S = origImage.width() * origImage.height();
+
+    for ( ptrdiff_t i=0; i<256; i++ ) {
+
+        My += i * histogramAbs[i];
+    }
+
+    threshColor = My / S;
 }
 
 void Material::corrPolyVals() {

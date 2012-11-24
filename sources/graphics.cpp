@@ -75,7 +75,7 @@ void createGraphics(QVector<QImage> &graphics,
     curve11->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                       QPen(Qt::black), QSize(1, 1)) );
 
-    QVector<double> y11 = material1->histogramValues();
+    QVector<double> y11 = material1->histogramRelValues();
 
     curve11->setRawSamples(x.data(), y11.data(), x.size());
     curve11->attach(plot1.data());
@@ -114,7 +114,7 @@ void createGraphics(QVector<QImage> &graphics,
     curve21->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                       QPen(Qt::black), QSize(1, 1)) );
 
-    QVector<double> y21 = material2->histogramValues();
+    QVector<double> y21 = material2->histogramRelValues();
 
     curve21->setRawSamples(x.data(), y21.data(), x.size());
     curve21->attach(plot2.data());
@@ -230,10 +230,10 @@ void createHistograms(QVector<QImage> &histograms,
                       const QVector< QSharedPointer<Granules> > &granules,
                       const QSharedPointer<Settings> &settings,
                       const QString &path,
-                      double minArea,
-                      double maxArea,
-                      double meanArea,
-                      double meanCompact) {
+                      double &minArea,
+                      double &maxArea,
+                      double &meanArea,
+                      double &meanCompact) {
 
     histograms.clear();
 
