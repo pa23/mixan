@@ -28,6 +28,7 @@ class Settings {
 public:
 
     Settings();
+    ~Settings();
 
     void setPolyPwr(const ptrdiff_t);
     void setThrAccur(const double);
@@ -54,6 +55,9 @@ public:
     ptrdiff_t val_imgWidth()            const { return imgWidth;            }
 
 private:
+
+    Settings(const Settings &);
+    Settings & operator=(const Settings &);
 
     ptrdiff_t polyPwr;
     double    thrAccur;

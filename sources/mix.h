@@ -32,7 +32,7 @@ class Mix {
 public:
 
     Mix(const QString &, const size_t, const Settings *);
-    virtual ~Mix();
+    ~Mix();
 
     void analyze();
 
@@ -43,6 +43,9 @@ public:
     double concentration()  const { return conc;        }
 
 private:
+
+    Mix(const Mix &);
+    Mix & operator=(const Mix &);
 
     QString fileName;
     size_t threshColor;

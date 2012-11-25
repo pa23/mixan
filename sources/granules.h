@@ -37,7 +37,7 @@ public:
              const size_t,
              const size_t,
              const Settings *);
-    virtual ~Granules();
+    ~Granules();
 
     void analyze();
 
@@ -49,6 +49,9 @@ public:
     ptrdiff_t       partNumber()      const;
 
 private:
+
+    Granules(const Granules &);
+    Granules & operator=(const Granules &);
 
     QString imgFileName;
     size_t limCol1;

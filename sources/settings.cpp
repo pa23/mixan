@@ -34,6 +34,9 @@ Settings::Settings() :
     imgWidth (0) {
 }
 
+Settings::~Settings() {
+}
+
 void Settings::setPolyPwr(const ptrdiff_t pp) {
 
     polyPwr = pp;

@@ -32,7 +32,7 @@ class Material {
 public:
 
     Material();
-    virtual ~Material();
+    ~Material();
 
     void analyze(const QString &, const Settings *);
     void clear();
@@ -47,6 +47,9 @@ public:
 
 private:
 
+    Material(const Material &);
+    Material & operator=(const Material &);
+
     QString fileName;
     QImage origImage;
 
@@ -59,8 +62,8 @@ private:
     QVector<ptrdiff_t> polylimits;
 
     void defHistogram();
-    void defThreshColorPA(); // through polynomial approximation of histogram
-    void defThreshColorGC(); // through gravity center of figure
+    void defThreshColorPA(); // through polynomial approximation
+    void defThreshColorGC(); // through gravity center
     void corrPolyVals();
 
 };
