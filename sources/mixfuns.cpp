@@ -41,7 +41,7 @@ double Vc(const QVector<double> &concentrations,
 
 size_t defThreshColor(const Material *m1,
                       const Material *m2,
-                      const double intersectaccur) {
+                      const Settings *settings) {
 
     const Material *mat1;
     const Material *mat2;
@@ -55,6 +55,13 @@ size_t defThreshColor(const Material *m1,
 
         mat1 = m2;
         mat2 = m1;
+    }
+
+    //
+
+    if ( settings->val_thrColDefMethod() == THRCOLDEFMETHOD_GRAVCENTER ) {
+
+        return ( mat1->thresholdColor() + mat2->thresholdColor() ) / 2;
     }
 
     //
@@ -76,7 +83,7 @@ size_t defThreshColor(const Material *m1,
 
     for ( size_t i=mat1->thresholdColor(); i<256; i++ ) {
 
-        if ( fabs(poly1[i]-poly2[i]) < intersectaccur ) {
+        if ( fabs(poly1[i]-poly2[i]) < settings->val_thrAccur() ) {
 
             tcol = i;
             break;

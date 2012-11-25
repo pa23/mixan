@@ -31,6 +31,7 @@ public:
 
     void setPolyPwr(const ptrdiff_t);
     void setThrAccur(const double);
+    void setThrColDefMethod(const size_t);
     void setIdealConc(const double);
     void setsizeinmm(const bool);
     void setpxpermm2(const double);
@@ -42,6 +43,7 @@ public:
 
     ptrdiff_t val_polyPwr()             const { return polyPwr;             }
     double    val_thrAccur()            const { return thrAccur;            }
+    size_t    val_thrColDefMethod()     const { return tcdMethod;           }
     double    val_idealConc()           const { return idealConc;           }
     bool      val_sizeinmm()            const { return sizeinmm;            }
     double    val_pxpermm2()            const { return pxpermm2;            }
@@ -55,6 +57,7 @@ private:
 
     ptrdiff_t polyPwr;
     double    thrAccur;
+    size_t    tcdMethod;
     double    idealConc;
     bool      sizeinmm;
     double    pxpermm2;

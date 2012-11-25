@@ -46,94 +46,11 @@ void createGraphics(QVector<QImage> &graphics,
 
     //
 
-    QVector<double> x(256);
-    for ( ptrdiff_t i=0; i<x.size(); i++ ) { x[i] = i; }
-
-    //
-
     QwtText xAxisTitle(QObject::tr("gray color"));
     xAxisTitle.setFont(QFont("DejaVu Sans", 12));
 
     QwtText yAxisTitle("n_i / N");
     yAxisTitle.setFont(QFont("DejaVu Sans", 12));
-
-    //
-
-    QSharedPointer<QwtPlot> plot1(new QwtPlot());
-    plot1->setPalette(QPalette(QColor(Qt::white)));
-    plot1->setFrameShape(QFrame::NoFrame);
-    plot1->setFrameShadow(QFrame::Plain);
-    plot1->setCanvasLineWidth(0);
-    plot1->setAxisAutoScale(QwtPlot::xBottom, true);
-    plot1->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
-    plot1->setAxisAutoScale(QwtPlot::yLeft, true);
-    plot1->setAxisTitle(QwtPlot::yLeft, yAxisTitle);
-
-    QSharedPointer<QwtPlotCurve> curve11(new QwtPlotCurve());
-    curve11->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve11->setStyle(QwtPlotCurve::NoCurve);
-    curve11->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
-                                      QPen(Qt::black), QSize(1, 1)) );
-
-    QVector<double> y11 = material1->histogramRelValues();
-
-    curve11->setRawSamples(x.data(), y11.data(), x.size());
-    curve11->attach(plot1.data());
-
-    QSharedPointer<QwtPlotCurve> curve12(new QwtPlotCurve());
-    curve12->setRenderHint(QwtPlotItem::RenderAntialiased);
-
-    QVector<double> y12 = material1->polynomValues();
-
-    curve12->setRawSamples(x.data(), y12.data(), x.size());
-    curve12->attach(plot1.data());
-
-    plot1->resize(600, 400);
-    plot1->replot();
-
-    QPixmap pixmap1(plot1->size());
-    plot1->render(&pixmap1);
-
-    graphics.push_back(pixmap1.toImage());
-
-    //
-
-    QSharedPointer<QwtPlot> plot2(new QwtPlot());
-    plot2->setPalette(QPalette(QColor(Qt::white)));
-    plot2->setFrameShape(QFrame::NoFrame);
-    plot2->setFrameShadow(QFrame::Plain);
-    plot2->setCanvasLineWidth(0);
-    plot2->setAxisAutoScale(QwtPlot::xBottom, true);
-    plot2->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
-    plot2->setAxisAutoScale(QwtPlot::yLeft, true);
-    plot2->setAxisTitle(QwtPlot::yLeft, yAxisTitle);
-
-    QSharedPointer<QwtPlotCurve> curve21(new QwtPlotCurve());
-    curve21->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve21->setStyle(QwtPlotCurve::NoCurve);
-    curve21->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
-                                      QPen(Qt::black), QSize(1, 1)) );
-
-    QVector<double> y21 = material2->histogramRelValues();
-
-    curve21->setRawSamples(x.data(), y21.data(), x.size());
-    curve21->attach(plot2.data());
-
-    QSharedPointer<QwtPlotCurve> curve22(new QwtPlotCurve());
-    curve22->setRenderHint(QwtPlotItem::RenderAntialiased);
-
-    QVector<double> y22 = material2->polynomValues();
-
-    curve22->setRawSamples(x.data(), y22.data(), x.size());
-    curve22->attach(plot2.data());
-
-    plot2->resize(600, 400);
-    plot2->replot();
-
-    QPixmap pixmap2(plot2->size());
-    plot2->render(&pixmap2);
-
-    graphics.push_back(pixmap2.toImage());
 
     //
 
@@ -147,82 +64,92 @@ void createGraphics(QVector<QImage> &graphics,
     plot3->setAxisAutoScale(QwtPlot::yLeft, true);
     plot3->setAxisTitle(QwtPlot::yLeft, yAxisTitle);
 
-    QSharedPointer<QwtPlotCurve> curve31(new QwtPlotCurve());
-    curve31->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve31->setRawSamples(x.data(), y12.data(), x.size());
-    curve31->attach(plot3.data());
+    //
 
-    QSharedPointer<QwtPlotCurve> curve31_s(new QwtPlotCurve());
-    curve31_s->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve31_s->setStyle(QwtPlotCurve::NoCurve);
-    curve31_s->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
-                                        QPen(Qt::black), QSize(7, 7)) );
+    QVector<double> x(256);
+    for ( ptrdiff_t i=0; i<x.size(); i++ ) { x[i] = i; }
 
-    QVector<double> x_s;
-    QVector<double> y12_s;
+    QVector<double> y1 = material1->histogramRelValues(); // histogram  1
+    QVector<double> y2 = material2->histogramRelValues(); // histogram  2
+    QVector<double> y3 = material1->polynomValues();      // polynomial 1
+    QVector<double> y4 = material2->polynomValues();      // polynomial 2
 
-    for ( ptrdiff_t i=0; i<x.size(); i+=10 ) {
+    //
 
-        x_s.push_back(x[i]);
-        y12_s.push_back(y12[i]);
+    QSharedPointer<QwtPlotCurve> curve1(new QwtPlotCurve()); // histogram 1
+    curve1->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve1->setStyle(QwtPlotCurve::NoCurve);
+    curve1->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
+                                     QPen(Qt::black), QSize(1, 1)) );
+
+    curve1->setRawSamples(x.data(), y1.data(), x.size());
+    curve1->attach(plot3.data());
+
+    //
+
+    QSharedPointer<QwtPlotCurve> curve2(new QwtPlotCurve()); // histogram 2
+    curve2->setRenderHint(QwtPlotItem::RenderAntialiased);
+    curve2->setStyle(QwtPlotCurve::NoCurve);
+    curve2->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
+                                     QPen(Qt::black), QSize(1, 1)) );
+
+    curve2->setRawSamples(x.data(), y2.data(), x.size());
+    curve2->attach(plot3.data());
+
+    //
+
+    QSharedPointer<QwtPlotCurve> curve3(new QwtPlotCurve()); // polynomial 1
+    curve3->setRenderHint(QwtPlotItem::RenderAntialiased);
+
+    curve3->setRawSamples(x.data(), y3.data(), x.size());
+
+    //
+
+    QSharedPointer<QwtPlotCurve> curve4(new QwtPlotCurve()); // polynomial 2
+    curve4->setRenderHint(QwtPlotItem::RenderAntialiased);
+
+    curve4->setRawSamples(x.data(), y4.data(), x.size());
+
+    //
+
+    if ( settings->val_thrColDefMethod() == THRCOLDEFMETHOD_POLYAPPROX ) {
+
+        curve3->attach(plot3.data());
+        curve4->attach(plot3.data());
     }
 
-    curve31_s->setRawSamples(x_s.data(), y12_s.data(), x_s.size());
-    curve31_s->attach(plot3.data());
+    //
 
-    QSharedPointer<QwtPlotCurve> curve32(new QwtPlotCurve());
-    curve32->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve32->setRawSamples(x.data(), y22.data(), x.size());
-    curve32->attach(plot3.data());
-
-    QSharedPointer<QwtPlotCurve> curve32_s(new QwtPlotCurve());
-    curve32_s->setRenderHint(QwtPlotItem::RenderAntialiased);
-    curve32_s->setStyle(QwtPlotCurve::NoCurve);
-    curve32_s->setSymbol( new QwtSymbol(QwtSymbol::Triangle, Qt::NoBrush,
-                                        QPen(Qt::black), QSize(7, 7)) );
-
-    QVector<double> y22_s;
-
-    for ( ptrdiff_t i=0; i<x.size(); i+=10 ) {
-
-        y22_s.push_back(y22[i]);
-    }
-
-    curve32_s->setRawSamples(x_s.data(), y22_s.data(), x_s.size());
-    curve32_s->attach(plot3.data());
-
-    QSharedPointer<QwtPlotCurve> curve33(new QwtPlotCurve());
-    curve33->setRenderHint(QwtPlotItem::RenderAntialiased);
+    QSharedPointer<QwtPlotCurve> curve5(new QwtPlotCurve()); // threshold color
+    curve5->setRenderHint(QwtPlotItem::RenderAntialiased);
 
     const double tcolm = defThreshColor(material1,
                                         material2,
-                                        settings->val_thrAccur());
+                                        settings);
 
-    const double max1 = y12[material1->thresholdColor()];
-    const double max2 = y22[material2->thresholdColor()];
+    QVector<double> x5(2, tcolm);
+    QVector<double> y5(2);
 
-    QVector<double> x33(2, tcolm);
-    QVector<double> y33(2);
-
-    if ( max1 > max2 ) { y33[1] = max1; }
-    else               { y33[1] = max2; }
-
-    curve33->setRawSamples(x33.data(), y33.data(), x33.size());
-    curve33->attach(plot3.data());
-
-    plot3->resize(600, 400);
     plot3->replot();
 
-    QPixmap pixmap3(plot3->size());
-    plot3->render(&pixmap3);
+    y5[1] = plot3->axisInterval(QwtPlot::yLeft).maxValue();
 
-    graphics.push_back(pixmap3.toImage());
+    curve5->setRawSamples(x5.data(), y5.data(), x5.size());
+    curve5->attach(plot3.data());
+
+    //
+
+    plot3->resize(600, 400);
+    QPixmap pixmap1(plot3->size());
+    plot3->render(&pixmap1);
+
+    graphics.push_back(pixmap1.toImage());
 
     //
 
     if ( settings->val_createTmpImg() ) {
 
-        saveGraphics(pixmap1, pixmap2, pixmap3, path);
+        saveGraphics(pixmap1, path);
     }
 }
 

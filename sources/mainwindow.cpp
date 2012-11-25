@@ -35,6 +35,7 @@
 #include <QSettings>
 #include <QRect>
 #include <QSpinBox>
+#include <QComboBox>
 #include <QCheckBox>
 #include <QSharedPointer>
 #include <QFont>
@@ -51,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     analysisDialog(new AnalysisDialog(this)),
     spinBox_polyPower(0),
     doubleSpinBox_intersectAccur(0),
+    comboBox_thrColDefMethod(0),
     doubleSpinBox_idealConc(0),
     checkBox_sizeinmm(0),
     doubleSpinBox_pxpermm2(0),
@@ -87,6 +89,8 @@ MainWindow::MainWindow(QWidget *parent) :
             findChild<QSpinBox *>("spinBox_polyPower");
     doubleSpinBox_intersectAccur = settingsDialog->
             findChild<QDoubleSpinBox *>("doubleSpinBox_intersectAccur");
+    comboBox_thrColDefMethod = settingsDialog->
+            findChild<QComboBox *>("comboBox_thrColDefMethod");
     doubleSpinBox_idealConc = settingsDialog->
             findChild<QDoubleSpinBox *>("doubleSpinBox_idealConc");
     checkBox_sizeinmm = settingsDialog->
@@ -146,6 +150,8 @@ void MainWindow::writeProgramSettings() {
     mixanSettings.setValue("/polynom_power", spinBox_polyPower->value());
     mixanSettings.setValue("/intersection_accuracy",
                            doubleSpinBox_intersectAccur->value());
+    mixanSettings.setValue("/threshold_color_definition_method",
+                           comboBox_thrColDefMethod->currentIndex());
     mixanSettings.setValue("/ideal_concentration",
                            doubleSpinBox_idealConc->value());
     mixanSettings.setValue("/size_in_millimeters",
@@ -163,7 +169,7 @@ void MainWindow::writeProgramSettings() {
     mixanSettings.setValue("/create_temporary_graphics",
                            checkBox_createTemporaryGraphics->isChecked());
     mixanSettings.setValue("/image_width", spinBox_imgWidth->value());
-    mixanSettings.setValue("/comboBox_analysisType",
+    mixanSettings.setValue("/analysis_type",
                            comboBox_analysisType->currentIndex());
     mixanSettings.endGroup();
 }
@@ -180,6 +186,9 @@ void MainWindow::readProgramSettings() {
     doubleSpinBox_intersectAccur->setValue(
                 mixanSettings.
                 value("/intersection_accuracy", 0.00025).toDouble()
+                );
+    comboBox_thrColDefMethod->setCurrentIndex(
+                mixanSettings.value("/threshold_color_definition_method", 0).toInt()
                 );
     doubleSpinBox_idealConc->setValue(
                 mixanSettings.value("/ideal_concentration", 0.5).toDouble()
@@ -212,7 +221,7 @@ void MainWindow::readProgramSettings() {
                 mixanSettings.value("/image_width", 600).toInt()
                 );
     comboBox_analysisType->setCurrentIndex(
-                mixanSettings.value("/comboBox_analysisType", 1).toInt()
+                mixanSettings.value("/analysis_type", 1).toInt()
                 );
     mixanSettings.endGroup();
 
@@ -226,6 +235,7 @@ void MainWindow::initCalcSettings() {
 
     calcSettings->setPolyPwr(spinBox_polyPower->value());
     calcSettings->setThrAccur(doubleSpinBox_intersectAccur->value());
+    calcSettings->setThrColDefMethod(comboBox_thrColDefMethod->currentIndex());
     calcSettings->setIdealConc(doubleSpinBox_idealConc->value());
     calcSettings->setsizeinmm(checkBox_sizeinmm->isChecked());
     calcSettings->setpxpermm2(doubleSpinBox_pxpermm2->value());

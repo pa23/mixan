@@ -23,6 +23,7 @@
 Settings::Settings() :
     polyPwr  (0),
     thrAccur (0),
+    tcdMethod(0),
     idealConc(0),
     sizeinmm (true),
     pxpermm2 (0),
@@ -41,6 +42,11 @@ void Settings::setPolyPwr(const ptrdiff_t pp) {
 void Settings::setThrAccur(const double ta) {
 
     thrAccur = ta;
+}
+
+void Settings::setThrColDefMethod(const size_t tcm) {
+
+    tcdMethod = tcm;
 }
 
 void Settings::setIdealConc(const double ic) {

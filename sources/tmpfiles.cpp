@@ -32,8 +32,6 @@
 #include "granules.h"
 
 void saveGraphics(const QPixmap &pixmap1,
-                  const QPixmap &pixmap2,
-                  const QPixmap &pixmap3,
                   const QString &path) {
 
     QDir tempDir;
@@ -49,18 +47,6 @@ void saveGraphics(const QPixmap &pixmap1,
     }
 
     if ( !pixmap1.save(path + QDir::separator() + "graphic_0.png") ) {
-
-        QMessageBox::warning(0, "mixan",
-                             QObject::tr("Can not save pixmap to file!"));
-    }
-
-    if ( !pixmap2.save(path + QDir::separator() + "graphic_1.png") ) {
-
-        QMessageBox::warning(0, "mixan",
-                             QObject::tr("Can not save pixmap to file!"));
-    }
-
-    if ( !pixmap3.save(path + QDir::separator() + "graphic_2.png") ) {
 
         QMessageBox::warning(0, "mixan",
                              QObject::tr("Can not save pixmap to file!"));

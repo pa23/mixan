@@ -42,6 +42,7 @@ void SettingsDialog::on_pushButton_defaults_clicked() {
 
     ui->spinBox_polyPower->setValue(9);
     ui->doubleSpinBox_intersectAccur->setValue(0.00025);
+    ui->comboBox_thrColDefMethod->setCurrentIndex(0);
     ui->doubleSpinBox_idealConc->setValue(0.5);
     ui->checkBox_sizeinmm->setChecked(false);
     ui->doubleSpinBox_pxpermm2->setValue(0);

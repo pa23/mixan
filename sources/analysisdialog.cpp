@@ -47,14 +47,14 @@
 #include <QDateTime>
 #include <QSharedPointer>
 
-const Settings *tmp_settings = 0;
-QListWidget *tmp_probesFileNames = 0;
 size_t tmp_tcol = 0;
-QVector< QSharedPointer<Mix> > *tmp_probes = 0;
 size_t tmp_limcol1 = 0;
 size_t tmp_limcol2 = 0;
-QVector< QSharedPointer<Granules> > *tmp_granules = 0;
 QString *tmp_thrmsg = 0;
+const Settings *tmp_settings = 0;
+QListWidget *tmp_probesFileNames = 0;
+QVector< QSharedPointer<Mix> > *tmp_probes = 0;
+QVector< QSharedPointer<Granules> > *tmp_granules = 0;
 
 void runMixAnalysis(const ptrdiff_t &iter) {
 
@@ -143,13 +143,6 @@ AnalysisDialog::AnalysisDialog(QWidget *parent) :
             progressDialog,
             SLOT(setValue(int))
             );
-
-    //
-
-    tmp_probesFileNames = ui->listWidget_probesFileNames;
-    tmp_probes = &probes;
-    tmp_granules = &granules;
-    tmp_thrmsg = &thrmsg;
 }
 
 AnalysisDialog::~AnalysisDialog() {
@@ -163,6 +156,10 @@ void AnalysisDialog::init(QTextBrowser *txtbrowser, const Settings *sts) {
     settings = sts;
 
     tmp_settings = settings;
+    tmp_probesFileNames = ui->listWidget_probesFileNames;
+    tmp_probes = &probes;
+    tmp_granules = &granules;
+    tmp_thrmsg = &thrmsg;
 }
 
 void AnalysisDialog::on_comboBox_analysisType_currentIndexChanged(int index) {
@@ -341,7 +338,7 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
         tmp_tcol = defThreshColor(material1.data(),
                                   material2.data(),
-                                  settings->val_thrAccur());
+                                  settings);
 
         QVector<ptrdiff_t> iterations;
         for ( ptrdiff_t i=0; i<ui->listWidget_probesFileNames->count(); i++ ) {
@@ -361,7 +358,7 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
         tmp_tcol = defThreshColor(material1.data(),
                                   material2.data(),
-                                  settings->val_thrAccur());
+                                  settings);
 
         if ( material1->thresholdColor() < tmp_tcol ) {
 
@@ -423,10 +420,10 @@ void AnalysisDialog::showAnalysisResults() {
                    settings,
                    tempPath + QDir::separator() + lastCalcDateTime);
 
-    if ( graphics.size() != 3 ) {
+    if ( graphics.isEmpty() ) {
 
-        QMessageBox::warning(this, "mixan", tr("Can not create graphics!"));
         freeMemory();
+        QMessageBox::warning(this, "mixan", tr("Can not create graphics!"));
 
         return;
     }
@@ -448,6 +445,24 @@ void AnalysisDialog::showAnalysisResults() {
                 + tr("Power of the approximate polynom")
                 + ": "
                 + QString::number(settings->val_polyPwr())
+                + "<br>* "
+                + tr("Method of threshold color definition")
+                + ": ");
+
+    if ( settings->val_thrColDefMethod() == THRCOLDEFMETHOD_POLYAPPROX ) {
+
+        report->insertHtml(
+                    tr("Through polynomial approximation")
+                    );
+    }
+    else {
+
+        report->insertHtml(
+                    tr("Through gravity centers")
+                    );
+    }
+
+    report->insertHtml(
                 + "<br>* "
                 + tr("Accuracy of color threshold determining")
                 + ": "
@@ -553,14 +568,6 @@ void AnalysisDialog::showAnalysisResults() {
 
     report->insertHtml(
                 "<br><br>"
-                + tr("Characteristic of the first material "
-                     "(histogram and polynomial approximant)")
-                +":<br>"
-                );
-    report->textCursor().insertImage(graphics[0]);
-
-    report->insertHtml(
-                "<br><br>"
                 + tr("Second material image file")
                 + ": "
                 + ui->lineEdit_mat2FileName->text());
@@ -588,20 +595,12 @@ void AnalysisDialog::showAnalysisResults() {
 
     report->insertHtml(
                 "<br><br>"
-                + tr("Characteristic of the second material "
-                     "(histogram and polynomial approximant)")
-                + ":<br>"
-                );
-    report->textCursor().insertImage(graphics[1]);
-
-    report->insertHtml(
-                "<br><br>"
                 + tr("Visualization of the calculated "
-                     "gray color threshold "
-                     "(polynoms and threshold color)")
+                     "gray color threshold. "
+                     "Histograms (with polynoms) and threshold color.")
                 + ":<br>"
                 );
-    report->textCursor().insertImage(graphics[2]);
+    report->textCursor().insertImage(graphics[0]);
 
     report->insertHtml("<br>");
 

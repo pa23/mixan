@@ -79,6 +79,7 @@ private:
 
     QSpinBox *spinBox_polyPower;
     QDoubleSpinBox *doubleSpinBox_intersectAccur;
+    QComboBox *comboBox_thrColDefMethod;
     QDoubleSpinBox *doubleSpinBox_idealConc;
     QCheckBox *checkBox_sizeinmm;
     QDoubleSpinBox *doubleSpinBox_pxpermm2;

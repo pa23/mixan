@@ -29,4 +29,11 @@ const QString TMPDIR = "mixan_temp";
 const ptrdiff_t HISTDIMENSION = 20;
 const double CELLKOEFF = 1.25;
 
+enum { ANALTYPE_MATERIALS,
+       ANALTYPE_MIX,
+       ANALTYPE_GRANULATION };
+
+enum { THRCOLDEFMETHOD_POLYAPPROX,
+       THRCOLDEFMETHOD_GRAVCENTER };
+
 #endif // CONSTANTS_H

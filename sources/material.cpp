@@ -75,8 +75,17 @@ void Material::analyze(const QString &imgFileName, const Settings *settings) {
     }
 
     defHistogram();
-    defThreshColorPA();
-    //defThreshColorGC();
+
+    if ( settings->val_thrColDefMethod() == THRCOLDEFMETHOD_POLYAPPROX ) {
+
+        defThreshColorPA();
+    }
+    else {
+
+        defThreshColorGC();
+    }
+
+    //
 
     fileName = imgFileName;
 

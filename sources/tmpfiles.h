@@ -29,8 +29,6 @@
 #include "granules.h"
 
 void saveGraphics(const QPixmap &,
-                  const QPixmap &,
-                  const QPixmap &,
                   const QString &);
 
 void saveHistograms(const QVector<QImage> &,

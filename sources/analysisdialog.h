@@ -90,10 +90,6 @@ private:
     QString lastCalcDateTime;
     QString lastImgDir;
 
-    enum { ANALTYPE_MATERIALS,
-           ANALTYPE_MIX,
-           ANALTYPE_GRANULATION };
-
     void freeMemory();
 
 };
