@@ -432,6 +432,7 @@ GC - Through gravity centers of image histogram</string>
  <tabstops>
   <tabstop>spinBox_polyPower</tabstop>
   <tabstop>doubleSpinBox_intersectAccur</tabstop>
+  <tabstop>comboBox_thrColDefMethod</tabstop>
   <tabstop>doubleSpinBox_idealConc</tabstop>
   <tabstop>checkBox_sizeinmm</tabstop>
   <tabstop>doubleSpinBox_pxpermm2</tabstop>

@@ -295,6 +295,32 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
     //
 
+    if ( ui->listWidget_probesFileNames->count() > 10 &&
+         (settings->val_showImgInReport() ||
+          settings->val_createTmpImg()) ) {
+
+        int ret = QMessageBox::
+                warning(this,
+                        "mixan",
+                        tr("You have chosen more than 10 image files of "
+                           "probes. Also, you want to display images in "
+                           "the report or save them to a directory for "
+                           "temporary files (see Settings menu). Keep in "
+                           "mind that using the above settings, results "
+                           "in very high memory consumption and can "
+                           "exhaust all memory of your computer! "
+                           "Continue?"),
+                        QMessageBox::Yes,
+                        QMessageBox::No);
+
+        if ( ret == QMessageBox::No ) {
+
+            return;
+        }
+    }
+
+    //
+
     if ( ( ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MATERIALS )
            &&
            ( ui->lineEdit_mat1FileName->text().isEmpty() ||

@@ -47,10 +47,10 @@ void createGraphics(QVector<QImage> &graphics,
     //
 
     QwtText xAxisTitle(QObject::tr("gray color"));
-    xAxisTitle.setFont(QFont("DejaVu Sans", 12));
+    xAxisTitle.setFont(QFont("DejaVu Sans", 10));
 
     QwtText yAxisTitle("n_i / N");
-    yAxisTitle.setFont(QFont("DejaVu Sans", 12));
+    yAxisTitle.setFont(QFont("DejaVu Sans", 10));
 
     //
 
