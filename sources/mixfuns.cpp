@@ -23,6 +23,9 @@
 #include "material.h"
 
 #include <cmath>
+#include <memory>
+
+using std::shared_ptr;
 
 double Vc(const QVector<double> &concentrations,
           const double idealconc) {
@@ -39,12 +42,12 @@ double Vc(const QVector<double> &concentrations,
             pow( 1.0 / ( probesnum - 1.0 ) * summ_concdiff, 0.5 );
 }
 
-size_t defThreshColor(const Material *m1,
-                      const Material *m2,
-                      const Settings *settings) {
+size_t defThreshColor(const shared_ptr<const Material> &m1,
+                      const shared_ptr<const Material> &m2,
+                      const shared_ptr<const Settings> &settings) {
 
-    const Material *mat1;
-    const Material *mat2;
+    shared_ptr<const Material> mat1;
+    shared_ptr<const Material> mat2;
 
     if ( m1->thresholdColor() < m2->thresholdColor() ) {
 
@@ -105,7 +108,7 @@ size_t defThreshColor(const Material *m1,
     return 0;
 }
 
-void defRemainders(const QVector< QSharedPointer<Granules> > &granules,
+void defRemainders(const QVector< shared_ptr<Granules> > &granules,
                    QVector<double> &sieveCells,
                    QVector<double> &partRemainders,
                    QVector<double> &totalRemainders) {

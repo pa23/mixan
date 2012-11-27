@@ -20,7 +20,6 @@
 
 #include <QPixmap>
 #include <QVector>
-#include <QSharedPointer>
 #include <QDir>
 #include <QMessageBox>
 #include <QThread>
@@ -30,6 +29,10 @@
 
 #include "tmpfiles.h"
 #include "granules.h"
+
+#include <memory>
+
+using std::shared_ptr;
 
 void saveGraphics(const QPixmap &pixmap1,
                   const QString &path) {
@@ -86,7 +89,7 @@ void saveHistograms(const QVector<QImage> &histograms,
     }
 }
 
-const QVector< QSharedPointer<Granules> > *tmp_granules_tf = 0;
+const QVector< shared_ptr<Granules> > *tmp_granules_tf = 0;
 const QString *tmp_path_tf = 0;
 
 void realSavingImages(ptrdiff_t &iter) {
@@ -108,7 +111,7 @@ void realSavingImages(ptrdiff_t &iter) {
     }
 }
 
-void saveImages(const QVector< QSharedPointer<Granules> > &granules,
+void saveImages(const QVector< shared_ptr<Granules> > &granules,
                 const QString &path) {
 
     QDir tempDir;
@@ -134,31 +137,31 @@ void saveImages(const QVector< QSharedPointer<Granules> > &granules,
 
     //
 
-    QSharedPointer<QProgressDialog> progressDialog =
-            QSharedPointer<QProgressDialog>(new QProgressDialog());
+    shared_ptr<QProgressDialog> progressDialog =
+            shared_ptr<QProgressDialog>(new QProgressDialog());
     progressDialog->setWindowTitle("mixan: progress");
 
-    QSharedPointer< QFutureWatcher<void> > futureWatcher =
-            QSharedPointer< QFutureWatcher<void> >(new QFutureWatcher<void>);
+    shared_ptr< QFutureWatcher<void> > futureWatcher =
+            shared_ptr< QFutureWatcher<void> >(new QFutureWatcher<void>);
 
-    QObject::connect(futureWatcher.data(),
+    QObject::connect(futureWatcher.get(),
                      SIGNAL(finished()),
-                     progressDialog.data(),
+                     progressDialog.get(),
                      SLOT(reset())
                      );
-    QObject::connect(progressDialog.data(),
+    QObject::connect(progressDialog.get(),
                      SIGNAL(canceled()),
-                     futureWatcher.data(),
+                     futureWatcher.get(),
                      SLOT(cancel())
                      );
-    QObject::connect(futureWatcher.data(),
+    QObject::connect(futureWatcher.get(),
                      SIGNAL(progressRangeChanged(int,int)),
-                     progressDialog.data(),
+                     progressDialog.get(),
                      SLOT(setRange(int,int))
                      );
-    QObject::connect(futureWatcher.data(),
+    QObject::connect(futureWatcher.get(),
                      SIGNAL(progressValueChanged(int)),
-                     progressDialog.data(),
+                     progressDialog.get(),
                      SLOT(setValue(int))
                      );
 

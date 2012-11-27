@@ -45,22 +45,29 @@
 #include <QProgressDialog>
 #include <QPixmap>
 #include <QDateTime>
-#include <QSharedPointer>
+
+#include <memory>
+
+using std::shared_ptr;
+
+//
 
 size_t tmp_tcol = 0;
 size_t tmp_limcol1 = 0;
 size_t tmp_limcol2 = 0;
 QString *tmp_thrmsg = 0;
-const Settings *tmp_settings = 0;
+shared_ptr<const Settings> tmp_settings = 0;
 QListWidget *tmp_probesFileNames = 0;
-QVector< QSharedPointer<Mix> > *tmp_probes = 0;
-QVector< QSharedPointer<Granules> > *tmp_granules = 0;
+QVector< shared_ptr<Mix> > *tmp_probes = 0;
+QVector< shared_ptr<Granules> > *tmp_granules = 0;
+
+//
 
 void runMixAnalysis(const ptrdiff_t &iter) {
 
     try {
 
-        QSharedPointer<Mix>
+        shared_ptr<Mix>
                 probe(new Mix(tmp_probesFileNames->item(iter)->text(),
                               tmp_tcol,
                               tmp_settings));
@@ -78,7 +85,7 @@ void runGranulationAnalysis(const ptrdiff_t &iter) {
 
     try {
 
-        QSharedPointer<Granules>
+        shared_ptr<Granules>
                 grans(new Granules(tmp_probesFileNames->item(iter)->text(),
                                    tmp_limcol1,
                                    tmp_limcol2,
@@ -150,7 +157,8 @@ AnalysisDialog::~AnalysisDialog() {
     delete ui;
 }
 
-void AnalysisDialog::init(QTextBrowser *txtbrowser, const Settings *sts) {
+void AnalysisDialog::init(QTextBrowser *txtbrowser,
+                          const shared_ptr<const Settings> &sts) {
 
     report = txtbrowser;
     settings = sts;
@@ -362,8 +370,8 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
         probes.clear();
 
-        tmp_tcol = defThreshColor(material1.data(),
-                                  material2.data(),
+        tmp_tcol = defThreshColor(material1,
+                                  material2,
                                   settings);
 
         QVector<ptrdiff_t> iterations;
@@ -382,8 +390,8 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
         granules.clear();
 
-        tmp_tcol = defThreshColor(material1.data(),
-                                  material2.data(),
+        tmp_tcol = defThreshColor(material1,
+                                  material2,
                                   settings);
 
         if ( material1->thresholdColor() < tmp_tcol ) {
@@ -441,8 +449,8 @@ void AnalysisDialog::showAnalysisResults() {
     const ptrdiff_t imgWidth = settings->val_imgWidth();
 
     createGraphics(graphics,
-                   material1.data(),
-                   material2.data(),
+                   material1,
+                   material2,
                    settings,
                    tempPath + QDir::separator() + lastCalcDateTime);
 

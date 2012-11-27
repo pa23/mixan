@@ -30,11 +30,14 @@
 #include <opencv/highgui.h>
 
 #include <cmath>
+#include <memory>
+
+using std::shared_ptr;
 
 Granules::Granules(const QString &fileName,
                    const size_t lim1,
                    const size_t lim2,
-                   const Settings *set) :
+                   const shared_ptr<const Settings> &set) :
     imgFileName(fileName),
     limCol1(lim1),
     limCol2(lim2),

@@ -25,10 +25,13 @@
 
 #include <cmath>
 #include <numeric>
+#include <memory>
 
 #include <QVector>
 #include <QImage>
 #include <QObject>
+
+using std::shared_ptr;
 
 Material::Material() :
     fileName(),
@@ -50,7 +53,8 @@ Material::Material() :
 Material::~Material() {
 }
 
-void Material::analyze(const QString &imgFileName, const Settings *settings) {
+void Material::analyze(const QString &imgFileName,
+                       const shared_ptr<const Settings> &settings) {
 
     fileName.clear();
 

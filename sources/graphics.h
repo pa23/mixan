@@ -22,13 +22,14 @@
 #define GRAPHICS_H
 
 #include <QVector>
-#include <QSharedPointer>
 #include <QImage>
 #include <QString>
 
 #include "material.h"
 #include "granules.h"
 #include "settings.h"
+
+#include <memory>
 
 struct HistXSetup {
 
@@ -38,14 +39,14 @@ struct HistXSetup {
 };
 
 void createGraphics(QVector<QImage> &,
-                    const Material *,
-                    const Material *,
-                    const Settings *,
+                    const std::shared_ptr<const Material> &,
+                    const std::shared_ptr<const Material> &,
+                    const std::shared_ptr<const Settings> &,
                     const QString &);
 
 void createHistograms(QVector<QImage> &,
-                      const QVector< QSharedPointer<Granules> > &,
-                      const Settings *,
+                      const QVector< std::shared_ptr<Granules> > &,
+                      const std::shared_ptr<const Settings> &,
                       const QString &,
                       double &,
                       double &,

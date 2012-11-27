@@ -36,10 +36,14 @@
 #include "constants.h"
 #include "tmpfiles.h"
 
+#include <memory>
+
+using std::shared_ptr;
+
 void createGraphics(QVector<QImage> &graphics,
-                    const Material *material1,
-                    const Material *material2,
-                    const Settings *settings,
+                    const shared_ptr<const Material> &material1,
+                    const shared_ptr<const Material> &material2,
+                    const shared_ptr<const Settings> &settings,
                     const QString &path) {
 
     graphics.clear();
@@ -54,7 +58,7 @@ void createGraphics(QVector<QImage> &graphics,
 
     //
 
-    QSharedPointer<QwtPlot> plot3(new QwtPlot());
+    shared_ptr<QwtPlot> plot3(new QwtPlot());
     plot3->setPalette(QPalette(QColor(Qt::white)));
     plot3->setFrameShape(QFrame::NoFrame);
     plot3->setFrameShadow(QFrame::Plain);
@@ -76,36 +80,36 @@ void createGraphics(QVector<QImage> &graphics,
 
     //
 
-    QSharedPointer<QwtPlotCurve> curve1(new QwtPlotCurve()); // histogram 1
+    shared_ptr<QwtPlotCurve> curve1(new QwtPlotCurve()); // histogram 1
     curve1->setRenderHint(QwtPlotItem::RenderAntialiased);
     curve1->setStyle(QwtPlotCurve::NoCurve);
     curve1->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                      QPen(Qt::black), QSize(1, 1)) );
 
     curve1->setRawSamples(x.data(), y1.data(), x.size());
-    curve1->attach(plot3.data());
+    curve1->attach(plot3.get());
 
     //
 
-    QSharedPointer<QwtPlotCurve> curve2(new QwtPlotCurve()); // histogram 2
+    shared_ptr<QwtPlotCurve> curve2(new QwtPlotCurve()); // histogram 2
     curve2->setRenderHint(QwtPlotItem::RenderAntialiased);
     curve2->setStyle(QwtPlotCurve::NoCurve);
     curve2->setSymbol( new QwtSymbol(QwtSymbol::Ellipse, Qt::NoBrush,
                                      QPen(Qt::black), QSize(1, 1)) );
 
     curve2->setRawSamples(x.data(), y2.data(), x.size());
-    curve2->attach(plot3.data());
+    curve2->attach(plot3.get());
 
     //
 
-    QSharedPointer<QwtPlotCurve> curve3(new QwtPlotCurve()); // polynomial 1
+    shared_ptr<QwtPlotCurve> curve3(new QwtPlotCurve()); // polynomial 1
     curve3->setRenderHint(QwtPlotItem::RenderAntialiased);
 
     curve3->setRawSamples(x.data(), y3.data(), x.size());
 
     //
 
-    QSharedPointer<QwtPlotCurve> curve4(new QwtPlotCurve()); // polynomial 2
+    shared_ptr<QwtPlotCurve> curve4(new QwtPlotCurve()); // polynomial 2
     curve4->setRenderHint(QwtPlotItem::RenderAntialiased);
 
     curve4->setRawSamples(x.data(), y4.data(), x.size());
@@ -114,13 +118,13 @@ void createGraphics(QVector<QImage> &graphics,
 
     if ( settings->val_thrColDefMethod() == THRCOLDEFMETHOD_POLYAPPROX ) {
 
-        curve3->attach(plot3.data());
-        curve4->attach(plot3.data());
+        curve3->attach(plot3.get());
+        curve4->attach(plot3.get());
     }
 
     //
 
-    QSharedPointer<QwtPlotCurve> curve5(new QwtPlotCurve()); // threshold color
+    shared_ptr<QwtPlotCurve> curve5(new QwtPlotCurve()); // threshold color
     curve5->setRenderHint(QwtPlotItem::RenderAntialiased);
 
     const double tcolm = defThreshColor(material1,
@@ -135,7 +139,7 @@ void createGraphics(QVector<QImage> &graphics,
     y5[1] = plot3->axisInterval(QwtPlot::yLeft).maxValue();
 
     curve5->setRawSamples(x5.data(), y5.data(), x5.size());
-    curve5->attach(plot3.data());
+    curve5->attach(plot3.get());
 
     //
 
@@ -154,8 +158,8 @@ void createGraphics(QVector<QImage> &graphics,
 }
 
 void createHistograms(QVector<QImage> &histograms,
-                      const QVector< QSharedPointer<Granules> > &granules,
-                      const Settings *settings,
+                      const QVector< shared_ptr<Granules> > &granules,
+                      const shared_ptr<const Settings> &settings,
                       const QString &path,
                       double &minArea,
                       double &maxArea,
@@ -349,7 +353,7 @@ void createHistograms(QVector<QImage> &histograms,
     QwtText yAxisTitle1("n_i / N");
     yAxisTitle1.setFont(QFont("Liberation Sans", 12));
 
-    QSharedPointer<QwtPlot> histogram1(new QwtPlot());
+    shared_ptr<QwtPlot> histogram1(new QwtPlot());
     histogram1->setPalette(QPalette(QColor(Qt::white)));
     histogram1->setFrameShape(QFrame::NoFrame);
     histogram1->setFrameShadow(QFrame::Plain);
@@ -357,12 +361,12 @@ void createHistograms(QVector<QImage> &histograms,
     histogram1->setAxisTitle(QwtPlot::xBottom, xAxisTitle1);
     histogram1->setAxisTitle(QwtPlot::yLeft, yAxisTitle1);
 
-    QSharedPointer<QwtPlotHistogram> hist1(new QwtPlotHistogram());
+    shared_ptr<QwtPlotHistogram> hist1(new QwtPlotHistogram());
     hist1->setStyle(QwtPlotHistogram::Columns);
     hist1->setRenderHint(QwtPlotItem::RenderAntialiased);
 
     hist1->setSamples(hist1data);
-    hist1->attach(histogram1.data());
+    hist1->attach(histogram1.get());
 
     histogram1->resize(600, 400);
     histogram1->replot();
@@ -397,7 +401,7 @@ void createHistograms(QVector<QImage> &histograms,
     QwtText yAxisTitle2("n_i / N");
     yAxisTitle2.setFont(QFont("DejaVu Sans", 12));
 
-    QSharedPointer<QwtPlot> histogram2(new QwtPlot());
+    shared_ptr<QwtPlot> histogram2(new QwtPlot());
     histogram2->setPalette(QPalette(QColor(Qt::white)));
     histogram2->setFrameShape(QFrame::NoFrame);
     histogram2->setFrameShadow(QFrame::Plain);
@@ -405,12 +409,12 @@ void createHistograms(QVector<QImage> &histograms,
     histogram2->setAxisTitle(QwtPlot::xBottom, xAxisTitle2);
     histogram2->setAxisTitle(QwtPlot::yLeft, yAxisTitle2);
 
-    QSharedPointer<QwtPlotHistogram> hist2(new QwtPlotHistogram());
+    shared_ptr<QwtPlotHistogram> hist2(new QwtPlotHistogram());
     hist2->setStyle(QwtPlotHistogram::Columns);
     hist2->setRenderHint(QwtPlotItem::RenderAntialiased);
 
     hist2->setSamples(hist2data);
-    hist2->attach(histogram2.data());
+    hist2->attach(histogram2.get());
 
     histogram2->resize(600, 400);
     histogram2->replot();

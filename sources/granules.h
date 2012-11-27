@@ -29,6 +29,8 @@
 
 #include "settings.h"
 
+#include <memory>
+
 class Granules {
 
 public:
@@ -36,7 +38,7 @@ public:
     Granules(const QString &,
              const size_t,
              const size_t,
-             const Settings *);
+             const std::shared_ptr<const Settings> &);
     ~Granules();
 
     void analyze();
@@ -56,7 +58,7 @@ private:
     QString imgFileName;
     size_t limCol1;
     size_t limCol2;
-    const Settings *settings;
+    std::shared_ptr<const Settings> settings;
 
     QImage img;
 

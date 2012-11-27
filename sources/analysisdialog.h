@@ -27,7 +27,6 @@
 #include <QCheckBox>
 #include <QTextBrowser>
 #include <QString>
-#include <QSharedPointer>
 #include <QVector>
 #include <QImage>
 #include <QProgressDialog>
@@ -37,6 +36,8 @@
 #include "material.h"
 #include "mix.h"
 #include "granules.h"
+
+#include <memory>
 
 namespace Ui {
 class AnalysisDialog;
@@ -51,8 +52,8 @@ public:
     explicit AnalysisDialog(QWidget *parent = 0);
     ~AnalysisDialog();
 
-    void init(QTextBrowser *,    // report widget
-              const Settings *);
+    void init(QTextBrowser *, // report widget
+              const std::shared_ptr<const Settings> &);
 
 private slots:
 
@@ -70,14 +71,14 @@ private:
     Ui::AnalysisDialog *ui;
 
     QTextBrowser *report;
-    const Settings *settings;
+    std::shared_ptr<const Settings> settings;
 
     QString filters;
 
-    QSharedPointer<Material> material1;
-    QSharedPointer<Material> material2;
-    QVector< QSharedPointer<Mix> > probes;
-    QVector< QSharedPointer<Granules> > granules;
+    std::shared_ptr<Material> material1;
+    std::shared_ptr<Material> material2;
+    QVector< std::shared_ptr<Mix> > probes;
+    QVector< std::shared_ptr<Granules> > granules;
 
     QVector<QImage> graphics;
     QVector<QImage> histograms;

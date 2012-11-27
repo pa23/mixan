@@ -27,6 +27,8 @@
 
 #include "settings.h"
 
+#include <memory>
+
 class Material {
 
 public:
@@ -34,7 +36,8 @@ public:
     Material();
     ~Material();
 
-    void analyze(const QString &, const Settings *);
+    void analyze(const QString &,
+                 const std::shared_ptr<const Settings> &);
     void clear();
 
     QString imageFileName()                 const { return fileName;     }

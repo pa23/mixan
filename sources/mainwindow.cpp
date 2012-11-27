@@ -37,16 +37,17 @@
 #include <QSpinBox>
 #include <QComboBox>
 #include <QCheckBox>
-#include <QSharedPointer>
 #include <QFont>
 #include <QCloseEvent>
 #include <QDesktopServices>
 #include <QFile>
 
+#include <memory>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    mixanSettings("pa23software", "mixan"),
+    mixanSettings(new QSettings("pa23software", "mixan")),
     calcSettings(new Settings()),
     settingsDialog(new SettingsDialog(this)),
     analysisDialog(new AnalysisDialog(this)),
@@ -81,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //
 
-    analysisDialog->init(ui->textBrowser_report, calcSettings.data());
+    analysisDialog->init(ui->textBrowser_report, calcSettings);
 
     //
 
@@ -144,86 +145,86 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 
 void MainWindow::writeProgramSettings() {
 
-    mixanSettings.beginGroup("/Settings");
-    mixanSettings.setValue("/window_geometry", geometry());
-    mixanSettings.setValue("/panels_state", QMainWindow::saveState());
-    mixanSettings.setValue("/polynom_power", spinBox_polyPower->value());
-    mixanSettings.setValue("/intersection_accuracy",
-                           doubleSpinBox_intersectAccur->value());
-    mixanSettings.setValue("/threshold_color_definition_method",
-                           comboBox_thrColDefMethod->currentIndex());
-    mixanSettings.setValue("/ideal_concentration",
-                           doubleSpinBox_idealConc->value());
-    mixanSettings.setValue("/size_in_millimeters",
-                           checkBox_sizeinmm->isChecked());
-    mixanSettings.setValue("/px_per_mm",
-                           doubleSpinBox_pxpermm2->value());
-    mixanSettings.setValue("/sieves_cell_diameter",
-                           lineEdit_sievesCellDiameter->text());
-    mixanSettings.setValue("/sieves_cell_dimension",
-                           lineEdit_sievesCellDimension->text());
-    mixanSettings.setValue("/report_is_read_only",
-                           checkBox_reportReadOnly->isChecked());
-    mixanSettings.setValue("/show_images_in_report",
-                           checkBox_imagesInReport->isChecked());
-    mixanSettings.setValue("/create_temporary_graphics",
-                           checkBox_createTemporaryGraphics->isChecked());
-    mixanSettings.setValue("/image_width", spinBox_imgWidth->value());
-    mixanSettings.setValue("/analysis_type",
-                           comboBox_analysisType->currentIndex());
-    mixanSettings.endGroup();
+    mixanSettings->beginGroup("/Settings");
+    mixanSettings->setValue("/window_geometry", geometry());
+    mixanSettings->setValue("/panels_state", QMainWindow::saveState());
+    mixanSettings->setValue("/polynom_power", spinBox_polyPower->value());
+    mixanSettings->setValue("/intersection_accuracy",
+                            doubleSpinBox_intersectAccur->value());
+    mixanSettings->setValue("/threshold_color_definition_method",
+                            comboBox_thrColDefMethod->currentIndex());
+    mixanSettings->setValue("/ideal_concentration",
+                            doubleSpinBox_idealConc->value());
+    mixanSettings->setValue("/size_in_millimeters",
+                            checkBox_sizeinmm->isChecked());
+    mixanSettings->setValue("/px_per_mm",
+                            doubleSpinBox_pxpermm2->value());
+    mixanSettings->setValue("/sieves_cell_diameter",
+                            lineEdit_sievesCellDiameter->text());
+    mixanSettings->setValue("/sieves_cell_dimension",
+                            lineEdit_sievesCellDimension->text());
+    mixanSettings->setValue("/report_is_read_only",
+                            checkBox_reportReadOnly->isChecked());
+    mixanSettings->setValue("/show_images_in_report",
+                            checkBox_imagesInReport->isChecked());
+    mixanSettings->setValue("/create_temporary_graphics",
+                            checkBox_createTemporaryGraphics->isChecked());
+    mixanSettings->setValue("/image_width", spinBox_imgWidth->value());
+    mixanSettings->setValue("/analysis_type",
+                            comboBox_analysisType->currentIndex());
+    mixanSettings->endGroup();
 }
 
 void MainWindow::readProgramSettings() {
 
-    mixanSettings.beginGroup("/Settings");
-    setGeometry(mixanSettings.value("/window_geometry",
-                                    QRect(20, 40, 0, 0)).toRect());
-    restoreState(mixanSettings.value("/panels_state").toByteArray());
+    mixanSettings->beginGroup("/Settings");
+    setGeometry(mixanSettings->value("/window_geometry",
+                                     QRect(20, 40, 0, 0)).toRect());
+    restoreState(mixanSettings->value("/panels_state").toByteArray());
     spinBox_polyPower->setValue(
-                mixanSettings.value("/polynom_power", 9).toInt()
+                mixanSettings->value("/polynom_power", 9).toInt()
                 );
     doubleSpinBox_intersectAccur->setValue(
-                mixanSettings.
+                mixanSettings->
                 value("/intersection_accuracy", 0.00025).toDouble()
                 );
     comboBox_thrColDefMethod->setCurrentIndex(
-                mixanSettings.value("/threshold_color_definition_method", 0).toInt()
+                mixanSettings->value("/threshold_color_definition_method", 0).toInt()
                 );
     doubleSpinBox_idealConc->setValue(
-                mixanSettings.value("/ideal_concentration", 0.5).toDouble()
+                mixanSettings->value("/ideal_concentration", 0.5).toDouble()
                 );
     checkBox_sizeinmm->setChecked(
-                mixanSettings.value("/size_in_millimeters", false).toBool()
+                mixanSettings->value("/size_in_millimeters", false).toBool()
                 );
     doubleSpinBox_pxpermm2->setValue(
-                mixanSettings.value("/px_per_mm", 0).toDouble()
+                mixanSettings->value("/px_per_mm", 0).toDouble()
                 );
     lineEdit_sievesCellDiameter->setText(
-                mixanSettings.value("/sieves_cell_diameter",
-                                    "10;5").toString()
+                mixanSettings->value("/sieves_cell_diameter",
+                                     "10;5").toString()
                 );
     lineEdit_sievesCellDimension->setText(
-                mixanSettings.value("/sieves_cell_dimension",
-                                    "2.5;1.25;0.63;0.315;0.14;0.071;0.05").toString()
+                mixanSettings->value("/sieves_cell_dimension",
+                                     "2.5;1.25;0.63;0.315;0.14;0.071;0.05").toString()
                 );
     checkBox_reportReadOnly->setChecked(
-                mixanSettings.value("/report_is_read_only", true).toBool()
+                mixanSettings->value("/report_is_read_only", true).toBool()
                 );
     checkBox_imagesInReport->setChecked(
-                mixanSettings.value("/show_images_in_report", true).toBool()
+                mixanSettings->value("/show_images_in_report", true).toBool()
                 );
     checkBox_createTemporaryGraphics->setChecked(
-                mixanSettings.
+                mixanSettings->
                 value("/create_temporary_graphics", false).toBool()
                 );
     spinBox_imgWidth->setValue(
-                mixanSettings.value("/image_width", 600).toInt()
+                mixanSettings->value("/image_width", 600).toInt()
                 );
     comboBox_analysisType->setCurrentIndex(
-                mixanSettings.value("/analysis_type", 1).toInt()
+                mixanSettings->value("/analysis_type", 1).toInt()
                 );
-    mixanSettings.endGroup();
+    mixanSettings->endGroup();
 
     //
 

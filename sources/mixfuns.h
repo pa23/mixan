@@ -22,20 +22,21 @@
 #define MIXFUNS_H
 
 #include <QVector>
-#include <QSharedPointer>
 
 #include "material.h"
 #include "granules.h"
 #include "settings.h"
 
+#include <memory>
+
 double Vc(const QVector<double> &,
           const double);
 
-size_t defThreshColor(const Material *,
-                      const Material *,
-                      const Settings *);
+size_t defThreshColor(const std::shared_ptr<const Material> &,
+                      const std::shared_ptr<const Material> &,
+                      const std::shared_ptr<const Settings> &);
 
-void defRemainders(const QVector< QSharedPointer<Granules> > &,
+void defRemainders(const QVector< std::shared_ptr<Granules> > &,
                    QVector<double> &,
                    QVector<double> &,
                    QVector<double> &);

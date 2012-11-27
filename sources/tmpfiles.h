@@ -24,9 +24,10 @@
 #include <QPixmap>
 #include <QImage>
 #include <QVector>
-#include <QSharedPointer>
 
 #include "granules.h"
+
+#include <memory>
 
 void saveGraphics(const QPixmap &,
                   const QString &);
@@ -34,7 +35,7 @@ void saveGraphics(const QPixmap &,
 void saveHistograms(const QVector<QImage> &,
                     const QString &);
 
-void saveImages(const QVector< QSharedPointer<Granules> > &,
+void saveImages(const QVector< std::shared_ptr<Granules> > &,
                 const QString &);
 
 #endif // TMPFILES_H

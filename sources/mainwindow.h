@@ -22,7 +22,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QSharedPointer>
 #include <QSettings>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
@@ -34,6 +33,8 @@
 #include "settingsdialog.h"
 #include "analysisdialog.h"
 #include "settings.h"
+
+#include <memory>
 
 namespace Ui {
 class MainWindow;
@@ -70,9 +71,9 @@ private:
 
     Ui::MainWindow *ui;
 
-    QSettings mixanSettings;
+    QSettings *mixanSettings;
 
-    QSharedPointer<Settings> calcSettings;
+    std::shared_ptr<Settings> calcSettings;
 
     SettingsDialog *settingsDialog;
     AnalysisDialog *analysisDialog;

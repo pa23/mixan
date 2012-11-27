@@ -27,11 +27,15 @@
 #include "material.h"
 #include "settings.h"
 
+#include <memory>
+
 class Mix {
 
 public:
 
-    Mix(const QString &, const size_t, const Settings *);
+    Mix(const QString &,
+        const size_t,
+        const std::shared_ptr<const Settings> &);
     ~Mix();
 
     void analyze();
@@ -49,7 +53,7 @@ private:
 
     QString fileName;
     size_t threshColor;
-    const Settings *settings;
+    std::shared_ptr<const Settings> settings;
 
     QImage origImage;
     double conc;

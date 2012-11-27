@@ -22,16 +22,17 @@
 #include "mixanerror.h"
 
 #include <cmath>
+#include <memory>
 
 #include <QVector>
 #include <QImage>
 #include <QObject>
 
-#include <QDebug>
+using std::shared_ptr;
 
 Mix::Mix(const QString &imgFileName,
          const size_t threshCol,
-         const Settings *set) :
+         const shared_ptr<const Settings> &set) :
     fileName(imgFileName),
     threshColor(threshCol),
     settings(set),

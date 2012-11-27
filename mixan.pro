@@ -56,6 +56,8 @@ FORMS += sources/mainwindow.ui \
     sources/settingsdialog.ui \
     sources/analysisdialog.ui
 
+QMAKE_CXXFLAGS += -std=c++11
+
 unix: {
     INCLUDEPATH += . \
         /usr/include/qwt
