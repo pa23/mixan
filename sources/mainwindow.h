@@ -71,12 +71,11 @@ private:
 
     Ui::MainWindow *ui;
 
-    QSettings *mixanSettings;
-
+    std::shared_ptr<QSettings> mixanSettings;
     std::shared_ptr<Settings> calcSettings;
 
-    SettingsDialog *settingsDialog;
-    AnalysisDialog *analysisDialog;
+    std::shared_ptr<SettingsDialog> settingsDialog;
+    std::shared_ptr<AnalysisDialog> analysisDialog;
 
     QSpinBox *spinBox_polyPower;
     QDoubleSpinBox *doubleSpinBox_intersectAccur;

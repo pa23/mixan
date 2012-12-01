@@ -83,14 +83,14 @@ unix: {
 
 win32: {
     INCLUDEPATH += . \
-        c:/qwt/src \
-        c:/opencv/build/include
-    LIBS += -Lc:/qwt/lib \
-        -Lc:/opencv/build/x86/mingw/bin \
+        c:/Qt/qwt/src \
+        c:/opencv/build.orig/include
+    LIBS += -Lc:/Qt/qwt/lib \
+        -Lc:/opencv/build/bin \
         -lqwt \
-        -lopencv_core242 \
-        -lopencv_imgproc242 \
-        -lopencv_highgui242 \
+        -llibopencv_core243 \
+        -llibopencv_imgproc243 \
+        -llibopencv_highgui243 \
         -Wl,-rpath,.
     DESTDIR = build/win/bin
     MOC_DIR = build/win/moc

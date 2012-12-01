@@ -348,10 +348,10 @@ void createHistograms(QVector<QImage> &histograms,
     //
 
     QwtText xAxisTitle1(QObject::tr("Granule area"));
-    xAxisTitle1.setFont(QFont("Liberation Sans", 12));
+    xAxisTitle1.setFont(QFont("DejaVu Sans", 10));
 
     QwtText yAxisTitle1("n_i / N");
-    yAxisTitle1.setFont(QFont("Liberation Sans", 12));
+    yAxisTitle1.setFont(QFont("DejaVu Sans", 10));
 
     shared_ptr<QwtPlot> histogram1(new QwtPlot());
     histogram1->setPalette(QPalette(QColor(Qt::white)));
@@ -396,10 +396,10 @@ void createHistograms(QVector<QImage> &histograms,
     //
 
     QwtText xAxisTitle2(QObject::tr("Granule circularity"));
-    xAxisTitle2.setFont(QFont("DejaVu Sans", 12));
+    xAxisTitle2.setFont(QFont("DejaVu Sans", 10));
 
     QwtText yAxisTitle2("n_i / N");
-    yAxisTitle2.setFont(QFont("DejaVu Sans", 12));
+    yAxisTitle2.setFont(QFont("DejaVu Sans", 10));
 
     shared_ptr<QwtPlot> histogram2(new QwtPlot());
     histogram2->setPalette(QPalette(QColor(Qt::white)));
