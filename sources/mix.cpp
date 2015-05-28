@@ -4,7 +4,7 @@
 
     File: mix.cpp
 
-    Copyright (C) 2011-2012 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2011-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,7 +46,6 @@ Mix::~Mix() {
 void Mix::analyze() {
 
     if ( !origImage.load(fileName) ) {
-
         throw MixanError(
                     QObject::tr("Can not load image")
                     + " "
@@ -58,7 +57,6 @@ void Mix::analyze() {
     defConc();
 
     if ( !settings->val_showImgInReport() && !settings->val_createTmpImg() ) {
-
         origImage = QImage();
     }
 }
@@ -66,7 +64,6 @@ void Mix::analyze() {
 void Mix::defConc() {
 
     if ( origImage.isNull() ) {
-
         throw MixanError(QObject::tr("No image!"));
     }
 
@@ -78,11 +75,9 @@ void Mix::defConc() {
         for (ptrdiff_t j=0; j<origImage.height(); j++) {
 
             if ( (size_t)qGray(origImage.pixel(i, j)) < threshColor ) {
-
                 part2++;
             }
             else {
-
                 part1++;
             }
         }

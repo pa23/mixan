@@ -4,7 +4,7 @@
 
     File: graphics.cpp
 
-    Copyright (C) 2012 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2012-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -117,7 +117,6 @@ void createGraphics(QVector<QImage> &graphics,
     //
 
     if ( settings->val_thrColDefMethod() == THRCOLDEFMETHOD_POLYAPPROX ) {
-
         curve3->attach(plot3.get());
         curve4->attach(plot3.get());
     }
@@ -152,7 +151,6 @@ void createGraphics(QVector<QImage> &graphics,
     //
 
     if ( settings->val_createTmpImg() ) {
-
         saveGraphics(pixmap1, path);
     }
 }
@@ -178,7 +176,6 @@ void createHistograms(QVector<QImage> &histograms,
     QVector<double> compacts = granules[0]->compactValues();
 
     for ( ptrdiff_t n=1; n<granules.size(); n++ ) {
-
         areas += granules[n]->areaValues();
         compacts += granules[n]->compactValues();
     }
@@ -213,22 +210,18 @@ void createHistograms(QVector<QImage> &histograms,
         //
 
         if ( areas[i] < histAreasXSet.minval ) {
-
             histAreasXSet.minval = areas[i];
         }
 
         if ( areas[i] > histAreasXSet.maxval ) {
-
             histAreasXSet.maxval = areas[i];
         }
 
         if ( compacts[i] < histCompactsXSet.minval ) {
-
             histCompactsXSet.minval = compacts[i];
         }
 
         if ( compacts[i] > histCompactsXSet.maxval ) {
-
             histCompactsXSet.maxval = compacts[i];
         }
     }
@@ -261,7 +254,6 @@ void createHistograms(QVector<QImage> &histograms,
 
                 if ( areas[n]>=tmpmin1 &&
                      areas[n]<(tmpmax1+histAreasXSet.step) ) {
-
                     histAreasVls[i]++;
                     break;
                 }
@@ -269,7 +261,6 @@ void createHistograms(QVector<QImage> &histograms,
             else {
 
                 if ( areas[n]>=tmpmin1 && areas[n]<tmpmax1 ) {
-
                     histAreasVls[i]++;
                     break;
                 }
@@ -284,7 +275,6 @@ void createHistograms(QVector<QImage> &histograms,
     }
 
     for ( ptrdiff_t i=0; i<histAreasVls.size(); i++ ) {
-
         histAreasVls[i] /= areas.size();
     }
 
@@ -301,15 +291,12 @@ void createHistograms(QVector<QImage> &histograms,
 
                 if ( compacts[n]>=tmpmin2 &&
                      compacts[n]<(tmpmax2+histCompactsXSet.step) ) {
-
                     histCompactsVls[i]++;
                     break;
                 }
             }
             else {
-
                 if ( compacts[n]>=tmpmin2 && compacts[n]<tmpmax2 ) {
-
                     histCompactsVls[i]++;
                     break;
                 }
@@ -324,7 +311,6 @@ void createHistograms(QVector<QImage> &histograms,
     }
 
     for ( ptrdiff_t i=0; i<histCompactsVls.size(); i++ ) {
-
         histCompactsVls[i] /= compacts.size();
     }
 
@@ -427,7 +413,6 @@ void createHistograms(QVector<QImage> &histograms,
     //
 
     if ( settings->val_createTmpImg() ) {
-
         saveHistograms(histograms, path);
     }
 }

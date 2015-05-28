@@ -4,7 +4,7 @@
 
     File: mainwindow.cpp
 
-    Copyright (C) 2011-2012 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2011-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -132,13 +132,11 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 MainWindow::~MainWindow() {
-
     writeProgramSettings();
     delete ui;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
-
     saveIfNecessary();
     event->accept();
 }
@@ -283,7 +281,6 @@ void MainWindow::on_action_printReport_activated() {
     QPrintDialog printDialog(&printer, this);
 
     if (printDialog.exec() == QDialog::Accepted) {
-
         ui->textBrowser_report->print(&printer);
     }
 }
@@ -314,17 +311,14 @@ void MainWindow::on_action_analysis_activated() {
 void MainWindow::on_action_userManual_activated() {
 
     if ( QFile::exists("mixan_user_manual_ru.pdf") ) {
-
         QDesktopServices::openUrl(QUrl("mixan_user_manual_ru.pdf"));
     }
     else if ( QFile::exists("/usr/share/mixan/doc/mixan_user_manual_ru.pdf") ) {
-
         QDesktopServices::openUrl(
                     QUrl("/usr/share/mixan/doc/mixan_user_manual_ru.pdf")
                     );
     }
     else {
-
         QMessageBox::warning(this,
                              "mixan",
                              tr("Can not find documentation file!"));
@@ -365,11 +359,9 @@ void MainWindow::on_action_about_mixan_activated() {
 void MainWindow::reportReadOnlyChanged(int state) {
 
     if ( state == 0 ) {
-
         ui->textBrowser_report->setReadOnly(false);
     }
     else {
-
         ui->textBrowser_report->setReadOnly(true);
     }
 }
@@ -377,13 +369,11 @@ void MainWindow::reportReadOnlyChanged(int state) {
 void MainWindow::sizeinmmChanged(int state) {
 
     if ( state == 0 ) {
-
         doubleSpinBox_pxpermm2->setEnabled(false);
         lineEdit_sievesCellDiameter->setEnabled(false);
         lineEdit_sievesCellDimension->setEnabled(false);
     }
     else {
-
         doubleSpinBox_pxpermm2->setEnabled(true);
         lineEdit_sievesCellDiameter->setEnabled(true);
         lineEdit_sievesCellDimension->setEnabled(true);

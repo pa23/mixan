@@ -4,7 +4,7 @@
 
     File: numcompfuns.cpp
 
-    Copyright (C) 2011-2012 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2011-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,14 +33,12 @@ QVector<double> polyapprox(const QVector<double> &x,
     const ptrdiff_t N = x.size();
 
     if ( N != y.size() ) {
-
         throw MixanError(QObject::tr("When calculating the coefficients of the "
                                      "approximating polynomial arrays x and y "
                                      "must be the same size!"));
     }
 
     if ( K >= N ) {
-
         throw MixanError(QObject::tr("The degree of approximating polynomial "
                                      "must be less than the size of arrays "
                                      "with data!"));
@@ -65,7 +63,6 @@ QVector<double> polyapprox(const QVector<double> &x,
             sums[i][j] = 0;
 
             for ( ptrdiff_t k=0; k<N; k++ ) {
-
                 sums[i][j] += pow(x[k], i+j);
             }
         }
@@ -76,7 +73,6 @@ QVector<double> polyapprox(const QVector<double> &x,
     for ( ptrdiff_t i=0; i<(K+1); i++ ) {
 
         for ( ptrdiff_t k=0; k<N; k++ ) {
-
             b[i] += pow(x[k], i) * y[k];
         }
     }
@@ -96,7 +92,6 @@ QVector<double> polyapprox(const QVector<double> &x,
                 if ( (sums[j][i] != 0) && (sums[i][j] != 0) ) {
 
                     for ( ptrdiff_t k=0; k<(K+1); k++ ) {
-
                         temp = sums[j][k];
                         sums[j][k] = sums[i][k];
                         sums[i][k] = temp;
@@ -121,7 +116,6 @@ QVector<double> polyapprox(const QVector<double> &x,
         for ( ptrdiff_t i=(k+1); i<(K+1); i++ ) {
 
             if ( sums[k][k] == 0 ) {
-
                 throw MixanError(QObject::tr("Polynomial approximation: "
                                              "solution does not exist!"));
             }
@@ -129,7 +123,6 @@ QVector<double> polyapprox(const QVector<double> &x,
             M = sums[i][k] / sums[k][k];
 
             for ( ptrdiff_t j=k; j<(K+1); j++ ) {
-
                 sums[i][j] -= M * sums[k][j];
             }
 
@@ -146,7 +139,6 @@ QVector<double> polyapprox(const QVector<double> &x,
         s = 0;
 
         for ( ptrdiff_t j=i; j<(K+1); j++ ) {
-
             s += sums[i][j] * coeff[j];
         }
 

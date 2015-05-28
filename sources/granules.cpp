@@ -4,7 +4,7 @@
 
     File: granules.cpp
 
-    Copyright (C) 2012 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2012-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -52,18 +52,15 @@ Granules::~Granules() {
 }
 
 void Granules::analyze() {
-
     findAreas();
 }
 
 ptrdiff_t Granules::partNumber() const {
 
     if (areas.size() == compacts.size()) {
-
         return areas.size();
     }
     else {
-
         return 0;
     }
 }
@@ -163,11 +160,9 @@ void Granules::findAreas() {
             areas.push_back(area/pxpermm2);
 
             if ( rect.size.width < rect.size.height ) {
-
                 minosizes.push_back(rect.size.width/pxpermm);
             }
             else {
-
                 minosizes.push_back(rect.size.height/pxpermm);
             }
         }
@@ -176,11 +171,9 @@ void Granules::findAreas() {
             areas.push_back(area);
 
             if ( rect.size.width < rect.size.height ) {
-
                 minosizes.push_back(rect.size.width);
             }
             else {
-
                 minosizes.push_back(rect.size.height);
             }
         }
@@ -200,17 +193,14 @@ void Granules::findAreas() {
     if ( settings->val_showImgInReport() || settings->val_createTmpImg() ) {
 
         try {
-
             IplImage2QImage(dstImage);
         }
         catch (const MixanError &mixerr) {
-
             cvReleaseImage(&origImage);
             cvReleaseImage(&grayImage);
             cvReleaseImage(&binImage);
             cvReleaseImage(&dstImage);
             cvReleaseMemStorage(&storage);
-
             throw;
         }
     }
@@ -250,7 +240,6 @@ void Granules::IplImage2QImage(const IplImage *iplImg) {
         img = tmpImg;
     }
     else {
-
         throw MixanError(QObject::tr("Can not convert image "
                                      "from IplImage to QImage!"));
     }

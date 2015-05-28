@@ -4,7 +4,7 @@
 
     File: material.cpp
 
-    Copyright (C) 2011-2012 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2011-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -69,7 +69,6 @@ void Material::analyze(const QString &imgFileName,
     //
 
     if ( !origImage.load(imgFileName) ) {
-
         throw MixanError(
                     QObject::tr("Can not load image")
                     + " "
@@ -81,11 +80,9 @@ void Material::analyze(const QString &imgFileName,
     defHistogram();
 
     if ( settings->val_thrColDefMethod() == THRCOLDEFMETHOD_POLYAPPROX ) {
-
         defThreshColorPA();
     }
     else {
-
         defThreshColorGC();
     }
 
@@ -94,7 +91,6 @@ void Material::analyze(const QString &imgFileName,
     fileName = imgFileName;
 
     if ( !settings->val_showImgInReport() && !settings->val_createTmpImg() ) {
-
         origImage = QImage();
     }
 }
@@ -114,7 +110,6 @@ void Material::clear() {
 void Material::defHistogram() {
 
     if ( origImage.isNull() ) {
-
         throw MixanError(QObject::tr("No image!"));
     }
 
@@ -125,13 +120,11 @@ void Material::defHistogram() {
     for ( ptrdiff_t i=0; i<origImage.width(); i++ ) {
 
         for ( ptrdiff_t j=0; j<origImage.height(); j++ ) {
-
             histogramAbs[(size_t)qGray(origImage.pixel(i, j))]++;
         }
     }
 
     for ( ptrdiff_t i=0; i<256; i++ ) {
-
         histogramRel[i] = histogramAbs[i] / N;
     }
 }
@@ -158,7 +151,6 @@ void Material::defThreshColorPA() {
     for ( ptrdiff_t i=0; i<256; i++ ) {
 
         for ( ptrdiff_t n=0; n<(polynomPower+1); n++ ) {
-
             p += polyCoeff[n] * pow(x[i], n);
         }
 
@@ -173,7 +165,6 @@ void Material::defThreshColorPA() {
     for ( ptrdiff_t i=0; i<256; i++ ) {
 
         if ( polyVal[i] > maxpoly ) {
-
             maxpoly = polyVal[i];
             threshColor = i;
         }
@@ -190,7 +181,6 @@ void Material::defThreshColorGC() {
     const double S = origImage.width() * origImage.height();
 
     for ( ptrdiff_t i=0; i<256; i++ ) {
-
         My += i * histogramAbs[i];
     }
 
@@ -205,7 +195,6 @@ void Material::corrPolyVals() {
     for ( ptrdiff_t i=threshColor; i>=0; i-- ) {
 
         if ( polyVal[i] < 0 ) {
-
             polylimits[0] = i;
             break;
         }
@@ -214,7 +203,6 @@ void Material::corrPolyVals() {
     for ( ptrdiff_t i=threshColor; i<=255; i++ ) {
 
         if ( polyVal[i] < 0 ) {
-
             polylimits[1] = i;
             break;
         }
@@ -223,12 +211,10 @@ void Material::corrPolyVals() {
     //
 
     if ( polylimits[0] != 0 ) {
-
         for ( ptrdiff_t i=0; i<=polylimits[0]; i++ ) { polyVal[i] = 0; }
     }
 
     if ( polylimits[1] != 255 ) {
-
         for ( ptrdiff_t i=polylimits[1]; i<=255; i++ ) { polyVal[i] = 0; }
     }
 }

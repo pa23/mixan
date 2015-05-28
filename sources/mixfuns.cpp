@@ -4,7 +4,7 @@
 
     File: mixfuns.cpp
 
-    Copyright (C) 2011-2012 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2011-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@ double Vc(const QVector<double> &concentrations,
     const size_t probesnum = concentrations.size();
 
     for ( size_t i=0; i<probesnum; i++ ) {
-
         summ_concdiff += pow( (concentrations[i] - idealconc), 2 );
     }
 
@@ -50,12 +49,10 @@ size_t defThreshColor(const shared_ptr<const Material> &m1,
     shared_ptr<const Material> mat2;
 
     if ( m1->thresholdColor() < m2->thresholdColor() ) {
-
         mat1 = m1;
         mat2 = m2;
     }
     else {
-
         mat1 = m2;
         mat2 = m1;
     }
@@ -63,7 +60,6 @@ size_t defThreshColor(const shared_ptr<const Material> &m1,
     //
 
     if ( settings->val_thrColDefMethod() == THRCOLDEFMETHOD_GRAVCENTER ) {
-
         return ( mat1->thresholdColor() + mat2->thresholdColor() ) / 2;
     }
 
@@ -73,7 +69,6 @@ size_t defThreshColor(const shared_ptr<const Material> &m1,
     QVector<ptrdiff_t> lims2 = mat2->polynomLimits();
 
     if ( lims1[1] < lims2[0] ) {
-
         return ( mat1->thresholdColor() + mat2->thresholdColor() ) / 2;
     }
 
@@ -87,7 +82,6 @@ size_t defThreshColor(const shared_ptr<const Material> &m1,
     for ( size_t i=mat1->thresholdColor(); i<256; i++ ) {
 
         if ( fabs(poly1[i]-poly2[i]) < settings->val_thrAccur() ) {
-
             tcol = i;
             break;
         }
@@ -95,11 +89,9 @@ size_t defThreshColor(const shared_ptr<const Material> &m1,
 
     if ( tcol >= mat1->thresholdColor() &&
          tcol <= mat2->thresholdColor() ) {
-
         return tcol;
     }
     else {
-
         return ( mat1->thresholdColor() + mat2->thresholdColor() ) / 2;
     }
 
@@ -117,7 +109,6 @@ void defRemainders(const QVector< shared_ptr<Granules> > &granules,
     QVector<double> minosizes = granules[0]->minOverallSizes();
 
     for ( ptrdiff_t n=1; n<granules.size(); n++ ) {
-
         areas += granules[n]->areaValues();
         minosizes += granules[n]->minOverallSizes();
     }
@@ -142,7 +133,6 @@ void defRemainders(const QVector< shared_ptr<Granules> > &granules,
         for ( ptrdiff_t m=(sieveCells.size()-1); m>=0; m-- ) {
 
             if ( minosizes[n] > sieveCells[m] ) {
-
                 partRemainders[m] += areas[n];
                 break;
             }
@@ -150,7 +140,6 @@ void defRemainders(const QVector< shared_ptr<Granules> > &granules,
     }
 
     for ( ptrdiff_t i=0; i<partRemainders.size(); i++ ) {
-
         partRemainders[i] /= totalArea;
     }
 
@@ -160,7 +149,6 @@ void defRemainders(const QVector< shared_ptr<Granules> > &granules,
             partRemainders[partRemainders.size()-1];
 
     for ( ptrdiff_t i=(partRemainders.size()-2); i>=0; i-- ) {
-
         totalRemainders[i] = totalRemainders[i+1] + partRemainders[i];
     }
 }

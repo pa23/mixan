@@ -4,7 +4,7 @@
 
     File: tmpfiles.cpp
 
-    Copyright (C) 2012 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2012-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -42,7 +42,6 @@ void saveGraphics(const QPixmap &pixmap1,
     if ( !tempDir.exists(path) ) {
 
         if ( !tempDir.mkpath(path) ) {
-
             QMessageBox::warning(0, "mixan",
                                  QObject::tr("Can not create temporary "
                                              "directory!"));
@@ -50,7 +49,6 @@ void saveGraphics(const QPixmap &pixmap1,
     }
 
     if ( !pixmap1.save(path + QDir::separator() + "graphic_0.png") ) {
-
         QMessageBox::warning(0, "mixan",
                              QObject::tr("Can not save pixmap to file!"));
     }
@@ -64,7 +62,6 @@ void saveHistograms(const QVector<QImage> &histograms,
     if ( !tempDir.exists(path) ) {
 
         if ( !tempDir.mkpath(path) ) {
-
             QMessageBox::warning(
                         0,
                         "mixan",
@@ -80,7 +77,6 @@ void saveHistograms(const QVector<QImage> &histograms,
                                  + "histogram_"
                                  + QString::number(n)
                                  + ".png") ) {
-
             QMessageBox::warning(
                         0,
                         "mixan",
@@ -102,7 +98,6 @@ void realSavingImages(ptrdiff_t &iter) {
              + ".png"
              )
          ) {
-
         QMessageBox::warning(
                     0,
                     "mixan",
@@ -119,7 +114,6 @@ void saveImages(const QVector< shared_ptr<Granules> > &granules,
     if ( !tempDir.exists(path) ) {
 
         if ( !tempDir.mkpath(path) ) {
-
             QMessageBox::warning(
                         0,
                         "mixan",
@@ -167,7 +161,6 @@ void saveImages(const QVector< shared_ptr<Granules> > &granules,
 
     QVector<ptrdiff_t> iterations;
     for ( ptrdiff_t n=0; n<tmp_granules_tf->size(); n++ ) {
-
         iterations.push_back(n);
     }
 

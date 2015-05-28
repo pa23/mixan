@@ -4,7 +4,7 @@
 
     File: analysisdialog.cpp
 
-    Copyright (C) 2012 Artem Petrov <pa2311@gmail.com>
+    Copyright (C) 2012-2015 Artem Petrov <pa2311@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -66,7 +66,6 @@ QVector< shared_ptr<Granules> > *tmp_granules = 0;
 void runMixAnalysis(const ptrdiff_t &iter) {
 
     try {
-
         shared_ptr<Mix>
                 probe(new Mix(tmp_probesFileNames->item(iter)->text(),
                               tmp_tcol,
@@ -76,7 +75,6 @@ void runMixAnalysis(const ptrdiff_t &iter) {
         tmp_probes->push_back(probe);
     }
     catch(const MixanError &mixerr) {
-
         *tmp_thrmsg += mixerr.mixanErrMsg() + "\n";
     }
 }
@@ -84,7 +82,6 @@ void runMixAnalysis(const ptrdiff_t &iter) {
 void runGranulationAnalysis(const ptrdiff_t &iter) {
 
     try {
-
         shared_ptr<Granules>
                 grans(new Granules(tmp_probesFileNames->item(iter)->text(),
                                    tmp_limcol1,
@@ -95,7 +92,6 @@ void runGranulationAnalysis(const ptrdiff_t &iter) {
         tmp_granules->push_back(grans);
     }
     catch(const MixanError &mixerr) {
-
         *tmp_thrmsg += mixerr.mixanErrMsg() + "\n";
     }
 }
@@ -153,7 +149,6 @@ AnalysisDialog::AnalysisDialog(QWidget *parent) :
 }
 
 AnalysisDialog::~AnalysisDialog() {
-
     delete ui;
 }
 
@@ -173,12 +168,10 @@ void AnalysisDialog::init(QTextBrowser *txtbrowser,
 void AnalysisDialog::on_comboBox_analysisType_currentIndexChanged(int index) {
 
     if ( index == ANALTYPE_MIX || index == ANALTYPE_GRANULATION ) {
-
         ui->listWidget_probesFileNames->setEnabled(true);
         ui->pushButton_selectProbes->setEnabled(true);
     }
     else {
-
         ui->listWidget_probesFileNames->setEnabled(false);
         ui->pushButton_selectProbes->setEnabled(false);
     }
@@ -288,7 +281,6 @@ void AnalysisDialog::on_pushButton_selectProbes_clicked() {
     if ( mixImageFileNames.count() != 0 ) {
 
         for ( ptrdiff_t i=0; i<mixImageFileNames.size(); i++ ) {
-
             ui->listWidget_probesFileNames->addItem(mixImageFileNames[i]);
         }
 
@@ -351,19 +343,16 @@ void AnalysisDialog::on_pushButton_run_clicked() {
     //
 
     try {
-
         material1->analyze(ui->lineEdit_mat1FileName->text(), settings);
         material2->analyze(ui->lineEdit_mat2FileName->text(), settings);
     }
     catch(const MixanError &mixerr) {
-
         thrmsg += mixerr.mixanErrMsg() + "\n";
         showAnalysisResults();
         return;
     }
 
     if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MATERIALS ) {
-
         showAnalysisResults();
     }
     else if ( ui->comboBox_analysisType->currentIndex() == ANALTYPE_MIX ) {
@@ -395,19 +384,16 @@ void AnalysisDialog::on_pushButton_run_clicked() {
                                   settings);
 
         if ( material1->thresholdColor() < tmp_tcol ) {
-
             tmp_limcol1 = 0;
             tmp_limcol2 = tmp_tcol;
         }
         else {
-
             tmp_limcol1 = tmp_tcol;
             tmp_limcol2 = 255;
         }
 
         QVector<ptrdiff_t> iterations;
         for ( ptrdiff_t i=0; i<ui->listWidget_probesFileNames->count(); i++ ) {
-
             iterations.push_back(i);
         }
 
@@ -421,13 +407,11 @@ void AnalysisDialog::on_pushButton_run_clicked() {
     //
 
     if ( !thrmsg.isEmpty() ) {
-
         QMessageBox::warning(this, "mixan", tr("Analysis completed, but")
                              + "\n\n"
                              + thrmsg);
     }
     else {
-
         QMessageBox::information(this, "mixan", tr("Analysis completed!"));
     }
 }
@@ -840,11 +824,9 @@ void AnalysisDialog::showAnalysisResults() {
                     );
 
         if ( settings->val_sizeinmm() ) {
-
             report->insertHtml(tr("mm2"));
         }
         else {
-
             report->insertHtml(tr("px"));
         }
 
