@@ -27,6 +27,7 @@
 #include <QPen>
 #include <QPalette>
 #include <QObject>
+#include <QFrame>
 
 #include "graphics.h"
 #include "material.h"
@@ -62,7 +63,8 @@ void createGraphics(QVector<QImage> &graphics,
     plot3->setPalette(QPalette(QColor(Qt::white)));
     plot3->setFrameShape(QFrame::NoFrame);
     plot3->setFrameShadow(QFrame::Plain);
-    plot3->setCanvasLineWidth(0);
+    QFrame *frame_plot3 = static_cast<QFrame *>(plot3->canvas());
+    frame_plot3->setLineWidth(0);
     plot3->setAxisAutoScale(QwtPlot::xBottom, true);
     plot3->setAxisTitle(QwtPlot::xBottom, xAxisTitle);
     plot3->setAxisAutoScale(QwtPlot::yLeft, true);
@@ -343,7 +345,8 @@ void createHistograms(QVector<QImage> &histograms,
     histogram1->setPalette(QPalette(QColor(Qt::white)));
     histogram1->setFrameShape(QFrame::NoFrame);
     histogram1->setFrameShadow(QFrame::Plain);
-    histogram1->setCanvasLineWidth(0);
+    QFrame *frame_histogram1 = static_cast<QFrame *>(histogram1->canvas());
+    frame_histogram1->setLineWidth(0);
     histogram1->setAxisTitle(QwtPlot::xBottom, xAxisTitle1);
     histogram1->setAxisTitle(QwtPlot::yLeft, yAxisTitle1);
 
@@ -391,7 +394,8 @@ void createHistograms(QVector<QImage> &histograms,
     histogram2->setPalette(QPalette(QColor(Qt::white)));
     histogram2->setFrameShape(QFrame::NoFrame);
     histogram2->setFrameShadow(QFrame::Plain);
-    histogram2->setCanvasLineWidth(0);
+    QFrame *frame_histogram2 = static_cast<QFrame *>(histogram2->canvas());
+    frame_histogram2->setLineWidth(0);
     histogram2->setAxisTitle(QwtPlot::xBottom, xAxisTitle2);
     histogram2->setAxisTitle(QwtPlot::yLeft, yAxisTitle2);
 

@@ -69,6 +69,8 @@ MainWindow::MainWindow(QWidget *parent) :
         + VERSION
         + "</b><br>"
         + tr("Analysis of granular material mixes and emulsions.")
+        + "<br>"
+        + tr("Granulometric analysis.")
         + "<br><hr><br>"
         ) {
 
