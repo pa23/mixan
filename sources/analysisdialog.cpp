@@ -365,7 +365,6 @@ void AnalysisDialog::on_pushButton_run_clicked() {
 
         QVector<ptrdiff_t> iterations;
         for ( ptrdiff_t i=0; i<ui->listWidget_probesFileNames->count(); i++ ) {
-
             iterations.push_back(i);
         }
 

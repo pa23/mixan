@@ -69,6 +69,8 @@ MainWindow::MainWindow(QWidget *parent) :
         + VERSION
         + "</b><br>"
         + tr("Analysis of granular material mixes and emulsions.")
+        + "<br>"
+        + tr("Granulometric analysis.")
         + "<br><hr><br>"
         ) {
 
@@ -329,7 +331,7 @@ void MainWindow::on_action_about_mixan_activated() {
 
     const QString str = "<b>mixan " + VERSION + "</b>\n"
             "<br><br>Analysis of granular material mixes and emulsions."
-            "<br><br>Copyright (C) 2011-2012 Artem Petrov "
+            "<br><br>Copyright (C) 2011-2015 Artem Petrov "
             "<a href= \"mailto:pa2311@gmail.com\" >pa2311@gmail.com</a>"
             "<br><br>Web site: <a href= \"https://github.com/pa23/mixan\">"
             "https://github.com/pa23/mixan</a>"
